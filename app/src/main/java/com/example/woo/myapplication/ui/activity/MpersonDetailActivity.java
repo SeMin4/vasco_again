@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,7 +33,8 @@ import retrofit2.Retrofit;
 public class MpersonDetailActivity extends Activity implements View.OnClickListener{
     private final String SERVER_HOST_PATH = "http://13.125.174.158:9000/mperson_picture";
     ListView listView;
-    public static Activity _listview_popup_activity;
+    public static Activity _mpersonDetailActivity;
+    private Button makeRoom;
     static ListAdapter adapter;
     private LatLng missingPoint;
     private ArrayList<MapInfo> maplist;
@@ -101,49 +103,17 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_popup);
-        _listview_popup_activity = MpersonDetailActivity.this;
+        setContentView(R.layout.activity_mperson_detail);
+        _mpersonDetailActivity = MpersonDetailActivity.this;
         retrofit = MyGlobals.getInstance().getRetrofit();
         retrofitExService = MyGlobals.getInstance().getRetrofitExService();
         listView = (ListView)findViewById(R.id.listView_popup);
         adapter = new ListAdapter();
+        makeRoom = (Button)findViewById(R.id.makeroom);
         listView.setAdapter(adapter);
-
         selected = (Mperson)getIntent().getSerializableExtra("selecteditem");
 
-        ImageView profile = (ImageView)findViewById(R.id.ImageView_popuptitle);
-        TextView name = (TextView)findViewById(R.id.TextView_Name);
-        TextView time = (TextView)findViewById(R.id.TextView_Time);
-        TextView place = (TextView)findViewById(R.id.TextView_Place);
-        TextView desc = (TextView)findViewById(R.id.TextView_Characteristic);
-        TextView age = (TextView)findViewById(R.id.TextView_Age);
-        //이름 장소 시간 사진 특징 +나이
-        name.setText((CharSequence)selected.getP_name());
-        time.setText((CharSequence)selected.getP_time());
-        place.setText((CharSequence)selected.getP_place_string());
-        desc.setText((CharSequence)selected.getP_place_description());
-        age.setText((CharSequence)selected.birthToAge());
-
-        missingPoint = new LatLng(
-                Double.parseDouble(selected.getP_place_latitude()),
-                Double.parseDouble(selected.getP_place_longitude())
-        );
-
-        if(selected.getP_photo() == null){
-            profile.setImageResource(R.drawable.boy);
-        }
-        else{
-            float rotation = 0;
-
-            Picasso.with(getApplicationContext())
-                    .load(SERVER_HOST_PATH + "/" + selected.getP_photo())
-                    .fit()
-                    .rotate(0f)
-                    .into(profile);
-
-
-
-        }
+        setPerson(); // 사람정보 저장
 
         //***************************해당실종자***********
         retrofitExService.getPersonMapData( selected.getP_id()).enqueue(new Callback<ArrayList<MapInfo>>() {
@@ -178,6 +148,52 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
             }
         });
 
+        //방생성 이벤트
+        makeRoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MapConfigActivity.class);
+                intent.putExtra("missing_lat", missingPoint.latitude); //위도
+                intent.putExtra("missing_long", missingPoint.longitude); //경도
+                intent.putExtra("p_id",(CharSequence)selected.getP_id()); //실종자 아이디
+                intent.putExtra("m_place_string", (CharSequence)selected.getP_place_string()); // 실종위치
+                intent.putExtra("selecteditem",selected);
+                startActivity(intent);
+            }
+        });
+    }
+
+    public void setPerson(){
+        ImageView profile = (ImageView)findViewById(R.id.ImageView_popuptitle);
+        TextView name = (TextView)findViewById(R.id.TextView_Name);
+        TextView time = (TextView)findViewById(R.id.TextView_Time);
+        TextView place = (TextView)findViewById(R.id.TextView_Place);
+        TextView desc = (TextView)findViewById(R.id.TextView_Characteristic);
+        TextView age = (TextView)findViewById(R.id.TextView_Age);
+        //이름 장소 시간 사진 특징 +나이
+        name.setText((CharSequence)selected.getP_name());
+        time.setText((CharSequence)selected.getP_time());
+        place.setText((CharSequence)selected.getP_place_string());
+        desc.setText((CharSequence)selected.getP_place_description());
+        age.setText((CharSequence)selected.birthToAge()); //실종자 정보
+
+
+        missingPoint = new LatLng(
+                Double.parseDouble(selected.getP_place_latitude()),
+                Double.parseDouble(selected.getP_place_longitude())
+        );
+
+        if(selected.getP_photo() == null){
+            profile.setImageResource(R.drawable.boy);
+        }
+        else{
+            float rotation = 0;
+            Picasso.with(getApplicationContext())
+                    .load(SERVER_HOST_PATH + "/" + selected.getP_photo())
+                    .fit()
+                    .rotate(0f)
+                    .into(profile);
+        }
     }
 
     public void mOnClick(View v){
