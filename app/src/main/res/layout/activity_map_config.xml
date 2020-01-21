@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activity.MapConfigActivity"
-    android:weightSum = "12"
+    android:weightSum = "13"
+    android:id="@+id/mapConfig_Layout"
     android:orientation="vertical">
 
     <LinearLayout
@@ -28,7 +29,16 @@
             android:layout_weight="2"
             android:text="검색" />
 
+
     </LinearLayout>
+    <Spinner
+        android:id="@+id/mapTypeSpinner"
+        android:entries="@array/map_types"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+    </Spinner>
 
 <!--    <fragment-->
 <!--        android:id="@+id/map"-->
@@ -44,11 +54,8 @@
         android:layout_height="0dp"
         android:layout_weight="10">
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="30dp">
 
-        </Button>
+
 
     </FrameLayout>
 

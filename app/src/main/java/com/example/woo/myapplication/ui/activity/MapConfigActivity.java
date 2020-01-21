@@ -1,5 +1,6 @@
 package com.example.woo.myapplication.ui.activity;
 
+import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.annotation.NonNull;
@@ -8,8 +9,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
@@ -25,9 +31,11 @@ import java.util.List;
 
 public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCallback {
     EditText searchText;
-    NaverMap naverMap;
     String searchLocation;
     Button searchBtn;
+    Spinner maptypeSpinner;
+    LinearLayout MapConfigLayout;
+    FrameLayout NaverMapFrameLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +49,9 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
         mapFragment.getMapAsync(this);
         searchText = (EditText)findViewById(R.id.searchText);
         searchBtn = (Button)findViewById(R.id.searchButton);
+        maptypeSpinner = (Spinner)findViewById(R.id.mapTypeSpinner);
+        MapConfigLayout = (LinearLayout)findViewById(R.id.mapConfig_Layout);
+
     }
 
     @UiThread
@@ -49,6 +60,7 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
         // 지도 기본 셋팅
         naverMap.getUiSettings().setZoomControlEnabled(false);
         //
+
         final Geocoder geocoder = new Geocoder(this);
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +85,30 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
                         naverMap.moveCamera(cameraUpdate);
                     }
                 }
+            }
+        });
+        MapConfigLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
+            }
+        });
+
+        maptypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 0){
+                    naverMap.setMapType(NaverMap.MapType.Basic);
+                }
+                else if(position == 1){
+                    naverMap.setMapType(NaverMap.MapType.Satellite);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }
