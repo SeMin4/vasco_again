@@ -1,6 +1,9 @@
 package com.example.woo.myapplication.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PointF;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.annotation.NonNull;
@@ -25,6 +28,7 @@ import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.Marker;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,7 +39,10 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
     Button searchBtn;
     Spinner maptypeSpinner;
     LinearLayout MapConfigLayout;
-    FrameLayout NaverMapFrameLayout;
+    Button nextMapSettingBtn;
+    Marker marker;
+    double clickLat;
+    double clickLng;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +58,7 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
         searchBtn = (Button)findViewById(R.id.searchButton);
         maptypeSpinner = (Spinner)findViewById(R.id.mapTypeSpinner);
         MapConfigLayout = (LinearLayout)findViewById(R.id.mapConfig_Layout);
+        nextMapSettingBtn = (Button)findViewById(R.id.nextMap_Setting);
 
     }
 
@@ -108,6 +116,40 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        naverMap.setOnMapClickListener(
+                new NaverMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
+                        clickLat = latLng.latitude;
+                        clickLng = latLng.longitude;
+                        if(marker != null){
+                            marker.setMap(null);
+                            marker = new Marker();
+                            marker.setPosition(new LatLng(clickLat, clickLng));
+                            marker.setMap(naverMap);
+                            marker.setCaptionText("수색중심지점");
+                            marker.setIconTintColor(Color.RED);
+                        }
+                        else if(marker == null){
+                            marker = new Marker();
+                            marker.setPosition(new LatLng(clickLat, clickLng));
+                            marker.setMap(naverMap);
+                            marker.setCaptionText("수색중심지점");
+                            marker.setIconTintColor(Color.RED);
+                        }
+                    }
+                }
+        );
+        nextMapSettingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MapSettingActivity.class);
+                intent.putExtra("Lat",clickLat);
+                intent.putExtra("Lng",clickLng);
+                startActivity(intent);
 
             }
         });
