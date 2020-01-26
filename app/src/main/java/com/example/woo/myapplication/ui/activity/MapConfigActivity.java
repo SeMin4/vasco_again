@@ -48,7 +48,7 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_config);
         FragmentManager fm = getSupportFragmentManager();
-        MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.navermap);
         if(mapFragment == null){
             mapFragment = MapFragment.newInstance();
             fm.beginTransaction().add(R.id.naverMap_Config, mapFragment).commit();
