@@ -7,6 +7,7 @@
     <string name="auto_login">자동 로그인</string>
     <string name="sign_in">로그인</string>
     <string name="sign_up">회원 가입</string>
+    <string name="ask_sign_up">아직 회원이 아니십니까?  <u><b>가입하기</b></u></string>
     <string name="double_check">중복 체크</string>
     <string name="user_name">이름</string>
     <string name="user_department">소속</string>
