@@ -30,6 +30,7 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
