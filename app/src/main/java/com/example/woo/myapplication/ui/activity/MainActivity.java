@@ -2,6 +2,7 @@ package com.example.woo.myapplication.ui.activity;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -41,7 +44,10 @@ public class MainActivity extends Activity {
     InsertMpersonActivity _InsertMpersons = (InsertMpersonActivity)InsertMpersonActivity._InsertMpersons;
     protected Button logout_btn;
     protected Button myPage_btn;
-    protected FloatingActionButton fab_btn;
+    protected FloatingActionButton fab_btn,fab_sub1,fab_sub2;
+    protected Animation fab_open, fab_close;
+    protected boolean isFabOpen =false;
+
     public static Activity _MainActivity;
     ListView listView;
     MpersonAdapter adapter;
@@ -49,6 +55,9 @@ public class MainActivity extends Activity {
     MyGlobals.RetrofitExService retroService;
     String districtName;
     EditText search;
+
+    protected Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +70,15 @@ public class MainActivity extends Activity {
         _LoginActivity.finish();
         logout_btn = (Button) findViewById(R.id.logout_btn);
         myPage_btn = (Button) findViewById(R.id.my_page_btn);
+
         fab_btn = (FloatingActionButton) findViewById(R.id.fab);
+        fab_sub1=(FloatingActionButton) findViewById(R.id.fab_sub1);
+        fab_sub2=(FloatingActionButton) findViewById(R.id.fab_sub2);
+
+        mContext = getApplicationContext();
+        fab_open = AnimationUtils.loadAnimation(mContext, R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(mContext, R.anim.fab_close);
+
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         listView = (ListView) findViewById(R.id.listView);
         search = (EditText)findViewById(R.id.search);
@@ -173,14 +190,35 @@ public class MainActivity extends Activity {
                 finish();
             }
         });
+
+
+
         fab_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                toggleFab();
+
+
+            }
+        });
+        fab_sub1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFab();
                 Intent intent = new Intent(getApplicationContext(), InsertMpersonActivity.class);
+                startActivity(intent);
+
+            }
+        });
+        fab_sub2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFab();
+                Intent intent = new Intent(getApplicationContext(), InsertDepActivity.class);
                 startActivity(intent);
             }
         });
-
 
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -207,6 +245,25 @@ public class MainActivity extends Activity {
 
     }
 
+    protected void toggleFab(){
+        if (isFabOpen) {
+            //fab_btn.setImageResource(R.drawable.ic_add);
+            fab_sub1.startAnimation(fab_close);
+            fab_sub2.startAnimation(fab_close);
+            fab_sub1.setClickable(false);
+            fab_sub2.setClickable(false);
+            isFabOpen = false;
+        } else {
+
+            //fab_btn.setImageResource(R.drawable.ic_close);
+            fab_sub1.startAnimation(fab_open);
+            fab_sub2.startAnimation(fab_open);
+            fab_sub1.setClickable(true);
+            fab_sub2.setClickable(true);
+            isFabOpen = true;
+
+        }
+    }
 
     class MpersonAdapter extends BaseAdapter implements Filterable {  //adapter 정의
 

@@ -77,6 +77,30 @@
         </LinearLayout>
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_sub1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_add"
+            android:layout_margin="16dp"
+            android:backgroundTint="#FFFFFF"
+            app:fabSize="normal"
+            app:borderWidth="0dp"
+            android:visibility="invisible"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_sub2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:src="@drawable/ic_add"
+            android:layout_margin="16dp"
+            android:backgroundTint="#FFFFFF"
+            app:fabSize="normal"
+            app:borderWidth="0dp"
+            android:visibility="invisible"/>
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,9 +109,8 @@
             android:layout_margin="16dp"
             android:backgroundTint="#03A9F4"
             app:fabSize="normal"
-            app:borderWidth="0dp"/>
-
-
+            app:borderWidth="0dp"
+            />
 
 
 </LinearLayout>

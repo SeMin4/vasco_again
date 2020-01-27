@@ -2,6 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.woo.myapplication">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/playstore_icon"
@@ -11,9 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.activity.InsertMpersonActivity"
-            android:windowSoftInputMode="adjustNothing"
-            ></activity>
+        <activity android:name=".ui.activity.InsertDepActivity"></activity>
+        <activity
+            android:name=".ui.activity.InsertMpersonActivity"
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".ui.activity.RoomDeleteActivity"
             android:screenOrientation="portrait"
@@ -37,13 +48,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.activity.MainActivity"
-            android:windowSoftInputMode="adjustNothing"/>
-
-        <activity android:name=".ui.activity.EnterMapPWActivity" android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".ui.activity.MpersonDetailActivity"></activity>
-
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".ui.activity.EnterMapPWActivity"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".ui.activity.MpersonDetailActivity" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -59,15 +70,5 @@
                 android:resource="@xml/filepaths" />
         </provider>
     </application>
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>
