@@ -1,9 +1,12 @@
 package com.example.woo.myapplication.ui.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.OverlapExamineData;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.ui.addListenerOnTextChange;
 
 import java.util.HashMap;
 
@@ -57,6 +61,13 @@ public class SignUpActivity extends AppCompatActivity {
             retrofit = MyGlobals.getInstance().getRetrofit();
             retrofitExService = MyGlobals.getInstance().getRetrofitExService();
         }
+
+        sign_up_email.addTextChangedListener(new addListenerOnTextChange(this, sign_up_email, R.drawable.ic_mail_outline_selector, R.drawable.ic_mail_outline_burgundy));
+        sign_up_password.addTextChangedListener(new addListenerOnTextChange(this, sign_up_password, R.drawable.ic_lock_outline_selector, R.drawable.ic_lock_outline_burgundy));
+        sign_up_check_password.addTextChangedListener(new addListenerOnTextChange(this, sign_up_check_password, R.drawable.ic_lock_outline_selector, R.drawable.ic_lock_outline_burgundy));
+        sign_up_name.addTextChangedListener(new addListenerOnTextChange(this, sign_up_name, R.drawable.ic_person_outline_selector, R.drawable.ic_person_outline_burgundy));
+        sign_up_department.addTextChangedListener(new addListenerOnTextChange(this, sign_up_department, R.drawable.ic_link_outline_selector, R.drawable.ic_link_outline_burgundy));
+
 
         sign_up_email_check_btn.setOnClickListener(new View.OnClickListener() {
             @Override
