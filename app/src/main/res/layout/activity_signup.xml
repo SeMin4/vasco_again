@@ -5,19 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/burgundy"
 
     tools:context=".ui.activity.SignUpActivity">
 
     <TextView
 
         android:layout_width="match_parent"
-        android:textStyle="bold"
-        android:textColor="#ffffff"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:textSize="25dp"
-        android:paddingVertical="11dp"
+        android:gravity="left"
+        android:padding="40dp"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
         android:background="@color/burgundy"
         android:text="@string/sign_up">
 
@@ -25,40 +26,48 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/form">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="13dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="80dp"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/sign_up_email"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:background="@drawable/form"
                     android:cursorVisible="true"
+                    android:drawableLeft="@drawable/ic_mail_outline_selector"
+                    android:drawablePadding="15dp"
                     android:hint="@string/login_id"
                     android:importantForAutofill="no"
                     android:inputType="textNoSuggestions"
-                    tools:ignore="LabelFor"></EditText>
+                    tools:ignore="LabelFor"
+                    android:background="@drawable/custom_edit_text_light_gray"
+                    android:textSize="15sp"/>
 
                 <Button
                     android:id="@+id/sign_up_email_check_btn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorGray"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:background="@drawable/button_background_gray"
                     android:text="@string/double_check"
                     android:textColor="#ffffff"
-                    android:textStyle="bold"></Button>
+                    style="?android:attr/borderlessButtonStyle"/>
 
             </LinearLayout>
 
@@ -66,65 +75,76 @@
                 android:id="@+id/sign_up_password"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
-                android:background="@drawable/form"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="15dp"
+                android:drawableLeft="@drawable/ic_lock_outline_selector"
+                android:drawablePadding="15dp"
                 android:cursorVisible="true"
                 android:hint="@string/login_password"
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions|textPassword"
-                tools:ignore="LabelFor"></EditText>
+                tools:ignore="LabelFor"
+                android:background="@drawable/custom_edit_text_light_gray"
+                android:textSize="15sp"/>
 
             <EditText
                 android:id="@+id/sign_up_check_password"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
-                android:background="@drawable/form"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="15dp"
+                android:drawableLeft="@drawable/ic_lock_outline_selector"
+                android:drawablePadding="15dp"
                 android:cursorVisible="true"
                 android:hint="@string/login_password"
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions|textPassword"
-                tools:ignore="LabelFor"></EditText>
+                tools:ignore="LabelFor"
+                android:background="@drawable/custom_edit_text_light_gray"
+                android:textSize="15sp"/>
 
             <EditText
                 android:id="@+id/sign_up_name"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
-                android:background="@drawable/form"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="15dp"
+                android:drawableLeft="@drawable/ic_person_outline_selector"
+                android:drawablePadding="15dp"
                 android:cursorVisible="true"
                 android:hint="@string/user_name"
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions"
-                tools:ignore="LabelFor"></EditText>
+                tools:ignore="LabelFor"
+                android:background="@drawable/custom_edit_text_light_gray"
+                android:textSize="15sp"/>
 
             <EditText
                 android:id="@+id/sign_up_department"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
-                android:background="@drawable/form"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="15dp"
+                android:drawableLeft="@drawable/ic_link_outline_selector"
+                android:drawablePadding="15dp"
                 android:cursorVisible="true"
                 android:hint="@string/user_department"
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions"
-                tools:ignore="LabelFor"></EditText>
+                tools:ignore="LabelFor"
+                android:background="@drawable/custom_edit_text_light_gray"
+                android:textSize="15sp"/>
 
             <Button
                 android:id="@+id/sign_up_btn"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginHorizontal="40dp"
-                android:layout_marginVertical="10dp"
-                android:background="@drawable/button_background2"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginVertical="50dp"
+                android:background="@drawable/button_background_burgundy"
                 android:text="@string/sign_up"
                 android:textColor="#ffffff"
-                android:textSize="20dp"
-                android:textStyle="bold">
+                android:textSize="20dp">
 
             </Button>
 

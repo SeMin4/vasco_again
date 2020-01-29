@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--원래상태일때-->
-    <item>
+    <item android:state_pressed="false">
         <shape android:shape="rectangle">
             <corners android:radius="80dp">
             </corners>
@@ -11,8 +11,8 @@
             </solid>
             <padding android:left = "20dp"
                 android:right="20dp"
-                android:top="15dp"
-                android:bottom="15dp"/>
+                android:top="10dp"
+                android:bottom="10dp"/>
 
         </shape>
 
@@ -29,8 +29,8 @@
             </solid>
             <padding android:left = "20dp"
                 android:right="20dp"
-                android:top="15dp"
-                android:bottom="15dp"/>
+                android:top="10dp"
+                android:bottom="10dp"/>
 
         </shape>
     </item>
