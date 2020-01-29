@@ -54,8 +54,8 @@
                     android:importantForAutofill="no"
                     android:inputType="textNoSuggestions"
                     tools:ignore="LabelFor"
-                    android:background="@drawable/custom_edit_text_light_gray"
-                    android:textSize="15sp"/>
+                    app:theme="@style/EditTextStyle"
+                    android:background="@drawable/custom_edit_text_light_gray"/>
 
                 <Button
                     android:id="@+id/sign_up_email_check_btn"
@@ -66,7 +66,7 @@
                     android:minWidth="0dp"
                     android:background="@drawable/button_background_gray"
                     android:text="@string/double_check"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/colorGray"
                     style="?android:attr/borderlessButtonStyle"/>
 
             </LinearLayout>
@@ -84,8 +84,8 @@
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions|textPassword"
                 tools:ignore="LabelFor"
-                android:background="@drawable/custom_edit_text_light_gray"
-                android:textSize="15sp"/>
+                app:theme="@style/EditTextStyle"
+                android:background="@drawable/custom_edit_text_light_gray"/>
 
             <EditText
                 android:id="@+id/sign_up_check_password"
@@ -100,8 +100,8 @@
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions|textPassword"
                 tools:ignore="LabelFor"
-                android:background="@drawable/custom_edit_text_light_gray"
-                android:textSize="15sp"/>
+                app:theme="@style/EditTextStyle"
+                android:background="@drawable/custom_edit_text_light_gray"/>
 
             <EditText
                 android:id="@+id/sign_up_name"
@@ -116,8 +116,8 @@
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions"
                 tools:ignore="LabelFor"
-                android:background="@drawable/custom_edit_text_light_gray"
-                android:textSize="15sp"/>
+                app:theme="@style/EditTextStyle"
+                android:background="@drawable/custom_edit_text_light_gray"/>
 
             <EditText
                 android:id="@+id/sign_up_department"
@@ -132,8 +132,8 @@
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions"
                 tools:ignore="LabelFor"
-                android:background="@drawable/custom_edit_text_light_gray"
-                android:textSize="15sp"/>
+                app:theme="@style/EditTextStyle"
+                android:background="@drawable/custom_edit_text_light_gray"/>
 
             <Button
                 android:id="@+id/sign_up_btn"
