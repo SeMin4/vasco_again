@@ -4,9 +4,10 @@
     <!--원래상태일때-->
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
-            <corners android:radius="10dp">
+            <corners android:bottomLeftRadius="15dp"
+                android:bottomRightRadius="15dp">
             </corners>
-            <solid android:color="@color/light_gray">
+            <solid android:color="#00ff0000">
 
             </solid>
             <padding
@@ -23,9 +24,10 @@
     <item android:state_pressed="true">
 
         <shape android:shape="rectangle">
-            <corners android:radius="10dp">
+            <corners android:bottomLeftRadius="15dp"
+                android:bottomRightRadius="15dp">
             </corners>
-            <solid android:color="@color/gray">
+            <solid android:color="@color/light_gray">
 
             </solid>
             <padding

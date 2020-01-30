@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:background="#eeeeee"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/custom_dialog_bg"
     android:orientation="vertical"
     tools:context=".ui.activity.LoginErrorActivity">
 
@@ -13,16 +15,25 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/error_title"
-            android:textColor="#ffffff"
+            android:textColor="@color/burgundy"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:textSize="20sp"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:gravity="center"
-            android:background="@color/burgundy">
+            android:background="#00ff0000">
         </TextView>
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:src="@drawable/custom_dialog_divisor"/>
+
     <LinearLayout
-        android:padding="24dp"
+        android:padding="20dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -32,16 +43,25 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="#000"
-            android:textSize = "15sp"
-            android:layout_marginBottom="10dp">
+            android:textSize = "15sp">
         </TextView>
     </LinearLayout>
+
     <Button
         android:id="@+id/error_confirm_btn"
         android:layout_width="match_parent"
+        android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="@string/confirm">
+        android:minHeight="0dp"
+        android:padding="12dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="7dp"
+        android:textSize="15sp"
+        android:text="@string/confirm"
+        android:textColor="@color/dark_gray"
+        android:background="@drawable/button_background_gray"
+        style="?android:attr/borderlessButtonStyle">
 
     </Button>
 </LinearLayout>

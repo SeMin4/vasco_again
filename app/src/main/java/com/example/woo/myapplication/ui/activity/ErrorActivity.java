@@ -1,6 +1,8 @@
 package com.example.woo.myapplication.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -22,6 +24,7 @@ public class ErrorActivity extends AppCompatActivity {
         //status bar remove(whole screen)
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setContentView(R.layout.activity_error_actvity);
         error_title = (TextView) findViewById(R.id.error_title);
         error_body = (TextView) findViewById(R.id.error_body);

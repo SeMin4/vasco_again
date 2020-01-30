@@ -12,6 +12,7 @@
     <color name="gold">#BC8D49</color>
     <color name="orange">#D67D17</color>
     <color name = "dark_gray">#2e2b2b</color>
+    <color name = "light_gray">#dddde0</color>
     <color name="light_blue">#97BEC5</color>
     <color name="light_purple">#ABA8C5</color>
     <color name="light_gold">#BCB89D</color>
