@@ -47,6 +47,7 @@
                     android:layout_height="50dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
+                    android:background="@drawable/custom_edit_text_light_gray"
                     android:cursorVisible="true"
                     android:drawableLeft="@drawable/ic_mail_outline_selector"
                     android:drawablePadding="15dp"
@@ -54,8 +55,8 @@
                     android:importantForAutofill="no"
                     android:inputType="textNoSuggestions"
                     tools:ignore="LabelFor"
-                    app:theme="@style/EditTextStyle"
-                    android:background="@drawable/custom_edit_text_light_gray"/>
+                    android:textSize="15sp"
+                    android:textColorHint="@color/gray"/>
 
                 <Button
                     android:id="@+id/sign_up_email_check_btn"
@@ -82,7 +83,8 @@
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions|textPassword"
                 tools:ignore="LabelFor"
-                app:theme="@style/EditTextStyle"
+                android:textSize="15sp"
+                android:textColorHint="@color/gray"
                 android:background="@drawable/custom_edit_text_light_gray"/>
 
             <EditText
@@ -98,7 +100,8 @@
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions|textPassword"
                 tools:ignore="LabelFor"
-                app:theme="@style/EditTextStyle"
+                android:textSize="15sp"
+                android:textColorHint="@color/gray"
                 android:background="@drawable/custom_edit_text_light_gray"/>
 
             <EditText
@@ -114,7 +117,8 @@
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions"
                 tools:ignore="LabelFor"
-                app:theme="@style/EditTextStyle"
+                android:textSize="15sp"
+                android:textColorHint="@color/gray"
                 android:background="@drawable/custom_edit_text_light_gray"/>
 
             <EditText
@@ -130,7 +134,8 @@
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions"
                 tools:ignore="LabelFor"
-                app:theme="@style/EditTextStyle"
+                android:textSize="15sp"
+                android:textColorHint="@color/gray"
                 android:background="@drawable/custom_edit_text_light_gray"/>
 
             <Button
