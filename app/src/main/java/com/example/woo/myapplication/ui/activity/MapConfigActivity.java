@@ -11,6 +11,7 @@ import android.support.annotation.UiThread;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -130,6 +131,7 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
                             marker = new Marker();
                             marker.setPosition(new LatLng(clickLat, clickLng));
                             marker.setMap(naverMap);
+                            Log.d("CLCIKLAT-LNG",""+ clickLat + clickLng);
                             marker.setCaptionText("수색중심지점");
                             marker.setIconTintColor(Color.RED);
                         }
@@ -137,6 +139,7 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
                             marker = new Marker();
                             marker.setPosition(new LatLng(clickLat, clickLng));
                             marker.setMap(naverMap);
+                            Log.d("CLCIKLAT-LNG",""+ clickLat + clickLng);
                             marker.setCaptionText("수색중심지점");
                             marker.setIconTintColor(Color.RED);
                         }

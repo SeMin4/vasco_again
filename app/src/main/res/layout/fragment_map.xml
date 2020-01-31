@@ -11,21 +11,27 @@
         android:id="@+id/navermap"
         android:name="com.naver.maps.map.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
-    <TextView
-        android:id="@+id/tmp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="hello">
-
-    </TextView>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/map_grid_recycler"
-        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="hihihihi">
+
+        </TextView>
+
+
+
+    </fragment>
+
+<!--    <android.support.v7.widget.RecyclerView-->
+<!--        android:id="@+id/map_grid_recycler"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginTop="100dp"-->
+<!--        android:layout_marginBottom="100dp">-->
+
+<!--    </android.support.v7.widget.RecyclerView>-->
+
 
 </RelativeLayout>
