@@ -21,5 +21,6 @@
     <color name="impossible">#C83631</color>
     <color name="finish">#F5C102</color>
     <color name = "burgundy">#b42f2f</color>
+    <color name="dark_burgundy">#812121</color>
     <color name = "marsala">#8a3b3b</color>
 </resources>

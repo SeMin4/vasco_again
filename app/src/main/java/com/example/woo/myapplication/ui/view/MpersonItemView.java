@@ -84,6 +84,8 @@ public class MpersonItemView extends LinearLayout {
 
         imageView.setBackground(drawable);
         imageView.setClipToOutline(true);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
 
         if(imageName == null){
             imageView.setImageResource(R.drawable.boy);
