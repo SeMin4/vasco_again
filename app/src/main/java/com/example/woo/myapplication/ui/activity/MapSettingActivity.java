@@ -1,6 +1,7 @@
 package com.example.woo.myapplication.ui.activity;
 
 import android.content.Intent;
+import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +27,6 @@ public class MapSettingActivity extends AppCompatActivity
         Intent intent = getIntent();
         centerLat = intent.getDoubleExtra("Lat", 0);
         centerLng = intent.getDoubleExtra("Lng",0);
-
         fm= getSupportFragmentManager();
         naverMapFragment = (NaverMapFragment)fm.findFragmentById(R.id.naverMap_Frag);
         if(naverMapFragment == null){
@@ -35,7 +35,6 @@ public class MapSettingActivity extends AppCompatActivity
             fragmentTransaction.add(R.id.naverMap_Setting, naverMapFragment);
             fragmentTransaction.commit();
         }
-
     }
 
 

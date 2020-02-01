@@ -91,4 +91,29 @@ public class LocationDistance {
 
         return vertex;
     }
+
+    public static LatLng findLatitudeFromStand(LatLng standLatLng, double distance){
+        LatLng retLatLng;
+        //위도 1도 사이의 거리 : 110 키로미터 위도 1분 사이의 거리 : 1.8km 1초 사이의 거리 30m
+        // 비례식
+        //0.0001:30 = x : distance
+
+        //경도 1도 사이의 거리 : cos(위도)* 2 * pi * r (6380) / 360
+
+
+        return standLatLng;
+    }
+    public static LatLng findLongitudeFromStand(LatLng standLatLng, double distance){
+        return standLatLng;
+    }
+
+    public static LatLng[] findFourCornerLatitudeFromCenter(LatLng centerLatLng, double distance){
+        LatLng[] fourCorner = new LatLng[4];
+        //0 왼쪽위 // 1 왼쪽 아래 //2 오른쪽 위//오른쪽 아래
+        //위도 1도 사이의 거리 : 110 키로미터 위도 1분 사이의 거리 : 1.8km
+        //경도 1도 사이의 거리 : cos(위도)* 2 * pi * r (6380) / 360
+
+        return fourCorner;
+
+    }
 }

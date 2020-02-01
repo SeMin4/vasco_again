@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.ui.view.NaverMapFragment;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraUpdate;
@@ -152,6 +153,8 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
                 Intent intent = new Intent(getApplicationContext(), MapSettingActivity.class);
                 intent.putExtra("Lat",clickLat);
                 intent.putExtra("Lng",clickLng);
+                NaverMapFragment.centerLat = clickLat;
+                NaverMapFragment.centerLng = clickLng;
                 startActivity(intent);
 
             }
