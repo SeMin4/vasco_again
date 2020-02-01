@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:text="이규진"
                 android:textColor="@color/dark_burgundy"
-                android:textSize="15sp"
+                android:textSize="15dp"
                 android:textStyle="bold"/>
 
             <TextView

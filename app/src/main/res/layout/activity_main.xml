@@ -12,7 +12,8 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="end"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
             android:orientation="horizontal"
             android:layout_weight="1">
                 <Button
@@ -20,28 +21,43 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/myPage"
-                    android:background="@drawable/button_background2"
+                    android:background="@drawable/button_background_burgundy"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp"
+                    android:drawableRight="@drawable/ic_my_page_white"
+                    android:drawablePadding="5dp"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
                     android:textStyle="bold"
                     android:textColor="#ffffff"
-                    android:layout_marginHorizontal="7dp"
+                    android:layout_marginHorizontal="10dp"
                     android:layout_gravity="end"
+                    style="?attr/borderlessButtonStyle"
                     >
                 </Button>
+
                 <Button
-                    android:layout_marginHorizontal="7dp"
                     android:id="@+id/logout_btn"
-                    android:background="@drawable/button_background2"
-                    android:textColor="#ffffff"
-                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/logout"
+                    android:background="@drawable/button_background_burgundy"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp"
+                    android:drawableRight="@drawable/ic_logout_white"
+                    android:drawablePadding="5dp"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:textStyle="bold"
+                    android:textColor="#ffffff"
                     android:layout_gravity="end"
+                    style="?attr/borderlessButtonStyle"
                     >
                 </Button>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -57,38 +73,49 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="5.5"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="50dp"
                     android:prompt="@string/district_prompt"/>
                 <EditText
                     android:id="@+id/search"
+                    app:theme="@style/EditTextStyle"
+                    android:drawableLeft="@drawable/ic_search_selector"
+                    android:drawablePadding="5dp"
                     android:layout_width="0dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
                     android:hint="실종자 이름 입력"
                     android:layout_height="match_parent"
                     android:layout_weight="4.5">
                 </EditText>
         </LinearLayout>
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="11"
-            android:layout_marginTop="10dp">
+            android:layout_weight="11">
+
                 <ListView
                     android:id="@+id/listView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:divider="#00ff0000"
                     android:listSelector="#00ff0000"/>
-        </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:src="@drawable/ic_add"
-            android:layout_margin="16dp"
-            android:backgroundTint="#03A9F4"
-            app:fabSize="normal"
-            app:borderWidth="0dp"/>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|bottom"
+                    android:layout_alignEnd="@id/listView"
+                    android:layout_alignBottom="@id/listView"
+                    android:src="@drawable/ic_add"
+                    android:layout_margin="30dp"
+                    android:backgroundTint="#03A9F4"
+                    app:fabSize="normal"
+                    app:borderWidth="0dp"/>
+
+        </RelativeLayout>
 
 
 
