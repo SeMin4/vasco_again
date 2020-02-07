@@ -40,4 +40,5 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
     implementation 'com.github.yukuku:ambilwarna:2.0.1'
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
 }

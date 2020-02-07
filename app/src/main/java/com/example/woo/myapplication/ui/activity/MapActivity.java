@@ -13,10 +13,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.data.LocationInfo;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
 
@@ -31,16 +33,20 @@ public class MapActivity extends AppCompatActivity {
     private double prevLat;
     private int flag;
     double distance;
+    private PhotoView photoView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_activity);
+        photoView = (PhotoView) findViewById(R.id.photo_view);
         distance = 2.5;
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         isGPSEnabled = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         isNetworkEnabled = manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         locationList = new ArrayList<>();
         flag = 0;
+
+        photoView.setImageResource(R.drawable.test);
 
         if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
