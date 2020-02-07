@@ -66,7 +66,7 @@
                     android:layout_weight="4.5">
                 </EditText>
         </LinearLayout>
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="11">
@@ -74,43 +74,52 @@
                     android:id="@+id/listView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-        </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_sub1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:src="@drawable/ic_add"
-            android:layout_margin="16dp"
-            android:backgroundTint="#FFFFFF"
-            app:fabSize="normal"
-            app:borderWidth="0dp"
-            android:visibility="invisible"/>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_sub1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/fab_sub2"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_add"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginRight="20dp"
+                    android:backgroundTint="#FFFFFF"
+                    app:fabSize="normal"
+                    app:borderWidth="0dp"
+                    android:visibility="invisible"/>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_sub2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:src="@drawable/ic_add"
-            android:layout_margin="16dp"
-            android:backgroundTint="#FFFFFF"
-            app:fabSize="normal"
-            app:borderWidth="0dp"
-            android:visibility="invisible"/>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_sub2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/fab"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_add"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginRight="20dp"
+                    android:backgroundTint="#FFFFFF"
+                    app:fabSize="normal"
+                    app:borderWidth="0dp"
+                    android:visibility="invisible"/>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:src="@drawable/ic_add"
-            android:layout_margin="16dp"
-            android:backgroundTint="#03A9F4"
-            app:fabSize="normal"
-            app:borderWidth="0dp"
-            />
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_add"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginRight="20dp"
+                    android:backgroundTint="#03A9F4"
+                    app:fabSize="normal"
+                    app:borderWidth="0dp"
+                    />
+
+        </RelativeLayout>
+
+
 
 
 </LinearLayout>
