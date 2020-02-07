@@ -62,9 +62,11 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
         roomListAdapter = new MyRoomListAdapter(this);
         my_room_list_view.setAdapter(roomListAdapter);
         ArrayList<MyRoomItem> mlist = MyGlobals.getInstance().getMaplist();
-        for(int i =0;i<mlist.size();i++){
-            MyRoomItem item = mlist.get(i);
-            roomListAdapter.addItem(item.getM_id(),item.getP_name(),item.getM_place_string());
+        if(mlist!=null) {
+            for (int i = 0; i < mlist.size(); i++) {
+                MyRoomItem item = mlist.get(i);
+                roomListAdapter.addItem(item.getM_id(), item.getP_name(), item.getM_place_string());
+            }
         }
 
         change_password_btn = (Button)findViewById(R.id.change_pasaword_btn);

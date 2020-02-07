@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.activity.MapSettingActivity">
+
+    <FrameLayout
+        android:id="@+id/naverMap_Setting"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="11">
+
+
+        <fragment
+            android:id="@+id/naverMap_Frag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.example.woo.myapplication.ui.view.NaverMapFragment">
+        </fragment>
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/next_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:text="다음"/>
+
+
+
+
+
+
+
+
+
+
+
+
+</LinearLayout>

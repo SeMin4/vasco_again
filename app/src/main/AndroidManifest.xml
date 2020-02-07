@@ -22,6 +22,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".ui.activity.InsertDepActivity"></activity>
+        <activity android:name=".ui.activity.MapActivity"></activity>
+        <activity android:name=".ui.activity.MapSettingActivity" />
+        <activity android:name=".ui.activity.MapConfigActivity" />
         <activity
             android:name=".ui.activity.InsertMpersonActivity"
             android:windowSoftInputMode="adjustNothing" />
