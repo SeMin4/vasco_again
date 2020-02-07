@@ -101,18 +101,15 @@
                 android:inputType="textNoSuggestions"
                 tools:ignore="LabelFor"></EditText>
 
-            <EditText
+            <Spinner
                 android:id="@+id/sign_up_department"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="10dp"
                 android:background="@drawable/form"
-                android:cursorVisible="true"
                 android:hint="@string/user_department"
-                android:importantForAutofill="no"
-                android:inputType="textNoSuggestions"
-                tools:ignore="LabelFor"></EditText>
+            />
 
             <Button
                 android:id="@+id/sign_up_btn"

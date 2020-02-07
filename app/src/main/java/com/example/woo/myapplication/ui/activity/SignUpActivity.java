@@ -2,18 +2,22 @@ package com.example.woo.myapplication.ui.activity;
 
 import android.content.Intent;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.OverlapExamineData;
 import com.example.woo.myapplication.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit2.Call;
@@ -31,11 +35,14 @@ public class SignUpActivity extends AppCompatActivity {
     protected EditText sign_up_password;
     protected EditText sign_up_check_password;
     protected EditText sign_up_name;
-    protected EditText sign_up_department;
+    protected Spinner sign_up_department;
     protected Button sign_up_btn;
     private Retrofit retrofit;
     private MyGlobals.RetrofitExService retrofitExService;
     protected String sign_up_email_same = null;
+    ArrayList<String> depList;
+    ArrayAdapter<String> depArrayAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +53,30 @@ public class SignUpActivity extends AppCompatActivity {
         sign_up_password = (EditText) findViewById(R.id.sign_up_password);
         sign_up_check_password = (EditText) findViewById(R.id.sign_up_check_password);
         sign_up_name = (EditText) findViewById(R.id.sign_up_name);
-        sign_up_department = (EditText) findViewById(R.id.sign_up_department);
+        sign_up_department = (Spinner) findViewById(R.id.sign_up_department);
         sign_up_btn = (Button) findViewById(R.id.sign_up_btn);
+        depList = new ArrayList<>();
+
+        depList.add("1중대");
+        depList.add("2중");
+        depList.add("3");
+
+        depArrayAdapter = new ArrayAdapter<>(getApplicationContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                depList);
+
+        sign_up_department.setAdapter(depArrayAdapter);
+        sign_up_department.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplicationContext(),depList.get(i)+"가 선택되었습니다.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
         if( (MyGlobals.getInstance().getRetrofit() == null) || (MyGlobals.getInstance().getRetrofitExService() ==null) ){
             retrofit = new Retrofit.Builder().baseUrl(MyGlobals.RetrofitExService.URL).addConverterFactory(GsonConverterFactory.create()).build();
             retrofitExService = retrofit.create(MyGlobals.RetrofitExService.class);
@@ -102,7 +131,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 String sign_up_password_str = sign_up_password.getText().toString();
                 String sign_up_check_password_str = sign_up_check_password.getText().toString();
-                if (sign_up_email.getText().toString().equals("") || sign_up_password.getText().toString().equals("") || sign_up_check_password.getText().toString().equals("") || sign_up_name.getText().toString().equals("") || sign_up_department.getText().toString().equals("")) {
+                if (sign_up_email.getText().toString().equals("") || sign_up_password.getText().toString().equals("") || sign_up_check_password.getText().toString().equals("") || sign_up_name.getText().toString().equals("") /*|| sign_up_department.getText().toString().equals("")*/) {
                     Intent intent = new Intent(getApplicationContext(), ErrorActivity.class);
                     intent.putExtra("error_code", 2);
                     startActivity(intent);
@@ -115,7 +144,7 @@ public class SignUpActivity extends AppCompatActivity {
                         HashMap<String, String> input = new HashMap<>();
                         input.put("email", sign_up_email.getText().toString());
                         input.put("password", sign_up_password.getText().toString());
-                        input.put("department", sign_up_department.getText().toString());
+                        //input.put("department", sign_up_department.getText().toString());
                         input.put("name", sign_up_name.getText().toString());
                         retrofitExService.postAdmin(input).enqueue(new Callback<OverlapExamineData>() {
                             @Override
