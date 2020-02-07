@@ -3,18 +3,19 @@ package com.example.woo.myapplication.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.MyRoomItem;
@@ -34,7 +35,7 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
     protected LinearLayout MyPageLayout;
     protected EditText change_password;
     protected EditText change_check_password;
-    protected EditText change_department;
+    protected Spinner change_department;
     protected Button change_confirm_btn;
     protected TextView user_id;
     protected TextView user_name;
@@ -43,7 +44,8 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
     protected Button change_password_btn,change_department_btn;
     private Retrofit retrofit;
     private MyGlobals.RetrofitExService retrofitExService;
-
+    ArrayList<String> depList;
+    ArrayAdapter<String> depArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,8 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
         MyPageLayout = (LinearLayout) findViewById(R.id.my_page_layout);
         change_password = (EditText) findViewById(R.id.change_password);
         change_check_password = (EditText) findViewById(R.id.change_check_password);
-        change_department = (EditText) findViewById(R.id.change_department);
+        change_department=(Spinner)findViewById(R.id.change_department);
+        //change_department = (EditText) findViewById(R.id.change_department);
         change_confirm_btn = (Button) findViewById(R.id.change_confirm_btn);
         user_id = (TextView)findViewById(R.id.user_id);
         user_name = (TextView)findViewById(R.id.user_name);
@@ -76,8 +79,27 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
 
         user_id.setText(MyGlobals.getInstance().getUser().getU_email());
         user_name.setText(MyGlobals.getInstance().getUser().getU_name());
-        change_department.setHint(MyGlobals.getInstance().getUser().getU_department());
+      //  change_department.setHint(MyGlobals.getInstance().getUser().getU_department());
 
+        depList = new ArrayList<>();
+        depList.add("1중대");
+        depList.add("2중");
+        depList.add("3");
+
+        depArrayAdapter = new ArrayAdapter<>(getApplicationContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                depList);
+        change_department.setAdapter(depArrayAdapter);
+        change_department.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplicationContext(),depList.get(i)+"가 선택되었습니다.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
         MyPageLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +157,7 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
         change_department_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {  //department 변경
-                if( !(change_department.getText().toString().equals(""))){
+               /* if( !(change_department.getText().toString().equals(""))){
                     retrofitExService.getChangeDepartment(MyGlobals.getInstance().getUser().getU_id(), change_department.getText().toString()).enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
@@ -156,7 +178,7 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
                             Toast.makeText(getApplication(),"에러 발생 department 변경 실패",Toast.LENGTH_SHORT).show();
                         }
                     });
-                }
+                }*/
             }
         });
 

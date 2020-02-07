@@ -137,17 +137,15 @@
                 android:gravity="center"
                 android:text="@string/user_department">
             </TextView>
-            <EditText
+
+            <Spinner
                 android:id="@+id/change_department"
-                tools:ignore="LabelFor"
-                android:layout_weight="4.5"
                 android:layout_width="0dp"
+                android:layout_weight="4.5"
                 android:layout_height="match_parent"
-                android:inputType="textNoSuggestions"
-                android:importantForAutofill="no"
-                android:cursorVisible="true"
-                android:background="@drawable/form">
-            </EditText>
+                android:background="@drawable/form"
+                />
+
             <Button
                 android:id="@+id/change_department_btn"
                 android:layout_weight="2"
