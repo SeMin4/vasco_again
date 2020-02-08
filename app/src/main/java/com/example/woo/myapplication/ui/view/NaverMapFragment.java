@@ -142,7 +142,7 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         marker.setIconTintColor(Color.RED);
 
         LatLng centerLatLng = new LatLng(centerLat,centerLng);
-        zoomLevel = naverMap.getCameraPosition().zoom;
+        zoomLevel = naverMap.getCameraPosition().zoom + 0.9;
 //        Log.d("ZoomLevel", zoomLevel+ "");
         GridMapMakeTask gridMapMakeTask = new GridMapMakeTask(naverMap);
         gridMapMakeTask.execute();
@@ -282,27 +282,24 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
 
         @Override
         public void onCameraChange(int reason, boolean animated){
-            if(reason == CameraUpdate.REASON_GESTURE && !moving_camera &&naverMap.getUiSettings().isZoomGesturesEnabled()){
-                if(zoomLevel > naverMap.getCameraPosition().zoom){
+//            zoomLevel = naverMap.getCameraPosition().zoom;
+            if(reason == CameraUpdate.REASON_GESTURE && !moving_camera && naverMap.getUiSettings().isZoomGesturesEnabled()){
+
+                if(zoomLevel > naverMap.getCameraPosition().zoom+0.05){
                     naverMap.getUiSettings().setZoomGesturesEnabled(false);
                     moving_camera = true;
 //                    CameraUpdateParams params = new CameraUpdateParams();
 //                    params.zoomTo(zoomLevel + 1);
 //                    zoomLevel -= 1;
                     Log.d("MAP_radius", map_radius+ "");
-                    CameraUpdate cameraUpdate = CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius * -1,map_radius *-1),centerLatLng.offset(map_radius ,map_radius)))
-                            .animate(CameraAnimation.Easing,2000)
-                            .finishCallback(()->{
+//                    CameraUpdate cameraUpdate = CameraUpdate.finishCallback(()->{
                                 moving_camera = false;
 
                                 for(int i = 0; i<squareOverlay.size(); i++){
                                     squareOverlay.get(i).setMap(null);
                                 }
-//                                squareOverlay.clear();
-
                                 squareOverlay.clear();
-                                zoomLevel = naverMap.getCameraPosition().zoom;
-                                map_radius *= 2;
+
                                 {
                                     Log.d("네이버", "그리드 다시 그리기");
                                     GridMapMakeTask task = new GridMapMakeTask(naverMap);
@@ -310,14 +307,16 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
                                 }
 
                                 Log.d("ZoomLevel", zoomLevel+ "");
-                            })
-                            .cancelCallback(()->{
-//                                naverMap.moveCamera(CameraUpdate.fitBounds((new LatLngBounds(centerLatLng.offset(map_radius * -1,map_radius *-1),centerLatLng.offset(map_radius ,map_radius)))).animate(CameraAnimation.Easing,2000));
-                                moving_camera = false;
-                                naverMap.getUiSettings().setZoomGesturesEnabled(true);
-                            });
+//                            })
+//                            .cancelCallback(()->{
+////                                naverMap.moveCamera(CameraUpdate.fitBounds((new LatLngBounds(centerLatLng.offset(map_radius * -1,map_radius *-1),centerLatLng.offset(map_radius ,map_radius)))).animate(CameraAnimation.Easing,2000));
+//                                moving_camera = false;
+//                                naverMap.getUiSettings().setZoomGesturesEnabled(true);
+//                            });
 //                    naverMap.moveCamera(cameraUpdate);
-                    naverMap.moveCamera(cameraUpdate);
+
+
+
 //                    new Handler().postDelayed(()->{
 ////                        for(int i = 0; i<squareOverlay.size(); i++){
 ////                            squareOverlay.get(i).setMap(null);
@@ -358,6 +357,9 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
 
                     Log.d("ZoomLevel", zoomLevel+ "");
                 }
+//                else{
+//                    task = null;
+//                }
             }
         }
     }
@@ -372,6 +374,7 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         public GridMapMakeTask(NaverMap naverMap){
             super();
             this.naverMap = naverMap;
+//            zoomLevel = naverMap.getCameraPosition().zoom;
         }
 
         public NaverMap getNaverMap() {
@@ -394,6 +397,20 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
             naverMap.getUiSettings().setZoomGesturesEnabled(true);
             eventListener = new EventListener(naverMap);
             naverMap.addOnCameraChangeListener(eventListener);
+            Log.d("홍성기 바보야", map_radius + " " + zoomLevel);
+            naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius * -1/2,map_radius *-1/2),centerLatLng.offset(map_radius/2 ,map_radius/2)))
+                    .animate(CameraAnimation.Easing,2000));
+            map_radius *= 2;
+            zoomLevel -= 0.9;
+
+//            new Handler().postDelayed(()->{
+//                zoomLevel = naverMap.getCameraPosition().zoom;
+//                naverMap.getUiSettings().setZoomGesturesEnabled(true);
+//                eventListener = new EventListener(naverMap);
+//                naverMap.addOnCameraChangeListener(eventListener);
+//            },2000);
+
+
 //            new Handler().postDelayed(()->{
 
 //                eventListener = new EventListener(naverMap);
@@ -423,11 +440,6 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         @Override
         protected Void doInBackground(Void... voids) {
             centerLatLng = new LatLng(centerLat,centerLng);
-//            try{
-//                Thread.sleep(2000);
-//            }catch (Exception e){
-//
-//            }
             Log.d("네이버",""+map_radius);
             Log.d("네이버",""+naverMap.getUiSettings().isScrollGesturesEnabled());
             LatLng lineLatLng = centerLatLng.offset(map_radius/8*3,-1* map_radius / 2);
