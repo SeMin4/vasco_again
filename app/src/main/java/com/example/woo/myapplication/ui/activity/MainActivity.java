@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         listView = (ListView) findViewById(R.id.listView);
         search = (EditText)findViewById(R.id.search);
-        listView.setAdapter(adapter);
+
         adapter = new MpersonAdapter();
         if(MyGlobals.getInstance().getUser().getU_email().equals("admin") == false){
             fab_btn.hide();
@@ -100,9 +100,10 @@ public class MainActivity extends Activity {
         retroService.getData().enqueue(new Callback<ArrayList<Mperson>>() {
             @Override
             public void onResponse(Call<ArrayList<Mperson>> call, Response<ArrayList<Mperson>> response) {
-                System.out.println("onResponse 호출됨@@@@@@@@@");
+                Log.d("리스트뷰","onResponse");
                 ArrayList<Mperson> persons = response.body();
                 for(int i=0;i<persons.size();i++){
+                    Log.d("리스트뷰",persons.get(i).getP_name());
                     adapter.addItem(persons.get(i));
                 }
                 adapter.notifyDataSetChanged();
@@ -132,6 +133,7 @@ public class MainActivity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 districtName = parent.getItemAtPosition(position).toString();
+                //((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
                 //입력값을 변수에 저장한다.
 
             }
@@ -141,65 +143,10 @@ public class MainActivity extends Activity {
             }
         });
 
-
-
-        myPage_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //지도정보 받아오기
-                if(MyGlobals.getInstance().getMaplist() == null){
-                    retroService.getMypageMapData(MyGlobals.getInstance().getUser().getU_id()).enqueue(new Callback<ArrayList<MyRoomItem>>() {
-                        @Override
-                        public void onResponse(Call<ArrayList<MyRoomItem>> call, Response<ArrayList<MyRoomItem>> response) {
-                            System.out.println("onResponse 호출됨@@@@@@@@@@@@@@@@");
-                            ArrayList<MyRoomItem> maplist = response.body();
-                            System.out.println("size :" +maplist.size());
-                            //MyRoomItem maplist = response.body()
-                            MyGlobals.getInstance().setMaplist(maplist);
-                            Intent intent1 = new Intent(getApplicationContext(),MyPageActivity.class);
-                            startActivity(intent1);
-                        }
-
-                        @Override
-                        public void onFailure(Call<ArrayList<MyRoomItem>> call, Throwable t) {
-                            System.out.println("onFailure 호출됨@@@@@@@@@@@@@@@@@");
-                            Toast.makeText(getApplicationContext(),"맵호출 실패",Toast.LENGTH_SHORT).show();
-                            Intent intent1 = new Intent(getApplicationContext(),MyPageActivity.class);
-                            startActivity(intent1);
-                        }
-                    });
-                }
-                else{
-                    Intent intent1 = new Intent(getApplicationContext(),MyPageActivity.class);
-                    startActivity(intent1);
-                }
-
-            }
-        });
-
-        logout_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
-                MyGlobals.getInstance().setUser(null);
-                SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor auto_editor = auto.edit();
-                auto_editor.clear();
-                auto_editor.commit();
-                startActivity(intent);
-                finish();
-            }
-        });
-
-
-
         fab_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 toggleFab();
-
-
             }
         });
         fab_sub1.setOnClickListener(new View.OnClickListener() {
@@ -245,7 +192,48 @@ public class MainActivity extends Activity {
 
     }
 
-    protected void toggleFab(){
+    public void onClickMyPage(View view){
+        //지도정보 받아오기
+        if(MyGlobals.getInstance().getMaplist() == null){
+            retroService.getMypageMapData(MyGlobals.getInstance().getUser().getU_id()).enqueue(new Callback<ArrayList<MyRoomItem>>() {
+                @Override
+                public void onResponse(Call<ArrayList<MyRoomItem>> call, Response<ArrayList<MyRoomItem>> response) {
+                    System.out.println("onResponse 호출됨@@@@@@@@@@@@@@@@");
+                    ArrayList<MyRoomItem> maplist = response.body();
+                    System.out.println("size :" +maplist.size());
+                    //MyRoomItem maplist = response.body()
+                    MyGlobals.getInstance().setMaplist(maplist);
+                    Intent intent1 = new Intent(getApplicationContext(),MyPageActivity.class);
+                    startActivity(intent1);
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<MyRoomItem>> call, Throwable t) {
+                    System.out.println("onFailure 호출됨@@@@@@@@@@@@@@@@@");
+                    Toast.makeText(getApplicationContext(),"맵호출 실패",Toast.LENGTH_SHORT).show();
+                    Intent intent1 = new Intent(getApplicationContext(),MyPageActivity.class);
+                    startActivity(intent1);
+                }
+            });
+        }
+        else{
+            Intent intent1 = new Intent(getApplicationContext(),MyPageActivity.class);
+            startActivity(intent1);
+        }
+    }
+
+    public void onClickLogout(View view){
+        Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+        MyGlobals.getInstance().setUser(null);
+        SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor auto_editor = auto.edit();
+        auto_editor.clear();
+        auto_editor.commit();
+        startActivity(intent);
+        finish();
+    }
+
+    protected void toggleFab() {
         if (isFabOpen) {
             //fab_btn.setImageResource(R.drawable.ic_add);
             fab_sub1.startAnimation(fab_close);

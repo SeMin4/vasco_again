@@ -2,6 +2,7 @@ package com.example.woo.myapplication.ui.view;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.GradientDrawable;
 import android.media.ExifInterface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ public class MpersonItemView extends LinearLayout {
     TextView textView3; //실종시간
     ImageView imageView; // 실종자 사진
     TextView textView4; //실종자 나이
+    GradientDrawable drawable;
 
 
     public MpersonItemView(Context context) {
@@ -58,6 +60,10 @@ public class MpersonItemView extends LinearLayout {
         textView4 = findViewById(R.id.TextView_Age);
         //실종자 나이
 
+        //imageView rounded corners 설정
+        drawable= (GradientDrawable) context.getDrawable(R.drawable.iv_corners_rounded);
+
+
     }
 
     public void setName(String name)
@@ -75,6 +81,12 @@ public class MpersonItemView extends LinearLayout {
     }
     public void setImage(String imageBaseDirectory, String imageName)
     {
+
+        imageView.setBackground(drawable);
+        imageView.setClipToOutline(true);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+
         if(imageName == null){
             imageView.setImageResource(R.drawable.boy);
         }
@@ -86,6 +98,7 @@ public class MpersonItemView extends LinearLayout {
                     .rotate(0f)
                     .into(imageView);
         }
+
     }
     public void setAge(String age)
     {
