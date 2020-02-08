@@ -175,7 +175,6 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
                             } else if (data.equals("no")) {
-
                                 Intent intent = new Intent(getApplicationContext(),LoginErrorActivity.class);
                                 startActivity(intent);
                             } else if (data.equals("wrong")) {

@@ -1,6 +1,7 @@
 package com.example.woo.myapplication;
 
 import com.example.woo.myapplication.data.CompleteData;
+import com.example.woo.myapplication.data.DepartmentData;
 import com.example.woo.myapplication.data.DetailData;
 import com.example.woo.myapplication.data.MapDetail;
 import com.example.woo.myapplication.data.MapInfo;
@@ -76,6 +77,9 @@ public class MyGlobals {
 
     public interface RetrofitExService{ //interface 선언
         public static final String URL = "http://13.125.174.158:9000/"; //서버 주소와 포트번호
+
+        @GET("/get/department")
+        Call<ArrayList<DepartmentData>> getDepartmentData();
 
         @GET("/mperson")
         Call<ArrayList<Mperson>> getData();
