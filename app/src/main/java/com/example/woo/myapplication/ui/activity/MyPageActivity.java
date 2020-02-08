@@ -83,7 +83,7 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
         user_name.setText(MyGlobals.getInstance().getUser().getU_name());
       //  change_department.setHint(MyGlobals.getInstance().getUser().getU_department());
 
-        depList = new ArrayList<>();
+        depList = new ArrayList<>(); //부서데이터받아오기
         retrofitExService.getDepartmentData().enqueue(new Callback<ArrayList<DepartmentData>>() {
             @Override
             public void onResponse(Call<ArrayList<DepartmentData>> call, Response<ArrayList<DepartmentData>> response) {
@@ -104,7 +104,6 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
                 Log.d("부서","부서 onFailure");
             }
         });
-        //department 부서 추가
 
 
         change_department.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

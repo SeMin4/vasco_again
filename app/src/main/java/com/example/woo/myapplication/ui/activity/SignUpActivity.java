@@ -116,8 +116,7 @@ public class SignUpActivity extends AppCompatActivity {
         sign_up_password.addTextChangedListener(new addListenerOnTextChange(this, sign_up_password, R.drawable.ic_lock_outline_selector, R.drawable.ic_lock_outline_burgundy));
         sign_up_check_password.addTextChangedListener(new addListenerOnTextChange(this, sign_up_check_password, R.drawable.ic_lock_outline_selector, R.drawable.ic_lock_outline_burgundy));
         sign_up_name.addTextChangedListener(new addListenerOnTextChange(this, sign_up_name, R.drawable.ic_person_outline_selector, R.drawable.ic_person_outline_burgundy));
-       // sign_up_department.addTextChangedListener(new addListenerOnTextChange(this, sign_up_department, R.drawable.ic_link_outline_selector, R.drawable.ic_link_outline_burgundy));
-
+        
 
         sign_up_email_check_btn.setOnClickListener(new View.OnClickListener() {
             @Override
