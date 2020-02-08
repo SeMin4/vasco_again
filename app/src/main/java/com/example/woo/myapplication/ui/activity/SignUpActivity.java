@@ -20,6 +20,7 @@ import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.OverlapExamineData;
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.ui.addListenerOnTextChange;
+import com.example.woo.myapplication.data.DepartmentData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +53,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+
         sign_up_email = (EditText) findViewById(R.id.sign_up_email);
         sign_up_email_check_btn = (Button) findViewById(R.id.sign_up_email_check_btn);
         sign_up_password = (EditText) findViewById(R.id.sign_up_password);
@@ -60,26 +62,6 @@ public class SignUpActivity extends AppCompatActivity {
         sign_up_department = (Spinner) findViewById(R.id.sign_up_department);
         sign_up_btn = (Button) findViewById(R.id.sign_up_btn);
         depList = new ArrayList<>();
-
-        depList.add("1중대");
-        depList.add("2중");
-        depList.add("3");
-
-        depArrayAdapter = new ArrayAdapter<>(getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item,
-                depList);
-
-        sign_up_department.setAdapter(depArrayAdapter);
-        sign_up_department.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getApplicationContext(),depList.get(i)+"가 선택되었습니다.",
-                        Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
 
         if( (MyGlobals.getInstance().getRetrofit() == null) || (MyGlobals.getInstance().getRetrofitExService() ==null) ){
             retrofit = new Retrofit.Builder().baseUrl(MyGlobals.RetrofitExService.URL).addConverterFactory(GsonConverterFactory.create()).build();
@@ -90,6 +72,45 @@ public class SignUpActivity extends AppCompatActivity {
             retrofit = MyGlobals.getInstance().getRetrofit();
             retrofitExService = MyGlobals.getInstance().getRetrofitExService();
         }
+
+        retrofitExService.getDepartmentData().enqueue(new Callback<ArrayList<DepartmentData>>() {
+            @Override
+            public void onResponse(Call<ArrayList<DepartmentData>> call, Response<ArrayList<DepartmentData>> response) {
+                Log.d("부서","부서 onResponse");
+                ArrayList<DepartmentData> data = response.body();
+                for(int i =0;i<data.size();i++)
+                {
+                    depList.add(data.get(i).getDepartment());
+                }
+                depArrayAdapter = new ArrayAdapter<>(getApplicationContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        depList);
+
+                sign_up_department.setAdapter(depArrayAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<DepartmentData>> call, Throwable t) {
+                Log.d("부서","부서 onFailure");
+            }
+        });
+
+
+
+        sign_up_department.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("spinner","아이템 선택");
+                Toast.makeText(getApplicationContext(),depList.get(i)+"가 선택되었습니다.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+
+
 
         sign_up_email.addTextChangedListener(new addListenerOnTextChange(this, sign_up_email, R.drawable.ic_mail_outline_selector, R.drawable.ic_mail_outline_burgundy));
         sign_up_password.addTextChangedListener(new addListenerOnTextChange(this, sign_up_password, R.drawable.ic_lock_outline_selector, R.drawable.ic_lock_outline_burgundy));

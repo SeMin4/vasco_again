@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -21,6 +22,7 @@ import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.MyRoomItem;
 import com.example.woo.myapplication.MyRoomListAdapter;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.data.DepartmentData;
 import com.example.woo.myapplication.data.User;
 
 import java.util.ArrayList;
@@ -82,14 +84,29 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
       //  change_department.setHint(MyGlobals.getInstance().getUser().getU_department());
 
         depList = new ArrayList<>();
-        depList.add("1중대");
-        depList.add("2중");
-        depList.add("3");
+        retrofitExService.getDepartmentData().enqueue(new Callback<ArrayList<DepartmentData>>() {
+            @Override
+            public void onResponse(Call<ArrayList<DepartmentData>> call, Response<ArrayList<DepartmentData>> response) {
+                Log.d("부서","부서 onResponse");
+                ArrayList<DepartmentData> data = response.body();
+                for(int i =0;i<data.size();i++)
+                {
+                    depList.add(data.get(i).getDepartment());
+                }
+                depArrayAdapter = new ArrayAdapter<>(getApplicationContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        depList);
+                change_department.setAdapter(depArrayAdapter);
+            }
 
-        depArrayAdapter = new ArrayAdapter<>(getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item,
-                depList);
-        change_department.setAdapter(depArrayAdapter);
+            @Override
+            public void onFailure(Call<ArrayList<DepartmentData>> call, Throwable t) {
+                Log.d("부서","부서 onFailure");
+            }
+        });
+        //department 부서 추가
+
+
         change_department.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -157,28 +174,29 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
         change_department_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {  //department 변경
-               /* if( !(change_department.getText().toString().equals(""))){
-                    retrofitExService.getChangeDepartment(MyGlobals.getInstance().getUser().getU_id(), change_department.getText().toString()).enqueue(new Callback<User>() {
+                String department = change_department.getSelectedItem().toString();
+                Log.d("부서변경",department);
+                if( !(change_department.getSelectedItem().toString().equals(""))){
+                    retrofitExService.getChangeDepartment(MyGlobals.getInstance().getUser().getU_id(), department).enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
-                            System.out.println("onResponse@@@@@@@@@@@@@@@@@@@");
+                            Log.d("부서변경","onResponse");
                             User user = response.body();
                             if(user.getCheck().equals("yes")) {
-                                MyGlobals.getInstance().getUser().setU_department(change_department.getText().toString());
-                                change_department.setText("");
-                                change_department.setHint(MyGlobals.getInstance().getUser().getU_department());
+                                MyGlobals.getInstance().getUser().setU_department(department);
+                                MyGlobals.getInstance().getUser().setColor(user.getColor());
                             }
-                            else if(user.getCheck().equals("no"))
+                            else if(user.getCheck().equals("error"))
                                 Toast.makeText(getApplication(),"에러 발생 department 변경 실패",Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onFailure(Call<User> call, Throwable t) {
-                            System.out.println("onFailure@@@@@@@@@@@@@@@@@@@@");
+                            Log.d("부서변경","onFailure" + t);
                             Toast.makeText(getApplication(),"에러 발생 department 변경 실패",Toast.LENGTH_SHORT).show();
                         }
                     });
-                }*/
+                }
             }
         });
 

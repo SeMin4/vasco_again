@@ -8,6 +8,15 @@ public class User {
     private String u_password;
     private String u_name;
     private String u_department;
+    private String color;
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
 
     public String getU_id() {
         return u_id;
