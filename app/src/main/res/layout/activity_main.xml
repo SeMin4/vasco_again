@@ -8,114 +8,157 @@
     tools:context=".ui.activity.MainActivity"
     android:weightSum="13">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="end"
+        android:layout_marginVertical="5dp"
+        android:layout_marginHorizontal="20dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="end"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:paddingRight="20dp"
             android:layout_weight="1">
-                <Button
-                    android:id="@+id/my_page_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/myPage"
-                    android:background="@drawable/button_background_burgundy"
-                    android:paddingHorizontal="15dp"
-                    android:paddingVertical="10dp"
-                    android:drawableRight="@drawable/ic_my_page_white"
-                    android:drawablePadding="5dp"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_gravity="end"
-                    style="?attr/borderlessButtonStyle"
-                    >
-                </Button>
+            <Button
+                android:id="@+id/my_page_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_edit_text_bg"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="7dp"
+                android:drawableStart="@drawable/ic_person"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:textColor="#ffffff"
+                android:layout_gravity="center_vertical"
+                style="?attr/borderlessButtonStyle"
+                android:onClick="onClickMyPage"
+                />
 
-                <Button
-                    android:id="@+id/logout_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/logout"
-                    android:background="@drawable/button_background_burgundy"
-                    android:paddingHorizontal="15dp"
-                    android:paddingVertical="10dp"
-                    android:drawableRight="@drawable/ic_logout_white"
-                    android:drawablePadding="5dp"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"
-                    android:layout_gravity="end"
-                    style="?attr/borderlessButtonStyle"
-                    >
-                </Button>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="마이페이지"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="13sp"
+                android:textColor="@color/burgundy"
+                android:onClick="onClickMyPage"
+                />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:orientation="horizontal"
-            android:weightSum="10">
-                <Spinner
-                    android:paddingLeft="12dp"
+            android:gravity="center_horizontal"
+            android:paddingRight="20dp"
+            android:layout_weight="1">
 
-                    android:paddingRight="12dp"
-                    android:paddingTop="12dp"
-                    android:id="@+id/spinner"
-                    android:entries="@array/district"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="5.5"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="50dp"
-                    android:prompt="@string/district_prompt"/>
-                <EditText
-                    android:id="@+id/search"
-                    app:theme="@style/EditTextStyle"
-                    android:drawableLeft="@drawable/ic_search_selector"
-                    android:drawablePadding="5dp"
-                    android:layout_width="0dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="20dp"
-                    android:hint="실종자 이름 입력"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4.5">
-                </EditText>
+            <Button
+                android:id="@+id/logout_btn"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/custom_edit_text_bg"
+                android:drawableStart="@drawable/ic_logout_burgundy"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="7dp"
+                android:textColor="#ffffff"
+                android:onClick="onClickLogout"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="로그아웃"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="13sp"
+                android:textColor="@color/burgundy"
+                android:onClick="onClickLogout"
+                />
         </LinearLayout>
 
-        <RelativeLayout
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/custom_background_cream"
+        android:layout_marginHorizontal="20dp"
+        android:paddingLeft="12dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="11">
+        <Spinner
+            android:id="@+id/spinner"
+            android:entries="@array/district"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:prompt="@string/district_prompt"/>
+        <EditText
+            android:id="@+id/search"
+            android:theme="@style/EditTextStyle"
+            android:textSize="13sp"
+            android:drawableLeft="@drawable/ic_search_selector"
+            android:drawablePadding="5dp"
+            android:layout_width="0dp"
+            android:layout_marginRight="10dp"
+            android:hint="실종자 이름 입력"
+            android:layout_height="match_parent"
+            android:layout_weight="5">
+        </EditText>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:paddingHorizontal="20dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/divider_burgundy"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="11">
+
+        <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="11">
+            android:layout_height="match_parent"
+            android:paddingBottom="15dp"
+            android:clipToPadding="false"
+            android:divider="#00ff0000"
+            android:listSelector="#00ff0000"/>
 
-                <ListView
-                    android:id="@+id/listView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:divider="#00ff0000"
-                    android:listSelector="#00ff0000"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_alignEnd="@id/listView"
+            android:layout_alignBottom="@id/listView"
+            android:src="@drawable/ic_add_white"
+            android:layout_margin="30dp"
+            android:backgroundTint="@color/burgundy"
+            app:fabSize="normal"
+            app:borderWidth="0dp"
+            app:elevation="0dp"/>
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/fab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|bottom"
-                    android:layout_alignEnd="@id/listView"
-                    android:layout_alignBottom="@id/listView"
-                    android:src="@drawable/ic_add"
-                    android:layout_margin="30dp"
-                    android:backgroundTint="#03A9F4"
-                    app:fabSize="normal"
-                    app:borderWidth="0dp"/>
-
-        </RelativeLayout>
+    </RelativeLayout>
 
 
 

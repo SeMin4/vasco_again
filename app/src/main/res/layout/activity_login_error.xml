@@ -30,7 +30,7 @@
         android:layout_height="2dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:src="@drawable/custom_dialog_divisor"/>
+        android:src="@drawable/divider_burgundy"/>
 
     <LinearLayout
         android:padding="20dp"
