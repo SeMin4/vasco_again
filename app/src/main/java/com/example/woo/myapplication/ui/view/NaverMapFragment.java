@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,8 +27,10 @@ import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.utils.GridAdapter;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
+import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.CameraUpdateParams;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
@@ -50,10 +53,16 @@ import java.util.concurrent.Executor;
 public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
     MapFragment mapFragment;
     ArrayList tmp;
+    public static double zoomLevel;
     public static double centerLat;
     public static double centerLng;
     public LatLng centerLatLng;
+    public static boolean moving_camera = false;
     Fragment naverMapfragment;
+    int level = 1;
+    int map_radius = 1280;
+    public EventListener eventListener;
+    public ArrayList<PolygonOverlay> squareOverlay;
 //    GridLayoutManager gridLayoutManager;
     FragmentTransaction fragmentTransaction;
     public static NaverMapFragment newInstance() {
@@ -77,6 +86,7 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
             fragmentTransaction.add(R.id.navermap, mapFragment).addToBackStack(null).commit();
 
         }
+        squareOverlay = new ArrayList<PolygonOverlay>();
         mapFragment.getMapAsync(this);
         naverMapfragment = fm.findFragmentById(R.id.navermap);
 
@@ -114,11 +124,16 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         naverMap.getUiSettings().setZoomControlEnabled(false);
+//        naverMap.getUiSettings().setScrollGesturesEnabled(false);
+//        naverMap.getUiSettings().setZoomGesturesEnabled(false);
+        naverMap.getUiSettings().setTiltGesturesEnabled(false);
+
         centerLatLng = new LatLng(centerLat,centerLng);
 
 
         naverMap.setCameraPosition(new CameraPosition(new LatLng(centerLat, centerLng), 10));
-        naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(-80,-80),centerLatLng.offset(80,80))));
+        naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius*-1/2,map_radius*-1/2),centerLatLng.offset(map_radius/2,map_radius/2))));
+        naverMap.setMapType(NaverMap.MapType.Satellite);
         Marker marker = new Marker();
         marker.setPosition(new LatLng(centerLat, centerLng));
         marker.setMap(naverMap);
@@ -127,10 +142,57 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         marker.setIconTintColor(Color.RED);
 
         LatLng centerLatLng = new LatLng(centerLat,centerLng);
-        LatLng drawLatLng = centerLatLng.offset(60,-80);
-
-
-
+        zoomLevel = naverMap.getCameraPosition().zoom;
+//        Log.d("ZoomLevel", zoomLevel+ "");
+        GridMapMakeTask gridMapMakeTask = new GridMapMakeTask(naverMap);
+        gridMapMakeTask.execute();
+//        eventListener = new EventListener(naverMap);
+//        naverMap.addOnCameraChangeListener(eventListener);
+//        naverMap.addOnCameraChangeListener(new EventListener(naverMap));
+//        naverMap.addOnCameraChangeListener((reason, animated) -> {
+//            if(reason == CameraUpdate.REASON_GESTURE && !moving_camera &&naverMap.getUiSettings().isZoomGesturesEnabled()){
+//                if(zoomLevel > naverMap.getCameraPosition().zoom){
+//                    naverMap.getUiSettings().setZoomGesturesEnabled(false);
+//                    moving_camera = true;
+////                    CameraUpdateParams params = new CameraUpdateParams();
+////                    params.zoomTo(zoomLevel + 1);
+////                    zoomLevel -= 1;
+//
+//                    CameraUpdate cameraUpdate = CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius * -1,map_radius *-1),centerLatLng.offset(map_radius ,map_radius)))
+//                            .finishCallback(()->{
+//                                moving_camera = false;
+//
+//                                for(int i = 0; i<squareOverlay.size(); i++){
+//                                    squareOverlay.get(i).setMap(null);
+//                                }
+////                                squareOverlay.clear();
+//
+//                                squareOverlay.clear();
+//                                zoomLevel = naverMap.getCameraPosition().zoom;
+//                                map_radius *= 2;
+//                                {
+//                                    GridMapMakeTask task = new GridMapMakeTask(naverMap);
+//                                    task.execute();
+//                                }
+//
+//                                Log.d("ZoomLevel", zoomLevel+ "");
+//                            })
+//                            .cancelCallback(()->{
+//                                moving_camera = false;
+//                                naverMap.getUiSettings().setZoomGesturesEnabled(true);
+//                            });
+//
+//                    naverMap.moveCamera(cameraUpdate.animate(CameraAnimation.Easing,2000));
+//
+//                    if(map_radius == 5120 * 2){
+//                        map_radius = 5120;
+//                        naverMap.cancelTransitions();
+//                    }
+//
+//                    Log.d("ZoomLevel", zoomLevel+ "");
+//                }
+//            }
+//        });
         //위도 1도 사이의 거리 : 110 키로미터 위도 1분 사이의 거리 : 1.8km
         //경도 1도 사이의 거리 : cos(위도)* 2 * pi * r (6380) / 360
 
@@ -157,8 +219,6 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
 //            }
 //        });
 
-        GridMapMakeTask gridMapMakeTask = new GridMapMakeTask(naverMap);
-        gridMapMakeTask.execute();
 
 //        TextView tmp = new TextView(getContext());
 //        tmp.setText("hello");
@@ -207,6 +267,101 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
 
 
     }
+    private class EventListener implements NaverMap.OnCameraChangeListener{
+        private NaverMap naverMap;
+        public EventListener(){
+
+        };
+        public EventListener(NaverMap naverMap){
+            this.naverMap = naverMap;
+        }
+
+        public NaverMap getNaverMap() {
+            return naverMap;
+        }
+
+        @Override
+        public void onCameraChange(int reason, boolean animated){
+            if(reason == CameraUpdate.REASON_GESTURE && !moving_camera &&naverMap.getUiSettings().isZoomGesturesEnabled()){
+                if(zoomLevel > naverMap.getCameraPosition().zoom){
+                    naverMap.getUiSettings().setZoomGesturesEnabled(false);
+                    moving_camera = true;
+//                    CameraUpdateParams params = new CameraUpdateParams();
+//                    params.zoomTo(zoomLevel + 1);
+//                    zoomLevel -= 1;
+                    Log.d("MAP_radius", map_radius+ "");
+                    CameraUpdate cameraUpdate = CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius * -1,map_radius *-1),centerLatLng.offset(map_radius ,map_radius)))
+                            .animate(CameraAnimation.Easing,2000)
+                            .finishCallback(()->{
+                                moving_camera = false;
+
+                                for(int i = 0; i<squareOverlay.size(); i++){
+                                    squareOverlay.get(i).setMap(null);
+                                }
+//                                squareOverlay.clear();
+
+                                squareOverlay.clear();
+                                zoomLevel = naverMap.getCameraPosition().zoom;
+                                map_radius *= 2;
+                                {
+                                    Log.d("네이버", "그리드 다시 그리기");
+                                    GridMapMakeTask task = new GridMapMakeTask(naverMap);
+                                    task.execute();
+                                }
+
+                                Log.d("ZoomLevel", zoomLevel+ "");
+                            })
+                            .cancelCallback(()->{
+//                                naverMap.moveCamera(CameraUpdate.fitBounds((new LatLngBounds(centerLatLng.offset(map_radius * -1,map_radius *-1),centerLatLng.offset(map_radius ,map_radius)))).animate(CameraAnimation.Easing,2000));
+                                moving_camera = false;
+                                naverMap.getUiSettings().setZoomGesturesEnabled(true);
+                            });
+//                    naverMap.moveCamera(cameraUpdate);
+                    naverMap.moveCamera(cameraUpdate);
+//                    new Handler().postDelayed(()->{
+////                        for(int i = 0; i<squareOverlay.size(); i++){
+////                            squareOverlay.get(i).setMap(null);
+////                        }
+//////                                squareOverlay.clear();
+////
+////                        squareOverlay.clear();
+////                        zoomLevel = naverMap.getCameraPosition().zoom;
+////                        map_radius *= 2;
+////                        {
+////                            Log.d("네이버", "그리드 다시 그리기");
+////                            GridMapMakeTask task = new GridMapMakeTask(naverMap);
+////                            task.execute();
+////                        }
+////                    },2000);
+//                    new Handler().postDelayed(()->{
+//                        moving_camera = false;
+//
+//                        for(int i = 0; i<squareOverlay.size(); i++){
+//                            squareOverlay.get(i).setMap(null);
+//                        }
+////                                squareOverlay.clear();
+//
+//                        squareOverlay.clear();
+//                        zoomLevel = naverMap.getCameraPosition().zoom;
+//                        map_radius *= 2;
+//                        {
+//                            Log.d("네이버", "그리드 다시 그리기");
+//                            GridMapMakeTask task = new GridMapMakeTask(naverMap);
+//                            task.execute();
+//                        }
+//
+//                    },2000);
+                    if(map_radius == 5120 * 2){
+                        map_radius = 5120;
+                        naverMap.cancelTransitions();
+                    }
+
+                    Log.d("ZoomLevel", zoomLevel+ "");
+                }
+            }
+        }
+    }
+
 
     private class GridMapMakeTask extends AsyncTask<Void, PolygonOverlay, Void> implements Serializable {
         private NaverMap naverMap;
@@ -228,11 +383,22 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         }
         @Override
         protected void onPreExecute() {
+//            map_radius *= 2;
+            if (eventListener != null)
+                naverMap.removeOnCameraChangeListener(eventListener);
             super.onPreExecute();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            naverMap.getUiSettings().setZoomGesturesEnabled(true);
+            eventListener = new EventListener(naverMap);
+            naverMap.addOnCameraChangeListener(eventListener);
+//            new Handler().postDelayed(()->{
+
+//                eventListener = new EventListener(naverMap);
+//                naverMap.addOnCameraChangeListener(eventListener);
+//            },2000);
             super.onPostExecute(aVoid);
         }
 
@@ -257,17 +423,26 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         @Override
         protected Void doInBackground(Void... voids) {
             centerLatLng = new LatLng(centerLat,centerLng);
-            LatLng lineLatLng = centerLatLng.offset(60,-80);
-            LatLng drawLatLng = centerLatLng.offset(60,-80);
-            for(int i = 0; i< 64*64; i++){
+//            try{
+//                Thread.sleep(2000);
+//            }catch (Exception e){
+//
+//            }
+            Log.d("네이버",""+map_radius);
+            Log.d("네이버",""+naverMap.getUiSettings().isScrollGesturesEnabled());
+            LatLng lineLatLng = centerLatLng.offset(map_radius/8*3,-1* map_radius / 2);
+            LatLng drawLatLng = centerLatLng.offset(map_radius/8*3,-1* map_radius / 2);
+            for(int i = 0; i< 64; i++){
                 if(i != 0 && i % 8 == 0){
-                    lineLatLng = lineLatLng.offset(20,0);
+                    lineLatLng = lineLatLng.offset(-1*map_radius/8,0);
                     drawLatLng = lineLatLng;
                 }
                 PolygonOverlay polygonOverlay = new PolygonOverlay();
                 polygonOverlay.setCoords(getFourCornerLatLng(drawLatLng));
-                polygonOverlay.setOutlineColor(Color.BLACK);
+                polygonOverlay.setOutlineColor(Color.WHITE);
+                polygonOverlay.setColor(Color.TRANSPARENT);
                 polygonOverlay.setOutlineWidth(2);
+                squareOverlay.add(polygonOverlay);
                 publishProgress(polygonOverlay);
                 drawLatLng = getFourCornerLatLng(drawLatLng).get(3);
             }
@@ -292,6 +467,7 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
 //            e.setPosition(new LatLng(37.55917549459318,126.97839392597788));
 ////            a.setPosition(new LatLng(37.55917549459318,126.97829392597788));
 //            publishProgress(e);
+
             return null;
         }
 
@@ -301,9 +477,9 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
     public List<LatLng> getFourCornerLatLng(LatLng standardLatLng){
         return Arrays.asList(
                 standardLatLng,
-                standardLatLng.offset(20,0),
-                standardLatLng.offset(20,20),
-                standardLatLng.offset(0,20)
+                standardLatLng.offset(map_radius/8,0),
+                standardLatLng.offset(map_radius/8,map_radius/8),
+                standardLatLng.offset(0,map_radius/8)
         );
 
     }
