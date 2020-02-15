@@ -22,6 +22,7 @@ import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.MyRoomItem;
 import com.example.woo.myapplication.MyRoomListAdapter;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.data.Color;
 import com.example.woo.myapplication.data.DepartmentData;
 import com.example.woo.myapplication.data.User;
 
@@ -97,6 +98,13 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
                         android.R.layout.simple_spinner_dropdown_item,
                         depList);
                 change_department.setAdapter(depArrayAdapter);
+
+                for(int i = 0;i<depList.size();i++){
+                    if(depList.get(i).equals(MyGlobals.getInstance().getUser().getU_department())){
+                        change_department.setSelection(i);
+                        break;
+                    }
+                }
             }
 
             @Override
@@ -176,21 +184,22 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
                 String department = change_department.getSelectedItem().toString();
                 Log.d("부서변경",department);
                 if( !(change_department.getSelectedItem().toString().equals(""))){
-                    retrofitExService.getChangeDepartment(MyGlobals.getInstance().getUser().getU_id(), department).enqueue(new Callback<User>() {
+                    retrofitExService.getChangeDepartment(MyGlobals.getInstance().getUser().getU_id(), department).enqueue(new Callback<Color>() {
                         @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
+                        public void onResponse(Call<Color> call, Response<Color> response) {
                             Log.d("부서변경","onResponse");
-                            User user = response.body();
-                            if(user.getCheck().equals("yes")) {
+                            Color color = response.body();
+                            if(color.getCheck().equals("yes")) {
                                 MyGlobals.getInstance().getUser().setU_department(department);
-                                MyGlobals.getInstance().getUser().setColor(user.getColor());
+                                MyGlobals.getInstance().getUser().setColor(color.getColor());
+                                Toast.makeText(getApplicationContext(),"부서변경 성공입니다.",Toast.LENGTH_SHORT).show();
                             }
-                            else if(user.getCheck().equals("error"))
+                            else if(color.getCheck().equals("error"))
                                 Toast.makeText(getApplication(),"에러 발생 department 변경 실패",Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
-                        public void onFailure(Call<User> call, Throwable t) {
+                        public void onFailure(Call<Color> call, Throwable t) {
                             Log.d("부서변경","onFailure" + t);
                             Toast.makeText(getApplication(),"에러 발생 department 변경 실패",Toast.LENGTH_SHORT).show();
                         }

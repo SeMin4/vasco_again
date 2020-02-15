@@ -8,6 +8,7 @@
     tools:context=".ui.activity.InsertDepActivity">
 
     <EditText
+        android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -15,7 +16,6 @@
         android:id="@+id/colorpicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:text="색상 선택" />
 
     <Button

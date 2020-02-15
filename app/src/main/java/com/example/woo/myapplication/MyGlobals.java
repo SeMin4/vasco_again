@@ -1,5 +1,6 @@
 package com.example.woo.myapplication;
 
+import com.example.woo.myapplication.data.Color;
 import com.example.woo.myapplication.data.CompleteData;
 import com.example.woo.myapplication.data.DepartmentData;
 import com.example.woo.myapplication.data.DetailData;
@@ -116,7 +117,7 @@ public class MyGlobals {
         Call<User> postChangePassword(@FieldMap HashMap<String,String> param);
 
         @GET("/change/department?") //URL
-        Call<User> getChangeDepartment(@Query("u_id") String u_id, @Query("u_department") String u_department);
+        Call<Color> getChangeDepartment(@Query("u_id") String u_id, @Query("u_department") String u_department);
 
         @FormUrlEncoded
         @POST("/delete/room")
@@ -154,6 +155,8 @@ public class MyGlobals {
         @Part("p_time")RequestBody date,@Part("p_place_string")RequestBody place,@Part("p_place_latitude")RequestBody latitude,@Part("p_place_longitude")RequestBody longitude,
                                                    @Part("p_place_description")RequestBody description);
 
+        @GET("/insert/department")
+        Call<OverlapExamineData> getInsertDepartment(@Query("department") String dep,@Query("color") String color);
 
 
 

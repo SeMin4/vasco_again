@@ -175,7 +175,7 @@ public class SignUpActivity extends AppCompatActivity {
                         HashMap<String, String> input = new HashMap<>();
                         input.put("email", sign_up_email.getText().toString());
                         input.put("password", sign_up_password.getText().toString());
-                        //input.put("department", sign_up_department.getText().toString());
+                        input.put("department", sign_up_department.getSelectedItem().toString());
                         input.put("name", sign_up_name.getText().toString());
                         retrofitExService.postAdmin(input).enqueue(new Callback<OverlapExamineData>() {
                             @Override
