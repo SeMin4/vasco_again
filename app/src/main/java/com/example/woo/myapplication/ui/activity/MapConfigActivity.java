@@ -11,6 +11,7 @@ import android.support.annotation.UiThread;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -22,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.ui.view.NaverMapFragment;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraUpdate;
@@ -130,6 +132,7 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
                             marker = new Marker();
                             marker.setPosition(new LatLng(clickLat, clickLng));
                             marker.setMap(naverMap);
+                            Log.d("CLCIKLAT-LNG",""+ clickLat + clickLng);
                             marker.setCaptionText("수색중심지점");
                             marker.setIconTintColor(Color.RED);
                         }
@@ -137,6 +140,7 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
                             marker = new Marker();
                             marker.setPosition(new LatLng(clickLat, clickLng));
                             marker.setMap(naverMap);
+                            Log.d("CLCIKLAT-LNG",""+ clickLat + clickLng);
                             marker.setCaptionText("수색중심지점");
                             marker.setIconTintColor(Color.RED);
                         }
@@ -149,6 +153,8 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
                 Intent intent = new Intent(getApplicationContext(), MapSettingActivity.class);
                 intent.putExtra("Lat",clickLat);
                 intent.putExtra("Lng",clickLng);
+                NaverMapFragment.centerLat = clickLat;
+                NaverMapFragment.centerLng = clickLng;
                 startActivity(intent);
 
             }

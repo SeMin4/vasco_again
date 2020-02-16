@@ -23,4 +23,5 @@
     <color name = "burgundy">#b42f2f</color>
     <color name="dark_burgundy">#812121</color>
     <color name = "marsala">#8a3b3b</color>
+    <color name = "noArea">#56FF2222</color>
 </resources>

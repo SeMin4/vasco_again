@@ -13,12 +13,18 @@
         android:layout_weight="11">
 
 
+
         <fragment
             android:id="@+id/naverMap_Frag"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:name="com.example.woo.myapplication.ui.view.NaverMapFragment">
+
+
+
         </fragment>
+
+
 
     </FrameLayout>
 
