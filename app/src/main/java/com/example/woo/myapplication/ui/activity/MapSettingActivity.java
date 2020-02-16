@@ -1,10 +1,10 @@
 package com.example.woo.myapplication.ui.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
@@ -39,12 +39,28 @@ public class MapSettingActivity extends AppCompatActivity
             fragmentTransaction.add(R.id.naverMap_Setting, naverMapFragment);
             fragmentTransaction.commit();
         }
+      /*  if(Build.VERSION.SDK_INT >= 26) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel notificationChannel = new NotificationChannel("channel1", "1번채널", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.setDescription("1번채널입니다");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.GREEN);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setVibrationPattern(new long[]{100, 200, 100, 200});
+            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
+*/
 
         next_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),MapActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(getApplicationContext(), GPSService.class);
+                startService(intent);
+
+ /*               Intent intent = new Intent(getApplicationContext(),MapActivity.class);
+                startActivity(intent);*/
             }
         });
 

@@ -7,13 +7,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
@@ -34,6 +34,9 @@ public class MapActivity extends AppCompatActivity {
     private int flag;
     double distance;
     private PhotoView photoView;
+    TextView text1;
+    TextView text2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,19 +48,55 @@ public class MapActivity extends AppCompatActivity {
         isNetworkEnabled = manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         locationList = new ArrayList<>();
         flag = 0;
-
+        text1=(TextView)findViewById(R.id.textView);
+        text2=(TextView)findViewById(R.id.textView2);
         photoView.setImageResource(R.drawable.test);
 
+
+        // GPS 프로바이더 사용 가능 여부
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Log.d("Mapaaa","gps");
+        }
+
+        // 네트워크 프로바이더 사용 가능 여부
+        if (manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            Log.d("Mapaaa","net");
+        }
+
+
+        Log.d("Mapaaa","oncreate");
         if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MapActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+            ActivityCompat.requestPermissions(MapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     0);
-        } else {
-            Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            double longitude = location.getLongitude();
-            double latitude = location.getLatitude();
-            System.out.println("가장최근 : " + latitude + " " + longitude + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+            Log.d("Mapaaa","onGRANT");
+
         }
+
+
+            Location lastKnownLocation =
+                    manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (lastKnownLocation != null) {
+                Log.d("Mapaaa","gps");
+                Log.d("Mapaaa",String.valueOf(lastKnownLocation)); // 위치정보 출력
+            } else {
+                lastKnownLocation =
+                        manager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (lastKnownLocation != null) {
+                    Log.d("Mapaaa","net");
+                    Log.d("Mapaaa",String.valueOf(lastKnownLocation)); // 위치정보 출력
+                }
+            }
+
+            //Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+           /* double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+
+            System.out.println("가장최근 : " + latitude + " " + longitude + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+*/
+
+
 
         if (isGPSEnabled || isNetworkEnabled) {
             gpsLocationListener = new LocationListener() {
@@ -66,8 +105,11 @@ public class MapActivity extends AppCompatActivity {
                     String provider = location.getProvider();
                     double longitude = location.getLongitude();
                     double latitude = location.getLatitude();
-                    Log.d("위치정보", "위치정보 : " + provider + " 위도 : " + longitude + " 경도 : " + latitude + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                    System.out.println("위치정보 : " + provider + " 위도 : " + longitude + " 경도 : " + latitude + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                    Log.d("Mapaaa","location");
+                    text1.setText("위도"+latitude);
+                    text2.setText("경도"+longitude);
+                    Log.d("위치정보", "위치정보 : "
+                            + provider + " 위도 : " + latitude+ " 경도 : " + longitude + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                     if(flag == 0){
                         prevLong = longitude;
                         prevLat = latitude;
