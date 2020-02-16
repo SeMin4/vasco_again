@@ -21,4 +21,5 @@
     <color name="finish">#F5C102</color>
     <color name = "burgundy">#760c0c</color>
     <color name = "marsala">#8a3b3b</color>
+    <color name = "noArea">#56FF2222</color>
 </resources>

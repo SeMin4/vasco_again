@@ -22,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.utils.GridAdapter;
@@ -52,18 +53,17 @@ import java.util.concurrent.Executor;
 
 public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
     MapFragment mapFragment;
-    ArrayList tmp;
     public static double zoomLevel;
     public static double centerLat;
     public static double centerLng;
     public LatLng centerLatLng;
     public static boolean moving_camera = false;
     Fragment naverMapfragment;
-    int level = 1;
     int map_radius = 1280;
     public EventListener eventListener;
+    public IdleListener cameraIdleListener;
     public ArrayList<PolygonOverlay> squareOverlay;
-//    GridLayoutManager gridLayoutManager;
+    TextView mapSizeTextView;
     FragmentTransaction fragmentTransaction;
     public static NaverMapFragment newInstance() {
         NaverMapFragment fragment = new NaverMapFragment();
@@ -75,42 +75,23 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tmp = new ArrayList<>(Arrays.asList("Person1", "Person2", "Person3", "Person4", "Person5", "Person6", "Person7", "Person8", "Person9", "Person10", "Person11", "Person12", "Person13", "Person14"));
         FragmentManager fm = getChildFragmentManager();
-
-//        MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.map);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance();
             fragmentTransaction = fm.beginTransaction();
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             fragmentTransaction.add(R.id.navermap, mapFragment).addToBackStack(null).commit();
-
         }
         squareOverlay = new ArrayList<PolygonOverlay>();
         mapFragment.getMapAsync(this);
         naverMapfragment = fm.findFragmentById(R.id.navermap);
-
     }
-
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // ...
-//        super.onCreateView(inflater,container,savedInstanceState);
         View rootView =  inflater.inflate(R.layout.fragment_map, container, true);
-
-//        mapGridRecycler = (RecyclerView)rootView.findViewById(R.id.map_grid_recycler);
-//        gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-
-        //        rootView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return false;
-//            }
-//        });
-//        mapGridRecycler.setOnTouchListener();
+        mapSizeTextView = rootView.findViewById(R.id.mapSizeText);
         return rootView;
     }
 
@@ -123,260 +104,170 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
     @UiThread
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
+        //기본적인 네이버맵의 ui 셋팅을 하는 부분 오른쪽에 뜨는 zoomControl 창을 없애고 맵 기울이는 기능을 비활성화 시킴
         naverMap.getUiSettings().setZoomControlEnabled(false);
-//        naverMap.getUiSettings().setScrollGesturesEnabled(false);
-//        naverMap.getUiSettings().setZoomGesturesEnabled(false);
         naverMap.getUiSettings().setTiltGesturesEnabled(false);
+        naverMap.getUiSettings().setScrollGesturesEnabled(false);
 
+        // 이전의 액티비티로 부터 설정해주었던 centerLat, centerLng 값을 받아서 지도 중심을 설정
         centerLatLng = new LatLng(centerLat,centerLng);
+        naverMap.setCameraPosition(new CameraPosition(centerLatLng, 10));
 
-
-        naverMap.setCameraPosition(new CameraPosition(new LatLng(centerLat, centerLng), 10));
+        // 지도 중심으로 부터 지도의 전체 크기 1280 m에서 절반 640 미터씩 남서쪽 북동쪽 부분으로 바운드를 결정하고 그 부분을 볼 수 있는 부분으로 카메라를 옮김.
         naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius*-1/2,map_radius*-1/2),centerLatLng.offset(map_radius/2,map_radius/2))));
+
+        //네이버맵의 맵 설정을 위성 맵으로 설정
         naverMap.setMapType(NaverMap.MapType.Satellite);
+
+        //수색 중심지점 마커 생성 하기 (캡션으로 "수색중심지점" 텍스트 설정, 색깔을 빨간색으로 바꾸기)
         Marker marker = new Marker();
-        marker.setPosition(new LatLng(centerLat, centerLng));
+        marker.setPosition(centerLatLng);
         marker.setMap(naverMap);
         marker.setCaptionText("수색중심지점");
         marker.setIcon(MarkerIcons.BLACK);
         marker.setIconTintColor(Color.RED);
 
-        LatLng centerLatLng = new LatLng(centerLat,centerLng);
         zoomLevel = naverMap.getCameraPosition().zoom + 0.9;
-//        Log.d("ZoomLevel", zoomLevel+ "");
+
+        //AsynTask를 extend 해서 비동기적으로 뒤에 해당하는 격자표 그리기.
         GridMapMakeTask gridMapMakeTask = new GridMapMakeTask(naverMap);
         gridMapMakeTask.execute();
-//        eventListener = new EventListener(naverMap);
-//        naverMap.addOnCameraChangeListener(eventListener);
-//        naverMap.addOnCameraChangeListener(new EventListener(naverMap));
-//        naverMap.addOnCameraChangeListener((reason, animated) -> {
-//            if(reason == CameraUpdate.REASON_GESTURE && !moving_camera &&naverMap.getUiSettings().isZoomGesturesEnabled()){
-//                if(zoomLevel > naverMap.getCameraPosition().zoom){
-//                    naverMap.getUiSettings().setZoomGesturesEnabled(false);
-//                    moving_camera = true;
-////                    CameraUpdateParams params = new CameraUpdateParams();
-////                    params.zoomTo(zoomLevel + 1);
-////                    zoomLevel -= 1;
-//
-//                    CameraUpdate cameraUpdate = CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius * -1,map_radius *-1),centerLatLng.offset(map_radius ,map_radius)))
-//                            .finishCallback(()->{
-//                                moving_camera = false;
-//
-//                                for(int i = 0; i<squareOverlay.size(); i++){
-//                                    squareOverlay.get(i).setMap(null);
-//                                }
-////                                squareOverlay.clear();
-//
-//                                squareOverlay.clear();
-//                                zoomLevel = naverMap.getCameraPosition().zoom;
-//                                map_radius *= 2;
-//                                {
-//                                    GridMapMakeTask task = new GridMapMakeTask(naverMap);
-//                                    task.execute();
-//                                }
-//
-//                                Log.d("ZoomLevel", zoomLevel+ "");
-//                            })
-//                            .cancelCallback(()->{
-//                                moving_camera = false;
-//                                naverMap.getUiSettings().setZoomGesturesEnabled(true);
-//                            });
-//
-//                    naverMap.moveCamera(cameraUpdate.animate(CameraAnimation.Easing,2000));
-//
-//                    if(map_radius == 5120 * 2){
-//                        map_radius = 5120;
-//                        naverMap.cancelTransitions();
-//                    }
-//
-//                    Log.d("ZoomLevel", zoomLevel+ "");
-//                }
-//            }
-//        });
-        //위도 1도 사이의 거리 : 110 키로미터 위도 1분 사이의 거리 : 1.8km
-        //경도 1도 사이의 거리 : cos(위도)* 2 * pi * r (6380) / 360
 
-//      혹시 모르는 리사이클러뷰 냉겨 놓기.
-//        Marker marker = new Marker();
-//        RecyclerView mapRecyclerViewNormal = new RecyclerView(getContext());
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 8 , LinearLayoutManager.HORIZONTAL, false);
-//        mapRecyclerViewNormal.setLayoutManager(gridLayoutManager);
-//        GridAdapter gridAdapter = new GridAdapter(getActivity().getApplicationContext(), tmp);
-//        mapRecyclerViewNormal.setAdapter(gridAdapter);
-//        mapRecyclerViewNormal.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-//            @Override
-//            public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-//                getView().onTouchEvent(motionEvent);
-//            }
-//
-//            @Override
-//            public void onRequestDisallowInterceptTouchEvent(boolean b) {
-//            }
-//        });
-
-
-//        TextView tmp = new TextView(getContext());
-//        tmp.setText("hello");
-//        OverlayImage recyclerOverlay = OverlayImage.fromView(mapRecyclerViewNormal);
-//
-//        GroundOverlay groundOverlay = new GroundOverlay();
-//        groundOverlay.setImage(recyclerOverlay);
-//        groundOverlay.setBounds(new LatLngBounds(new LatLng(34.0714,125.1131), new LatLng(37,128)));
-//        groundOverlay.setMap(naverMap);
-//        tmp.clear();
-//        tmp. add("hello");
-//        gridAdapter.notifyDataSetChanged();
-//        groundOverlay.setMap(null);
-//        groundOverlay.setBounds(new LatLngBounds(new LatLng(34.0714,125.1131), new LatLng(37,128)));
-//        recyclerOverlay = OverlayImage.fromView(mapRecyclerViewNormal);
-//        groundOverlay.setImage(recyclerOverlay);
-//        groundOverlay.setMap(naverMap);
-
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                tmp.clear();
-//                gridAdapter.notifyDataSetChanged();
-//            }
-//        },2000);
-
-//        marker.setIcon(recyclerOverlay);
-//        marker.setPosition(new LatLng(37.55917549459318,126.97829392597788));
-//        marker.setForceShowIcon(true);
-//        marker.setIconPerspectiveEnabled(true);
-//        marker.setVisible(true);
-
-
-
-//        naverMap.setCameraPosition(new CameraPosition(new LatLng(centerLat, centerLng), 10));
-//        Marker marker = new Marker();
-//        marker.setPosition(new LatLng(centerLat, centerLng));
-//        marker.setMap(naverMap);
-//        marker.setCaptionText("수색중심지점");
-//        marker.setIcon(MarkerIcons.BLACK);
-//        marker.setIconTintColor(Color.RED);
-
-
-
-
-
+        cameraIdleListener = new IdleListener(naverMap, naverMap.getCameraPosition().zoom, false);
+        naverMap.addOnCameraIdleListener(cameraIdleListener);
     }
+
+    //이벤트 리스너 클래스 생성 (네이버 지도 내에서 어떠한 이유에서든지 카메라가 변경이 되면 이벤트 리스너 클래스 내에 있는 onCameraChange 메서드를 호출함 ) NaverMap.OnCameraChangeListener 인터페이스를 implements 해서  안에서 구현
+    //현재는 사용하지 않는 이벤트 리스너 하지만 추후를 위해서 남겨 놓았음
     private class EventListener implements NaverMap.OnCameraChangeListener{
+        //안에서 naverMap에 접근하기 위해서 naverMap 객체를 private 멤버 변수로 받아 옴.
         private NaverMap naverMap;
         public EventListener(){
-
         };
+        //constructor 에서 이 이벤트 리스너에 해당하는 naverMap의 객체를 연결시켜준다.
         public EventListener(NaverMap naverMap){
             this.naverMap = naverMap;
         }
-
+        // private 멤버 변수를 사용하였기 때문에 getMethod 생성 하였음.
         public NaverMap getNaverMap() {
             return naverMap;
         }
 
+
+        // 가장 중요한 부분!! <어떠한 이유에서든지 네이버 맵의 카메라가 조금이라도 변경이 되면 이 메서드를 호출하게 됨)
         @Override
         public void onCameraChange(int reason, boolean animated){
-//            zoomLevel = naverMap.getCameraPosition().zoom;
-            if(reason == CameraUpdate.REASON_GESTURE && !moving_camera && naverMap.getUiSettings().isZoomGesturesEnabled()){
-
-                if(zoomLevel > naverMap.getCameraPosition().zoom+0.05){
+            if(reason == CameraUpdate.REASON_GESTURE && !moving_camera && naverMap.getUiSettings().isZoomGesturesEnabled() && map_radius < 10240){
+                if(zoomLevel > naverMap.getCameraPosition().zoom+0.1){
                     naverMap.getUiSettings().setZoomGesturesEnabled(false);
                     moving_camera = true;
-//                    CameraUpdateParams params = new CameraUpdateParams();
-//                    params.zoomTo(zoomLevel + 1);
-//                    zoomLevel -= 1;
                     Log.d("MAP_radius", map_radius+ "");
-//                    CameraUpdate cameraUpdate = CameraUpdate.finishCallback(()->{
-                                moving_camera = false;
-
-                                for(int i = 0; i<squareOverlay.size(); i++){
-                                    squareOverlay.get(i).setMap(null);
-                                }
-                                squareOverlay.clear();
-
-                                {
-                                    Log.d("네이버", "그리드 다시 그리기");
-                                    GridMapMakeTask task = new GridMapMakeTask(naverMap);
-                                    task.execute();
-                                }
-
-                                Log.d("ZoomLevel", zoomLevel+ "");
-//                            })
-//                            .cancelCallback(()->{
-////                                naverMap.moveCamera(CameraUpdate.fitBounds((new LatLngBounds(centerLatLng.offset(map_radius * -1,map_radius *-1),centerLatLng.offset(map_radius ,map_radius)))).animate(CameraAnimation.Easing,2000));
-//                                moving_camera = false;
-//                                naverMap.getUiSettings().setZoomGesturesEnabled(true);
-//                            });
-//                    naverMap.moveCamera(cameraUpdate);
-
-
-
-//                    new Handler().postDelayed(()->{
-////                        for(int i = 0; i<squareOverlay.size(); i++){
-////                            squareOverlay.get(i).setMap(null);
-////                        }
-//////                                squareOverlay.clear();
-////
-////                        squareOverlay.clear();
-////                        zoomLevel = naverMap.getCameraPosition().zoom;
-////                        map_radius *= 2;
-////                        {
-////                            Log.d("네이버", "그리드 다시 그리기");
-////                            GridMapMakeTask task = new GridMapMakeTask(naverMap);
-////                            task.execute();
-////                        }
-////                    },2000);
-//                    new Handler().postDelayed(()->{
-//                        moving_camera = false;
-//
-//                        for(int i = 0; i<squareOverlay.size(); i++){
-//                            squareOverlay.get(i).setMap(null);
-//                        }
-////                                squareOverlay.clear();
-//
-//                        squareOverlay.clear();
-//                        zoomLevel = naverMap.getCameraPosition().zoom;
-//                        map_radius *= 2;
-//                        {
-//                            Log.d("네이버", "그리드 다시 그리기");
-//                            GridMapMakeTask task = new GridMapMakeTask(naverMap);
-//                            task.execute();
-//                        }
-//
-//                    },2000);
-                    if(map_radius == 5120 * 2){
-                        map_radius = 5120;
-                        naverMap.cancelTransitions();
+                    moving_camera = false;
+                    for(int i = 0; i<squareOverlay.size(); i++){
+                        squareOverlay.get(i).setMap(null);
                     }
-
+                    squareOverlay.clear();
+                    {
+                        naverMap.removeOnCameraChangeListener(this);
+                        Log.d("네이버", "그리드 다시 그리기");
+                        GridMapMakeTask task = new GridMapMakeTask(naverMap);
+                        task.execute();
+                    }
                     Log.d("ZoomLevel", zoomLevel+ "");
                 }
-//                else{
-//                    task = null;
-//                }
             }
         }
     }
 
+    //이벤트 리스너 클래스 생성 (네이버 지도 내에서 변경이 완료되고 난 뒤에 이벤트 리스너 클래스 내에 있는 onCameraIdle 메서드를 호출함 ) NaverMap.onCameraIdleListener 인터페이스를 implements 해서  안에서 구현
+    private class IdleListener implements NaverMap.OnCameraIdleListener{
+        private NaverMap naverMap;
+        private double zoom;
+        private double comparisionZoom;
+        private boolean reduction;
+        //생성자를 통하여 naverMap 객체와 zoom 레벨, reduciton 맵이 이동중인지 아닌지 등을 파악.
+        private IdleListener (NaverMap naverMap, double zoom, boolean reduction){
+            this.naverMap = naverMap;
+            this.zoom = zoom;
+            this.reduction = reduction;
+        }
 
+        //가장 중요한 함수로서 카메라의 이동이 완료되는 시점에서 이 함수가 호출 됨.
+        @Override
+        public void onCameraIdle() {
+            Log.d("IdleListener", "IdleLister 동작" + " zoom Level 은 : "+ zoom);
+            //현재 줌레벨을 가지고 와서 원래 리스너가 들고 있는 줌레벨과 현재 줌 레벨을 비교해봄.
+            comparisionZoom = naverMap.getCameraPosition().zoom;
+            Log.d("IdleListener", "IdleLister 동작" + " current zoom Level 은 : "+ comparisionZoom);
+            //카메라가 이동중일때 가장 위에 if문에 걸리게 됨.
+            if(reduction){
+                //이동중임을 없애고. 밑에 거에 걸릴수 있도록 함. 연속되서 호출 될일이 없음. 밑에 있는 else if 구문에서 해당하는 naverMap.moveCamera의 애니메이션에 의해 이동되는 카메라 이동이 모두 완료되고 난 뒤에 다시 이 리스너를 호출하기 때문에 연속적으로 호출 되지 않음.
+                reduction = false;
+                mapSizeTextView.setText("지도 크기 : " + map_radius + "m");
+                zoom = naverMap.getCameraPosition().zoom;
+            }
+            // 지도를 축소 했을 당시에 이 else if 구문에 걸리게 되어 동작하게 된다.
+            else if(zoom - comparisionZoom > 0.1){
+                //우리가 제공하는 지도의 최대 레벨에 도달했는데도 불구하고 맵을 다시 축소시키려고 할때 우리가 제한해 놓은 범위로 다시 돌리는 과정
+                if(map_radius == 5120){
+                    naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius * -1/2,map_radius *-1/2),centerLatLng.offset(map_radius/2 ,map_radius/2)))
+                            .animate(CameraAnimation.Easing,2000));
+                    return;
+                }
+                // 축소시킬 시 맵의 반경을 2배로 확대하고 이동중임을 확인해주면 reduction 변수에 true 값을 지정해줌으로써 다음에 이 리스너가 호출 될 경우 가장 위에 있는 if문에 걸릴수 있도록 설정함.
+                map_radius *= 2;
+                reduction = true;
+                //map 을 우리가 설정한 boundary 에 맞춰서 맵을 이동시킨다. 간격을 2초라는 시간을 두고 최대한 자연스러움을 나타내기 위해서 표현.
+                naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius * -1/2,map_radius *-1/2),centerLatLng.offset(map_radius/2 ,map_radius/2)))
+                        .animate(CameraAnimation.Easing,2000));
+                //원래 이미 있던 폴리곤 오버레이들은 모두 삭제 시키는 반복문
+                for(int i = 0; i<squareOverlay.size(); i++){
+                    squareOverlay.get(i).setMap(null);
+                }
+                squareOverlay.clear();
+                // 윗 반복문을 통해서 지워진 폴리곤 오버레이 객체들의 다시 AsyncTask 객체를 생성하여 다시 객체를 그림.
+                GridMapMakeTask task = new GridMapMakeTask(naverMap);
+                task.execute();
+            }
+
+            //윗부분과 동일하고 이부분에서는 지도를 확대했을 당시에 관한 부분들을 처리해 주는 곳.
+            else if(comparisionZoom - zoom  > 0.1){
+                if(map_radius == 640){
+                    naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius * -1/2,map_radius *-1/2),centerLatLng.offset(map_radius/2 ,map_radius/2)))
+                            .animate(CameraAnimation.Easing,2000));
+                    return;
+                }
+                //지도를 확대했기 때문에 지도의 반경을 1/2 로 축소하여서 다시 폴리곤 오버레이를 그리는 과정을 반복한다.
+                map_radius /= 2;
+                reduction = true;
+                naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius * -1/2,map_radius *-1/2),centerLatLng.offset(map_radius/2 ,map_radius/2)))
+                        .animate(CameraAnimation.Easing,2000));
+                for(int i = 0; i<squareOverlay.size(); i++){
+                    squareOverlay.get(i).setMap(null);
+                }
+                squareOverlay.clear();
+                GridMapMakeTask task = new GridMapMakeTask(naverMap);
+                task.execute();
+            }
+
+        }
+    }
+
+    // 지도상에 폴리곤 오버레이를 그려주는 부분
     private class GridMapMakeTask extends AsyncTask<Void, PolygonOverlay, Void> implements Serializable {
+        // naverMap 객체를 얻어오기 위해서 private 멤버 변수로 지정
         private NaverMap naverMap;
 
         public GridMapMakeTask() {
             super();
         }
+        //생성자에서 private 멤버 변수를 연결 시켜줌.
         public GridMapMakeTask(NaverMap naverMap){
             super();
             this.naverMap = naverMap;
-//            zoomLevel = naverMap.getCameraPosition().zoom;
         }
 
+        //NaverMap 을 위한 GetMethod
         public NaverMap getNaverMap() {
             return naverMap;
         }
@@ -384,45 +275,31 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         public void setNaverMap(NaverMap naverMap) {
             this.naverMap = naverMap;
         }
+
+
         @Override
-        protected void onPreExecute() {
-//            map_radius *= 2;
-            if (eventListener != null)
-                naverMap.removeOnCameraChangeListener(eventListener);
+        protected void onPreExecute() {  // AsyncTask 를 시작하기 전에 발생
             super.onPreExecute();
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            naverMap.getUiSettings().setZoomGesturesEnabled(true);
-            eventListener = new EventListener(naverMap);
-            naverMap.addOnCameraChangeListener(eventListener);
-            Log.d("홍성기 바보야", map_radius + " " + zoomLevel);
-            naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius * -1/2,map_radius *-1/2),centerLatLng.offset(map_radius/2 ,map_radius/2)))
-                    .animate(CameraAnimation.Easing,2000));
-            map_radius *= 2;
-            zoomLevel -= 0.9;
-
-//            new Handler().postDelayed(()->{
-//                zoomLevel = naverMap.getCameraPosition().zoom;
-//                naverMap.getUiSettings().setZoomGesturesEnabled(true);
-//                eventListener = new EventListener(naverMap);
-//                naverMap.addOnCameraChangeListener(eventListener);
-//            },2000);
-
-
-//            new Handler().postDelayed(()->{
-
-//                eventListener = new EventListener(naverMap);
-//                naverMap.addOnCameraChangeListener(eventListener);
-//            },2000);
+        protected void onPostExecute(Void aVoid) {// AsyncTask 가 전부 다 끝나고 나서 한번 실행 됨.
             super.onPostExecute(aVoid);
         }
 
+
+        // 이부분이 doInBackground 에서 publishProgress 부분을 통해서 넘어온 부분 넘어온 부분이 parameter의 values의 배열에 담기게 되고 하나 밖에 없을 경우에는 values[0]의 값을 참조 하면 된다. 그래서 그 부분의 values[0].setMap을 통해 폴리곤 오버레이를 맵에 활성화 시켜줌.
+        // 그리고 지도의 폴리곤 오버레이에 그것에 해당하는 클릭 리스너를 달아 주는 과정이다. 지도상에서 수색을 진행하지 않을 부분들을 선택해야 하는 경우 이 것을 통해서 넘어 가게 된다.
         @Override
         protected void onProgressUpdate(PolygonOverlay... values) {
-//            values[0].setPosition(new LatLng(34.0714,125.1131));
             values[0].setMap(getNaverMap());
+            values[0].setOnClickListener(new Overlay.OnClickListener() {
+                @Override
+                public boolean onClick(@NonNull Overlay overlay) {
+                    values[0].setColor(getResources().getColor(R.color.noArea));
+                    return true;
+                }
+            });
             super.onProgressUpdate(values);
         }
 
@@ -439,9 +316,8 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         @SuppressLint("WrongThread")
         @Override
         protected Void doInBackground(Void... voids) {
-            centerLatLng = new LatLng(centerLat,centerLng);
-            Log.d("네이버",""+map_radius);
-            Log.d("네이버",""+naverMap.getUiSettings().isScrollGesturesEnabled());
+
+            // 백그라운드 내에서 해당하는 폴리곤 오버레이 객체를 계속해서 만들어 내는 중.......
             LatLng lineLatLng = centerLatLng.offset(map_radius/8*3,-1* map_radius / 2);
             LatLng drawLatLng = centerLatLng.offset(map_radius/8*3,-1* map_radius / 2);
             for(int i = 0; i< 64; i++){
@@ -450,42 +326,24 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
                     drawLatLng = lineLatLng;
                 }
                 PolygonOverlay polygonOverlay = new PolygonOverlay();
+                //getFourCornerLatLng 함수는 가장 남서쪽에 있는 좌표를 기준을 하여 총 사각형을 그릴수 있는 4개의 좌표를 알아내는 함수 (남서쪽, 북서쪽, 북동쪽, 남동쪽) 순서의 리스트 값을 반환한다.
                 polygonOverlay.setCoords(getFourCornerLatLng(drawLatLng));
                 polygonOverlay.setOutlineColor(Color.WHITE);
                 polygonOverlay.setColor(Color.TRANSPARENT);
                 polygonOverlay.setOutlineWidth(2);
+                polygonOverlay.setTag(i);
                 squareOverlay.add(polygonOverlay);
+                // 메인스레드로 넘겨 줌. 안드로이드의 특성상 메인 스레드가 아니면 UI를 건드릴수 없기 때문에 객체만 만들고 메인스레드로 넘겨서 메인스레드는 UI를 변경함.
                 publishProgress(polygonOverlay);
+                // 다음 객체에 해당하는 4개의 점의 좌표를 알기 위해 그전에 polygonOverlay의 남동쪽 좌표 값을 다음 폴리곤 오버레이의 남서쪽 좌표 객제 를 생성하는 부분이다.
                 drawLatLng = getFourCornerLatLng(drawLatLng).get(3);
             }
-
-//            Marker a = new Marker();
-//            a.setPosition(centerLatLng);
-////            a.setPosition(new LatLng(37.55917549459318,126.97829392597788));
-//            publishProgress(a);
-//            Marker b = new Marker();
-//            b.setPosition(norEastLatLng);
-////            a.setPosition(new LatLng(37.55917549459318,126.97829392597788));
-//            publishProgress(b);
-//            Marker c = new Marker();
-//            c.setPosition(southWestLatLNg);
-////            a.setPosition(new LatLng(37.55917549459318,126.97829392597788));
-//            publishProgress(c);
-//            Marker d = new Marker();
-//            d.setPosition(new LatLng(37.55917549459318,126.97819392597788));
-////            a.setPosition(new LatLng(37.55917549459318,126.97829392597788));
-//            publishProgress(d);
-//            Marker e = new Marker();
-//            e.setPosition(new LatLng(37.55917549459318,126.97839392597788));
-////            a.setPosition(new LatLng(37.55917549459318,126.97829392597788));
-//            publishProgress(e);
-
             return null;
         }
-
-
     }
 
+
+    //폴리곤 오버레이를 그리기 위해서 4개의 꼭짓점을 구하는 Method
     public List<LatLng> getFourCornerLatLng(LatLng standardLatLng){
         return Arrays.asList(
                 standardLatLng,
@@ -493,8 +351,5 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
                 standardLatLng.offset(map_radius/8,map_radius/8),
                 standardLatLng.offset(0,map_radius/8)
         );
-
     }
-
-
 }
