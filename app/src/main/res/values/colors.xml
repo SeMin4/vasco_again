@@ -16,6 +16,7 @@
     <color name="light_blue">#97BEC5</color>
     <color name="light_purple">#ABA8C5</color>
     <color name="light_gold">#BCB89D</color>
+    <color name="light_light_gray">#f7f7f7</color>
     <color name="white">#FFFFFF</color>
     <color name="line">#FFFFFF</color>
     <color name="impossible">#C83631</color>
@@ -23,4 +24,5 @@
     <color name = "burgundy">#b42f2f</color>
     <color name="dark_burgundy">#812121</color>
     <color name = "marsala">#8a3b3b</color>
+    <color name = "cream">#f7f6e2</color>
 </resources>
