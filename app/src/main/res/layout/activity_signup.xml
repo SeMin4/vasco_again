@@ -121,15 +121,26 @@
                 android:textColorHint="@color/gray"
                 android:background="@drawable/custom_edit_text_light_gray"/>
 
-            <Spinner
-                android:id="@+id/sign_up_department"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
-                android:background="@drawable/form"
-                android:hint="@string/user_department"
-            />
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:background="@drawable/custom_edit_text_light_gray">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_department_burgundy"
+                    android:layout_marginRight="15dp"/>
+                <Spinner
+                    android:id="@+id/sign_up_department"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+
 
             <Button
                 android:id="@+id/sign_up_btn"
