@@ -206,6 +206,10 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
                 reduction = false;
                 mapSizeTextView.setText("지도 크기 : " + map_radius + "m");
                 zoom = naverMap.getCameraPosition().zoom;
+                if(map_radius == 640)
+                    naverMap.setMaxZoom(zoom);
+                if(map_radius == 5120)
+                    naverMap.setMinZoom(zoom);
             }
             // 지도를 축소 했을 당시에 이 else if 구문에 걸리게 되어 동작하게 된다.
             else if(zoom - comparisionZoom > 0.1){
