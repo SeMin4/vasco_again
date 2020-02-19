@@ -1,7 +1,7 @@
 package com.example.woo.myapplication.ui.activity;
 
 import android.content.Intent;
-import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -58,8 +58,12 @@ public class MapSettingActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), GPSService.class);
-                startService(intent);
 
+                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                    startService(intent);
+                } else {
+                    startForegroundService(intent);
+                }
  /*               Intent intent = new Intent(getApplicationContext(),MapActivity.class);
                 startActivity(intent);*/
             }

@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
 
@@ -78,12 +79,14 @@ public class GPSService extends Service {
         gpsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         startActivity(gpsIntent);
+
+        Toast myToast = Toast.makeText(this.getApplicationContext(),"app 종료", Toast.LENGTH_LONG);
+     //   stopForeground(true);
         return super.onStartCommand(intent, flags, startId);
     }
 
 
     public void NotificationSomethings() {
-
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -94,10 +97,11 @@ public class GPSService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.boy)) //BitMap 이미지 요구
-                .setContentTitle("asdf")
-                .setContentText("상태바 드래그시 보이는 서브타이틀")
+                .setContentTitle("바스코로드")
+                .setContentText("구역 1 수색중")
+
                 // 더 많은 내용이라서 일부만 보여줘야 하는 경우 아래 주석을 제거하면 setContentText에 있는 문자열 대신 아래 문자열을 보여줌
-                //.setStyle(new NotificationCompat.BigTextStyle().bigText("더 많은 내용을 보여줘야 하는 경우..."))
+               // .setStyle(new NotificationCompat.BigTextStyle().bigText("더 많은 내용을 보여줘야 하는 경우..."))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent) // 사용자가 노티피케이션을 탭시 ResultActivity로 이동하도록 설정
                 .setAutoCancel(true);
@@ -106,7 +110,7 @@ public class GPSService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             builder.setSmallIcon(R.drawable.ic_launcher_foreground); //mipmap 사용시 Oreo 이상에서 시스템 UI 에러남
-            CharSequence channelName  = "노티페케이션 채널";
+            CharSequence channelName  = "노티피케이션 채널";
             String description = "오레오 이상을 위한 것임";
             int importance = NotificationManager.IMPORTANCE_HIGH;
 
@@ -121,13 +125,19 @@ public class GPSService extends Service {
 
 //        assert notificationManager != null;
 //        notificationManager.notify(1234, builder.build()); // 고유숫자로 노티피케이션 동작시킴
-        startForeground(1, builder.build());
+        startForeground(1234, builder.build());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
+        stopForeground(true);
+        stopSelf();
+
+
+        Toast myToast = Toast.makeText(this.getApplicationContext(),"app 종료", Toast.LENGTH_LONG);
+       // stopForeground(
         Log.d("service","ondestroy");
     }
 
@@ -135,5 +145,15 @@ public class GPSService extends Service {
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+
+        //stopLocationUpdates()
+        stopForeground(true);
+        stopSelf();
+
+        super.onTaskRemoved(rootIntent);
     }
 }
