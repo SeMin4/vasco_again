@@ -2,11 +2,14 @@ package com.example.woo.myapplication.ui.view;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
@@ -17,6 +20,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +37,7 @@ import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.CameraUpdateParams;
 import com.naver.maps.map.MapFragment;
+import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.GroundOverlay;
@@ -57,20 +62,25 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
     public static double centerLat;
     public static double centerLng;
     public LatLng centerLatLng;
+    Fragment naverFragment;
     public static boolean moving_camera = false;
     Fragment naverMapfragment;
+    MapView view;
     int map_radius = 1280;
     public EventListener eventListener;
     public IdleListener cameraIdleListener;
     public ArrayList<PolygonOverlay> squareOverlay;
     TextView mapSizeTextView;
     FragmentTransaction fragmentTransaction;
+    private GestureDetector detector;
+
     public static NaverMapFragment newInstance() {
         NaverMapFragment fragment = new NaverMapFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
+
 
 
     @Override
@@ -83,16 +93,80 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             fragmentTransaction.add(R.id.navermap, mapFragment).addToBackStack(null).commit();
         }
+
+        detector = new GestureDetector(new GestureDetector.OnGestureListener() {
+            @Override
+            public boolean onDown(MotionEvent e) {
+                System.out.println("onDown");
+                return true;
+            }
+
+            @Override
+            public void onShowPress(MotionEvent e) {
+                System.out.println("onShowPress");
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                System.out.println("onSingleTap");
+                return true;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                System.out.println("onScroll");
+                return true;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                System.out.println("onLongPress");
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                System.out.println("onFiling");
+                return true;
+            }
+        });
+
+//        LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        view = inflater.inflate(R.layout.fragment_map,null);
         squareOverlay = new ArrayList<PolygonOverlay>();
         mapFragment.getMapAsync(this);
         naverMapfragment = fm.findFragmentById(R.id.navermap);
+
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_map, container, true);
+        view = rootView.findViewById(R.id.navermap);
         mapSizeTextView = rootView.findViewById(R.id.mapSizeText);
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                System.out.println("터치됨@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                Log.d("터치","터치돰@@@@@@@@");
+                return true;
+            }
+        });
+       /* view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                System.out.println("터치됨@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                Log.d("터치","터치돰@@@@@@@@");
+                return true;
+            }
+        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("클릭됨@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                Log.d("터치","터치돰@@@@@@@@");
+            }
+        });*/
         return rootView;
     }
 
@@ -134,8 +208,10 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         GridMapMakeTask gridMapMakeTask = new GridMapMakeTask(naverMap);
         gridMapMakeTask.execute();
 
+
         cameraIdleListener = new IdleListener(naverMap, naverMap.getCameraPosition().zoom, false);
         naverMap.addOnCameraIdleListener(cameraIdleListener);
+
     }
 
     //이벤트 리스너 클래스 생성 (네이버 지도 내에서 어떠한 이유에서든지 카메라가 변경이 되면 이벤트 리스너 클래스 내에 있는 onCameraChange 메서드를 호출함 ) NaverMap.OnCameraChangeListener 인터페이스를 implements 해서  안에서 구현
@@ -230,7 +306,6 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
                 GridMapMakeTask task = new GridMapMakeTask(naverMap);
                 task.execute();
             }
-
             //윗부분과 동일하고 이부분에서는 지도를 확대했을 당시에 관한 부분들을 처리해 주는 곳.
             else if(comparisionZoom - zoom  > 0.1){
                 if(map_radius == 640){
@@ -249,10 +324,20 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
                 squareOverlay.clear();
                 GridMapMakeTask task = new GridMapMakeTask(naverMap);
                 task.execute();
+            }else{
+                //System.out.println("터치됨@@@@@@@@@@@@@@@");
+//                long downTime = SystemClock.uptimeMillis();
+//                long eventTime = SystemClock.uptimeMillis() + 100;
+//                float x = 0.0f;
+//                float y = 0.0f;
+//                int meetaState = 0;
+//                MotionEvent event = MotionEvent.obtain(downTime,eventTime,MotionEvent.ACTION_UP,x,y,meetaState);
+//                detector.onTouchEvent(event);
             }
-
         }
     }
+
+
 
     // 지도상에 폴리곤 오버레이를 그려주는 부분
     private class GridMapMakeTask extends AsyncTask<Void, PolygonOverlay, Void> implements Serializable {
