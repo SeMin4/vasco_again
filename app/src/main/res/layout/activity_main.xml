@@ -29,7 +29,7 @@
                 android:id="@+id/my_page_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/custom_edit_text_bg"
+                android:background="@drawable/bg_border_burgundy"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="7dp"
                 android:drawableStart="@drawable/ic_person"
@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/custom_edit_text_bg"
+                android:background="@drawable/bg_border_burgundy"
                 android:drawableStart="@drawable/ic_logout_burgundy"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
@@ -93,36 +93,64 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/custom_background_cream"
+        android:layout_marginHorizontal="20dp"
+        android:paddingVertical="5dp"
+        android:paddingHorizontal="10dp"
+        android:layout_weight="1">
+        <Spinner
+            android:id="@+id/spinner"
+            android:entries="@array/district"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:prompt="@string/district_prompt"
+            android:layout_alignParentLeft="true"/>
+        <EditText
+            android:id="@+id/search"
+            android:theme="@style/EditTextStyle"
+            android:textSize="15sp"
+            android:drawableLeft="@drawable/ic_search_selector"
+            android:drawablePadding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_marginRight="10dp"
+            android:paddingRight="20dp"
+            android:hint="실종자 검색"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <!--<LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/custom_background_cream"
         android:layout_marginHorizontal="20dp"
-        android:paddingLeft="12dp"
+        android:paddingVertical="5dp"
+        android:paddingHorizontal="10dp"
         android:layout_weight="1"
-        android:orientation="horizontal"
-        android:weightSum="11">
+        android:orientation="horizontal">
         <Spinner
             android:id="@+id/spinner"
             android:entries="@array/district"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="6"
             android:prompt="@string/district_prompt"/>
         <EditText
             android:id="@+id/search"
             android:theme="@style/EditTextStyle"
-            android:textSize="13sp"
+            android:textSize="15sp"
             android:drawableLeft="@drawable/ic_search_selector"
             android:drawablePadding="5dp"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_marginRight="10dp"
-            android:hint="실종자 이름 입력"
+            android:paddingRight="20dp"
+            android:hint="실종자 검색"
             android:layout_height="match_parent"
-            android:layout_weight="5">
-        </EditText>
-    </LinearLayout>
+            android:layout_gravity="end"/>
+    </LinearLayout>-->
 
     <ImageView
         android:layout_width="match_parent"
@@ -137,7 +165,11 @@
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:paddingBottom="15dp"
+            android:clipToPadding="false"
+            android:listSelector="#00ff0000"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_sub1"
@@ -145,7 +177,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/fab_sub2"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_add"
+            android:src="@drawable/ic_add_burgundy"
             android:layout_marginBottom="15dp"
             android:layout_marginRight="20dp"
             android:backgroundTint="#FFFFFF"
@@ -159,7 +191,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/fab"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_add"
+            android:src="@drawable/ic_add_burgundy"
             android:layout_marginBottom="15dp"
             android:layout_marginRight="20dp"
             android:backgroundTint="#FFFFFF"
@@ -173,10 +205,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_add"
+            android:src="@drawable/ic_add_white"
             android:layout_marginBottom="20dp"
             android:layout_marginRight="20dp"
-            android:backgroundTint="#03A9F4"
+            android:backgroundTint="@color/burgundy"
             app:fabSize="normal"
             app:borderWidth="0dp"
             />
