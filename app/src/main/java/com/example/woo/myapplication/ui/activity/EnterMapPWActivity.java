@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ public class EnterMapPWActivity extends Activity {
     private Retrofit retrofit;
     private MyGlobals.RetrofitExService retrofitExService;
     private String mapId;
+    private Button confirm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,10 +39,10 @@ public class EnterMapPWActivity extends Activity {
         setContentView(R.layout.popup_enter_pw);
 
         Intent intent = getIntent();
+        retrofitExService = MyGlobals.getInstance().getRetrofitExService();
         mapInfo_index = intent.getIntExtra("mapInfoIndex", -1);
         mapId = intent.getStringExtra("mapId");
         password = (EditText) findViewById(R.id.EditText_password);
-
         Log.d("Enter", "map index: " + mapInfo_index);
 
 
@@ -64,24 +66,25 @@ public class EnterMapPWActivity extends Activity {
             public void onResponse(Call<OverlapExamineData> call, Response<OverlapExamineData> response) {
                 OverlapExamineData data = response.body();
                 if(data.getOverlap_examine().equals("yes")){
+                    //방에입장한다.
+                    Toast.makeText(getApplicationContext(), "방에 입장하셨습니다.", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent();
                     intent.putExtra("mapInfoIndex", mapInfo_index);
                     setResult(RESULT_OK, intent);
                     finish();
                 }
-                else{
+                else if(data.getOverlap_examine().equals("wrong")){
                     Toast.makeText(getApplicationContext(), "비밀번호를 다시 확인하세요.", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "에러입니다.", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<OverlapExamineData> call, Throwable t) {
-                Log.w("hong....", t);
+                Toast.makeText(getApplicationContext(), "에러입니다.", Toast.LENGTH_LONG).show();
             }
         });
-
-
-
     }
 
 

@@ -139,7 +139,7 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
         });
 
 
-        //리스트뷰를 누르면 해당 지역의 수색 상황을 보여준다.
+        //리스트뷰를 누르면 해당 지역의 수색 상황을 보여준다,방으로 입장하기 위해서 비밀번호 입력
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {

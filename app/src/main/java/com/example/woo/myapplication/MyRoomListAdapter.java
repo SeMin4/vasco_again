@@ -64,7 +64,6 @@ public class MyRoomListAdapter extends BaseAdapter implements View.OnClickListen
 
     public void addItem(String m_id,String titlePerson, String location_map){
         MyRoomItem item = new MyRoomItem();
-
         item.setM_id(m_id);
         item.setP_name(titlePerson);
         item.setM_center_place_string(location_map);
@@ -75,6 +74,7 @@ public class MyRoomListAdapter extends BaseAdapter implements View.OnClickListen
         //MyPageActivity 의 onlistBtnClick()함수 호출
         if(this.listBtnClickListener != null){
             this.listBtnClickListener.onListBtnClick((int)v.getTag());
+
         }
     }
 

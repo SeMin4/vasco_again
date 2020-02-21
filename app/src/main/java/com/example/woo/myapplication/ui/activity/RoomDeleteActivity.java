@@ -43,17 +43,7 @@ public class RoomDeleteActivity extends AppCompatActivity {
 
         room_delete_confirm_btn = (Button)findViewById(R.id.room_delete_confirm_btn);
         room_delete_password = (EditText)findViewById(R.id.room_delete_password);
-        /*room_delete_confirm_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(room_delete_password.getText().toString().equals("12")){
-                    Toast.makeText(getApplicationContext(), MyPageActivity.roomListAdapter.myRoomList.get(position).getTitle_person() + "의 방이 삭제 되었습니다", Toast.LENGTH_SHORT).show();
-                    MyPageActivity.roomListAdapter.myRoomList.remove(position);
-                    MyPageActivity.roomListAdapter.notifyDataSetChanged();
-                    finish();
-                }
-            }
-        });*/
+
         room_delete_confirm_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +61,7 @@ public class RoomDeleteActivity extends AppCompatActivity {
                             MyPageActivity.roomListAdapter.myRoomList.remove(position);
                             MyPageActivity.roomListAdapter.notifyDataSetChanged();
                             MyGlobals.getInstance().setMaplist(MyPageActivity.roomListAdapter.myRoomList);
+                            Toast.makeText(getApplicationContext(),"삭제되었습니다.",Toast.LENGTH_SHORT).show();
                             finish();
                         }
                         else{
@@ -80,7 +71,7 @@ public class RoomDeleteActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<OverlapExamineData> call, Throwable t) {
-                        Log.w("hong....", t);
+                        Toast.makeText(getApplicationContext(), "에러 입니다.", Toast.LENGTH_LONG).show();
                     }
                 });
 
