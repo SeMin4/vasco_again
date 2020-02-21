@@ -3,7 +3,7 @@ package com.example.woo.myapplication;
 public class MyRoomItem {
     String m_id;
     String p_name;
-    String m_place_string;
+    String m_center_place_string;
 
 
     public String getM_id() {
@@ -22,11 +22,11 @@ public class MyRoomItem {
         this.p_name = p_name;
     }
 
-    public String getM_place_string() {
-        return m_place_string;
+    public String getM_center_place_string() {
+        return m_center_place_string;
     }
 
-    public void setM_place_string(String m_place_string) {
-        this.m_place_string = m_place_string;
+    public void setM_center_place_string(String m_center_place_string) {
+        this.m_center_place_string = m_center_place_string;
     }
 }

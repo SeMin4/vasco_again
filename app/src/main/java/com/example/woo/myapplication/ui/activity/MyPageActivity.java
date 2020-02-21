@@ -71,7 +71,7 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
         if(mlist!=null) {
             for (int i = 0; i < mlist.size(); i++) {
                 MyRoomItem item = mlist.get(i);
-                roomListAdapter.addItem(item.getM_id(), item.getP_name(), item.getM_place_string());
+                roomListAdapter.addItem(item.getM_id(), item.getP_name(), item.getM_center_place_string());
             }
         }
 
@@ -217,7 +217,6 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
                 MyRoomItem item = (MyRoomItem) parent.getItemAtPosition(position) ;
 
                 String titlePerson = item.getP_name() ;
-                String locationMap = item.getM_place_string() ;
 
             }
         }) ;

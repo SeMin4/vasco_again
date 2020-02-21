@@ -9,6 +9,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="PasswordTheme" parent="Theme.AppCompat.DayNight.Dialog">
+
+    </style>
     <!-- Login err pop_up theme. -->
     <style name="LoginErrorTheme" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="colorPrimary">@color/colorPrimary</item>

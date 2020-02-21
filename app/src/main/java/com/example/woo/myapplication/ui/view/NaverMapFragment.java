@@ -258,6 +258,10 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    public int getMsize(){
+        return map_radius;
+    }
+
     // 지도상에 폴리곤 오버레이를 그려주는 부분
     private class GridMapMakeTask extends AsyncTask<Void, PolygonOverlay, Void> implements Serializable {
         // naverMap 객체를 얻어오기 위해서 private 멤버 변수로 지정

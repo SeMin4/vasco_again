@@ -1,6 +1,8 @@
 package com.example.woo.myapplication.ui.activity;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -8,14 +10,21 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.data.MapInfo;
 import com.example.woo.myapplication.ui.view.NaverMapFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapSettingActivity extends AppCompatActivity 
 {
     double centerLat;
     double centerLng;
+    String pid;
 
     FragmentManager fm;
     FragmentTransaction fragmentTransaction;
@@ -29,6 +38,7 @@ public class MapSettingActivity extends AppCompatActivity
         setContentView(R.layout.activity_map_setting);
         next_btn = (Button)findViewById(R.id.next_btn);
         Intent intent = getIntent();
+        pid = intent.getStringExtra("pid");
         centerLat = intent.getDoubleExtra("Lat", 0);
         centerLng = intent.getDoubleExtra("Lng",0);
         fm= getSupportFragmentManager();
@@ -57,13 +67,64 @@ public class MapSettingActivity extends AppCompatActivity
         next_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), GPSService.class);
-
-                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                    startService(intent);
-                } else {
-                    startForegroundService(intent);
+                Intent intent = new Intent(getApplicationContext(),PasswordActivity.class);
+                int m_size = naverMapFragment.getMsize();
+                int m_unit_scale = m_size/8;
+                Geocoder geocoder = new Geocoder(getApplicationContext());
+                String centerLocation = "";
+                List<Address> list = null;
+                try {
+                    list = geocoder.getFromLocation(centerLat, centerLng, 10);
+                    if(list != null){
+                        if(list.size() == 0){
+                            Toast.makeText(getApplicationContext(), "구글지도에 제공되지 않는 위치입니다.", Toast.LENGTH_LONG).show();
+                        }else{
+                            String s1 = list.get(0).getCountryName(); //국가명
+                            if(s1 != null)
+                                centerLocation += s1+" ";
+                            String s2 = list.get(0).getAdminArea(); // 시
+                            if(s2 != null)
+                                centerLocation += s2+" ";
+                            String s3 = list.get(0).getLocality(); // 구 메인
+                            if(s3 != null)
+                                centerLocation += s3+" ";
+                            String s4 = list.get(0).getSubLocality(); //구 서브데이터
+                            if(s4 != null)
+                                centerLocation += s4+" ";
+                            String s5 = list.get(0).getThoroughfare(); // 동
+                            if(s5 != null)
+                                centerLocation += s5+" ";
+                            String s6 = list.get(0).getSubThoroughfare(); // 번지
+                            if(s2 != null)
+                                centerLocation += s6+" ";
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
+
+                MapInfo info = new MapInfo();
+                info.setP_id(pid);
+                info.setM_owner(MyGlobals.getInstance().getUser().getU_id());
+                info.setM_size(""+m_size);
+                info.setM_status("1");
+                info.setM_unit_scale(""+m_unit_scale);
+                info.setM_rotation("0");
+                info.setM_center_place_string(centerLocation);
+                info.setM_center_point_latitude(""+centerLat);
+                info.setM_center_point_longitude(""+centerLng);
+                info.setM_find_latitude(null);
+                info.setM_find_longitude(null);
+                intent.putExtra("mapinfo",info);
+                startActivity(intent);
+
+//                Intent intent = new Intent(getApplicationContext(), GPSService.class);
+//
+//                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+//                    startService(intent);
+//                } else {
+//                    startForegroundService(intent);
+//                }
  /*               Intent intent = new Intent(getApplicationContext(),MapActivity.class);
                 startActivity(intent);*/
             }
