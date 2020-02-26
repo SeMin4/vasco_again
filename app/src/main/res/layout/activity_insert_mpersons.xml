@@ -17,19 +17,36 @@
             android:orientation="vertical"
             android:background="@color/white"
             android:paddingBottom="10dp">
-            <TextView
-
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:textColor="#ffffff"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:paddingVertical="11dp"
+                android:paddingHorizontal="20dp"
                 android:layout_marginBottom="10dp"
-                android:background="@color/burgundy"
-                android:text="@string/addMperson">
-            </TextView>
+                android:background="@color/burgundy">
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:textColor="#ffffff"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:paddingVertical="11dp"
+                    android:text="@string/addMperson"
+                    /><!--
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:minWidth="0dp"
+                    android:id="@+id/insert"
+                    android:text="완료"
+                    android:textSize="15sp"
+                    android:textColor="#ffffff"
+                    android:background="#00ff0000"
+                    />-->
+            </RelativeLayout>
+
 
             <ImageView
                 android:id="@+id/imageView"
@@ -38,11 +55,11 @@
                 android:adjustViewBounds="true"
                 android:layout_marginHorizontal="50dp"
                 android:layout_marginVertical="10dp"
-                android:background="@drawable/button_background_light_gray"
+                android:background="@drawable/bg_light_gray_round"
                 android:gravity="center|left"
                 android:hint="@string/mpersonPhoto"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_add_a_photo_gray"
+                android:src="@drawable/ic_add_a_photo_selector"
                 android:textSize="10pt" />
 
             <EditText
@@ -122,8 +139,8 @@
                     android:paddingVertical="10dp"
                     android:layout_weight="2"
                     android:layout_marginLeft="10dp"
-                    android:textColor="#ffffff"
-                    android:background="@drawable/button_background_burgundy"
+                    android:textColor="@color/burgundy"
+                    android:background="@drawable/bg_button_border_burgundy"
                     android:text="@string/searchLocation"
                     >
                 </Button>
@@ -188,10 +205,9 @@
                 android:layout_marginVertical="10dp"
                 android:id="@+id/insert"
                 android:textColor="#ffffff"
-                android:textSize="18sp"
                 android:background="@drawable/button_background_burgundy"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:text="@string/insertMperson"
                 >
             </Button>

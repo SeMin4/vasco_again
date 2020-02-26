@@ -29,7 +29,7 @@
                 android:id="@+id/my_page_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_border_burgundy"
+                android:background="@drawable/bg_button_border_burgundy"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="7dp"
                 android:drawableStart="@drawable/ic_person"
@@ -37,7 +37,6 @@
                 android:minWidth="0dp"
                 android:textColor="#ffffff"
                 android:layout_gravity="center_vertical"
-                style="?attr/borderlessButtonStyle"
                 android:onClick="onClickMyPage"
                 />
 
@@ -65,11 +64,10 @@
 
             <Button
                 android:id="@+id/logout_btn"
-                style="?attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/bg_border_burgundy"
+                android:background="@drawable/bg_button_border_burgundy"
                 android:drawableStart="@drawable/ic_logout_burgundy"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
