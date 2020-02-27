@@ -27,7 +27,7 @@
         <activity android:name=".ui.activity.MapConfigActivity" />
         <activity
             android:name=".ui.activity.InsertMpersonActivity"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.activity.RoomDeleteActivity"
             android:screenOrientation="portrait"
