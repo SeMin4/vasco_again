@@ -7,17 +7,16 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -32,6 +31,7 @@ import android.widget.Toast;
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.OverlapExamineData;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.ui.addListenerOnTextChange;
 import com.naver.maps.geometry.LatLng;
 
 import java.io.File;
@@ -91,8 +91,21 @@ public class InsertMpersonActivity extends AppCompatActivity {
                 currentPhotoPath = path;
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+
+                    // 이미지를 상황에 맞게 회전시킨다
+                    ExifInterface exif = new ExifInterface(path);
+                    int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    int exifDegree = exifOrientationToDegrees(exifOrientation);
+                    bitmap = rotate(bitmap, exifDegree);
+
+                    // 변환된 이미지 사용
+                    //imageView.setImageBitmap(bitmap);
+
                     Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
                     imageView.setImageBitmap(bitmap);
+
+                    //이미지뷰 뒷배경 없애기..
+                    imageView.setBackgroundColor(Color.TRANSPARENT);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -110,6 +123,43 @@ public class InsertMpersonActivity extends AppCompatActivity {
                 missingLocation.setText(address);
             }
         }
+    }
+    public int exifOrientationToDegrees(int exifOrientation){
+        if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_90){
+            return 90;
+        }
+        else if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_180){
+            return 180;
+        }
+        else if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_270){
+            return 270;
+        }
+        return 0;
+    }
+    public Bitmap rotate(Bitmap bitmap, int degrees)
+    {
+        if(degrees != 0 && bitmap != null)
+        {
+            Matrix m = new Matrix();
+            m.setRotate(degrees, (float) bitmap.getWidth() / 2,
+                    (float) bitmap.getHeight() / 2);
+
+            try
+            {
+                Bitmap converted = Bitmap.createBitmap(bitmap, 0, 0,
+                        bitmap.getWidth(), bitmap.getHeight(), m, true);
+                if(bitmap != converted)
+                {
+                    bitmap.recycle();
+                    bitmap = converted;
+                }
+            }
+            catch(OutOfMemoryError ex)
+            {
+                // 메모리가 부족하여 회전을 시키지 못할 경우 그냥 원본을 반환합니다.
+            }
+        }
+        return bitmap;
     }
 
     public void updateMperson(String filepath,String name1,String age1,String date1,String place1,String lat,String lon,String des){
@@ -167,6 +217,9 @@ public class InsertMpersonActivity extends AppCompatActivity {
         description = (EditText)findViewById(R.id.mperson_description);
 
         missingLocation.setVisibility(View.INVISIBLE);
+
+        mpersonName.addTextChangedListener(new addListenerOnTextChange(this, mpersonName, R.drawable.ic_person_outline_selector, R.drawable.ic_person_outline_burgundy));
+        searchLocation.addTextChangedListener(new addListenerOnTextChange(this, searchLocation, R.drawable.ic_location_selector, R.drawable.ic_location_burgundy));
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
