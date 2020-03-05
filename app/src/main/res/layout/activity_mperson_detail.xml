@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-    android:paddingBottom="21dp"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
+    android:background="@color/white"
     >
         <TextView
 
@@ -15,33 +15,42 @@
             android:background="@color/burgundy"
             android:text="실종자 정보"
             android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:textSize="25dp"
+            android:textSize="20sp"
             android:gravity="center"
             android:layout_gravity="center_horizontal"
 
             />
+    <LinearLayout
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:padding="5dp"
+        android:background="@drawable/bg_circle_light_gray"
+        android:backgroundTint="@color/white"
+        android:elevation="10dp">
 
         <ImageView
             android:id="@+id/ImageView_popuptitle"
-            android:layout_marginTop="20dp"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
             android:layout_gravity="center"
             />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_centerInParent="true"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="이름 : "
-                android:textSize="17dp"
-                />
+            android:orientation="horizontal">
 
 
             <!--실종자 이름, 성별, 나이-->
@@ -50,148 +59,178 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="곽두식"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                >
-            </TextView>
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
                 android:text=" ("
-                />
+                android:textSize="17sp"
+                android:layout_gravity="center_vertical"/>
+
             <TextView
                 android:id="@+id/TextView_Age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="14"
-                android:textSize="20dp"
-                />
+                android:textSize="17sp"
+                android:layout_gravity="center_vertical"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="세)"
-                android:textSize="20dp"
-                ></TextView>
+                android:textSize="17sp"
+                android:layout_gravity="center_vertical"/>
 
         </LinearLayout>
-            <!--실종위치-->
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="5dp"
-        >
-        <TextView
+        <Button
+            android:id="@+id/makeroom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="장소 : "
-            android:textSize="17dp"
-
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="15dp"
+            android:background="@drawable/button_background_burgundy"
+            android:text="방 생성"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
             />
+    </RelativeLayout>
+
+            <!--실종위치-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
+        android:paddingVertical="20dp"
+        android:background="@drawable/bg_border_burgundy"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="20dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="장소"
+                android:textSize="15sp"
+                android:textColor="@color/dark_gray"
+                android:textStyle="bold"
+
+                />
 
             <TextView
                 android:id="@+id/TextView_Place"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="경북 경주시"
-                android:textSize="17dp"
-
+                android:textSize="15sp"
+                android:layout_marginHorizontal="10dp"
                 >
 
             </TextView>
-    </LinearLayout>
+        </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="5dp"
-        >
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="일자 : "
-            android:textSize="17dp"
-
-            />
-
-        <TextView
-            android:id="@+id/TextView_Time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="2019년 1월 19일 13시경"
-            android:textSize="17dp"
-
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="5dp"
             >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="일자"
+                android:textSize="15sp"
+                android:textColor="@color/dark_gray"
+                android:textStyle="bold"
+                />
 
-        </TextView>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/TextView_Time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2019년 1월 19일 13시경"
+                android:textSize="15sp"
+                android:layout_marginHorizontal="10dp"
+                >
+
+            </TextView>
+        </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="5dp"
-        >
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="특징 : "
-            android:textSize="17dp"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="5dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="특징"
+                android:textSize="15sp"
+                android:textColor="@color/dark_gray"
+                android:textStyle="bold"
+                />
 
-            />
+            <TextView
+                android:id="@+id/TextView_Characteristic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="엊쩌구저쩌구"
+                android:textSize="15sp"
+                android:layout_marginHorizontal="10dp"
+                >
+
+            </TextView>
+
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/TextView_Characteristic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="엊쩌구저쩌구"
-            android:textSize="17dp"
+            android:text="수색 진행 현황"
+            android:layout_marginTop="15dp"
+            android:layout_marginHorizontal="20dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/dark_gray"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:paddingHorizontal="5dp"
+            android:background="@drawable/custom_background_cream">
 
-            >
+            <ListView
+                android:id="@+id/listView_popup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:padding="5dp"
+                android:clipToPadding="false"
+                />
 
-        </TextView>
+        </LinearLayout>
 
     </LinearLayout>
-    <Button
-        android:id="@+id/makeroom"
-        android:layout_marginTop="7dp"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:background="@drawable/button_background2"
-        android:text="방 생성"
-        android:layout_gravity="center"
-        android:textColor="#ffffff"
-        android:textStyle="bold"
-        android:textSize="15dp"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="수색 진행 현황"
-        android:layout_marginTop="12dp"
-        android:paddingTop="7dp"
-        android:paddingBottom="7dp"
-        android:paddingLeft="25dp"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        android:textColor="#ffffff"
-        android:background="@color/colorGray"
-        />
-    <ListView
-        android:id="@+id/listView_popup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
 
-        />
+
 
     </LinearLayout>
 
