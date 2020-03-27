@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.ui.view.FindMapFragment;
 import com.example.woo.myapplication.ui.view.NaverMapFragment;
 
 public class MapSettingActivity extends AppCompatActivity 
@@ -57,6 +58,7 @@ public class MapSettingActivity extends AppCompatActivity
         next_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FindMapFragment.map_radius = NaverMapFragment.map_radius;
                 Intent intent = new Intent(getApplicationContext(), GPSService.class);
 
                 if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {

@@ -59,7 +59,7 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
     public LatLng centerLatLng;
     public static boolean moving_camera = false;
     Fragment naverMapfragment;
-    int map_radius = 1280;
+    public static int map_radius = 1280;
     public EventListener eventListener;
     public IdleListener cameraIdleListener;
     public ArrayList<PolygonOverlay> squareOverlay;
@@ -110,8 +110,10 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         naverMap.getUiSettings().setTiltGesturesEnabled(false);
         naverMap.getUiSettings().setScrollGesturesEnabled(false);
 
-        // 이전의 액티비티로 부터 설정해주었던 centerLat, centerLng 값을 받아서 지도 중심을 설정
+        // 이전의 액티비티로 부터 설정해주었던 centerLat, centerLng 값을 받아서 지도 중심을 설정 // 다음 findMapActivity의 센터값도 설정 해줌.
         centerLatLng = new LatLng(centerLat,centerLng);
+        FindMapFragment.centerLatLng = centerLatLng;
+
         naverMap.setCameraPosition(new CameraPosition(centerLatLng, 10));
 
         // 지도 중심으로 부터 지도의 전체 크기 1280 m에서 절반 640 미터씩 남서쪽 북동쪽 부분으로 바운드를 결정하고 그 부분을 볼 수 있는 부분으로 카메라를 옮김.
