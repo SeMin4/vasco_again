@@ -24,6 +24,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.data.MapInfo;
+import com.example.woo.myapplication.data.Mperson;
 import com.example.woo.myapplication.ui.view.NaverMapFragment;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;
@@ -44,8 +46,12 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
     LinearLayout MapConfigLayout;
     Button nextMapSettingBtn;
     Marker marker;
+
     GradientDrawable drawable;
     FrameLayout frameLayout;
+
+    Mperson selected;
+
     double clickLat;
     double clickLng;
     @Override
@@ -69,6 +75,7 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
         maptypeSpinner = (Spinner)findViewById(R.id.mapTypeSpinner);
         MapConfigLayout = (LinearLayout)findViewById(R.id.mapConfig_Layout);
         nextMapSettingBtn = (Button)findViewById(R.id.nextMap_Setting);
+        selected = (Mperson)getIntent().getSerializableExtra("selecteditem");
 
     }
 
@@ -159,6 +166,7 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MapSettingActivity.class);
+                intent.putExtra("pid",selected.getP_id());
                 intent.putExtra("Lat",clickLat);
                 intent.putExtra("Lng",clickLng);
                 NaverMapFragment.centerLat = clickLat;

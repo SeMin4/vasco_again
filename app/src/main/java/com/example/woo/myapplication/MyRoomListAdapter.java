@@ -47,7 +47,7 @@ public class MyRoomListAdapter extends BaseAdapter implements View.OnClickListen
 
         // 아이템 내 각 위젯에 데이터 반영
         titlePersonTextView.setText(RoomItem.getP_name());
-        locationMapTextView.setText(RoomItem.getM_place_string());
+        locationMapTextView.setText(RoomItem.getM_center_place_string());
         myRoomDeleteButton.setTag(position);
         myRoomDeleteButton.setOnClickListener(this);
         return convertView;
@@ -64,11 +64,9 @@ public class MyRoomListAdapter extends BaseAdapter implements View.OnClickListen
 
     public void addItem(String m_id,String titlePerson, String location_map){
         MyRoomItem item = new MyRoomItem();
-
         item.setM_id(m_id);
         item.setP_name(titlePerson);
-        item.setM_place_string(location_map);
-
+        item.setM_center_place_string(location_map);
         myRoomList.add(item);
     }
 
@@ -76,6 +74,7 @@ public class MyRoomListAdapter extends BaseAdapter implements View.OnClickListen
         //MyPageActivity 의 onlistBtnClick()함수 호출
         if(this.listBtnClickListener != null){
             this.listBtnClickListener.onListBtnClick((int)v.getTag());
+
         }
     }
 

@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +74,8 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
                 MapInfo listViewItem = listViewItemList.get(position);
                 // 아이템 내 각 위젯에 데이터 반영;
                 // place.setText("실종지점 위도 : "+listViewItem.getM_center_point_latitude() + " 실종지점 경도 : "+listViewItem.getM_center_point_longitude());
-                place.setText(listViewItem.getM_place_string());
+                //place.setText(listViewItem.getM_place_string());
+                place.setText(listViewItem.getM_center_place_string());
                 return convertView;
         }
         @Override
@@ -116,16 +118,16 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
         listView.setAdapter(adapter);
         selected = (Mperson)getIntent().getSerializableExtra("selecteditem");
 
+
         setPerson(); // 사람정보 저장
 
-        //***************************해당실종자***********
+        //***************************맵정보 가져오기***********
         retrofitExService.getPersonMapData( selected.getP_id()).enqueue(new Callback<ArrayList<MapInfo>>() {
             @Override
             public void onResponse(Call<ArrayList<MapInfo>> call, Response<ArrayList<MapInfo>> response) {
                 System.out.println("onResponse@@@@@@@@@@@@");
                 maplist = response.body();
                 System.out.println("maplist _size : "+maplist.size());
-//                System.out.println("place : "+maplist.get(0).getM_place_string());
                 for(int i =0;i<maplist.size();i++){
                     adapter.addItem(maplist.get(i));
                 }
@@ -135,12 +137,12 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
             @Override
             public void onFailure(Call<ArrayList<MapInfo>> call, Throwable t) {
                 System.out.println("onFailure@@@@@@@@@@@@@@");
-                Toast.makeText(getApplicationContext(),"지도 띄우기 실패",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"지도 목록 띄우기 실패입니다.",Toast.LENGTH_SHORT).show();
             }
         });
 
 
-        //리스트뷰를 누르면 해당 지역의 수색 상황을 보여준다.
+        //리스트뷰를 누르면 해당 지역의 수색 상황을 보여준다,방으로 입장하기 위해서 비밀번호 입력
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {

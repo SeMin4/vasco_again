@@ -24,10 +24,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.activity.PasswordActivity"
+                    android:theme="@style/PasswordTheme"></activity>
+
         <service
             android:name=".ui.activity.GPSService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity android:name=".ui.activity.InsertDepActivity" />
         <activity android:name=".ui.activity.MapActivity" />

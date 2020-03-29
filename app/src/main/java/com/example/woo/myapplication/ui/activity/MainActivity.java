@@ -194,32 +194,27 @@ public class MainActivity extends Activity {
 
     public void onClickMyPage(View view){
         //지도정보 받아오기
-        if(MyGlobals.getInstance().getMaplist() == null){
-            retroService.getMypageMapData(MyGlobals.getInstance().getUser().getU_id()).enqueue(new Callback<ArrayList<MyRoomItem>>() {
-                @Override
-                public void onResponse(Call<ArrayList<MyRoomItem>> call, Response<ArrayList<MyRoomItem>> response) {
-                    System.out.println("onResponse 호출됨@@@@@@@@@@@@@@@@");
-                    ArrayList<MyRoomItem> maplist = response.body();
-                    System.out.println("size :" +maplist.size());
-                    //MyRoomItem maplist = response.body()
-                    MyGlobals.getInstance().setMaplist(maplist);
-                    Intent intent1 = new Intent(getApplicationContext(),MyPageActivity.class);
-                    startActivity(intent1);
-                }
+        retroService.getMypageMapData(MyGlobals.getInstance().getUser().getU_id()).enqueue(new Callback<ArrayList<MyRoomItem>>() {
+            @Override
+            public void onResponse(Call<ArrayList<MyRoomItem>> call, Response<ArrayList<MyRoomItem>> response) {
+                System.out.println("onResponse 호출됨@@@@@@@@@@@@@@@@");
+                ArrayList<MyRoomItem> maplist = response.body();
+                System.out.println("size :" +maplist.size());
+                //MyRoomItem maplist = response.body()
+                MyGlobals.getInstance().setMaplist(maplist);
+                Intent intent1 = new Intent(getApplicationContext(),MyPageActivity.class);
+                startActivity(intent1);
+            }
 
-                @Override
-                public void onFailure(Call<ArrayList<MyRoomItem>> call, Throwable t) {
-                    System.out.println("onFailure 호출됨@@@@@@@@@@@@@@@@@");
-                    Toast.makeText(getApplicationContext(),"맵호출 실패",Toast.LENGTH_SHORT).show();
-                    Intent intent1 = new Intent(getApplicationContext(),MyPageActivity.class);
-                    startActivity(intent1);
-                }
-            });
-        }
-        else{
-            Intent intent1 = new Intent(getApplicationContext(),MyPageActivity.class);
-            startActivity(intent1);
-        }
+            @Override
+            public void onFailure(Call<ArrayList<MyRoomItem>> call, Throwable t) {
+                System.out.println("onFailure 호출됨@@@@@@@@@@@@@@@@@");
+                Toast.makeText(getApplicationContext(),"맵호출 실패",Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(getApplicationContext(),MyPageActivity.class);
+                startActivity(intent1);
+            }
+        });
+
     }
 
     public void onClickLogout(View view){
