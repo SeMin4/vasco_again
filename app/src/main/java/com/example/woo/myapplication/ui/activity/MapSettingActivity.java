@@ -2,6 +2,9 @@ package com.example.woo.myapplication.ui.activity;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -25,15 +28,20 @@ public class MapSettingActivity extends AppCompatActivity
     FragmentTransaction fragmentTransaction;
     FrameLayout frameLayout;
     NaverMapFragment naverMapFragment;
+    private Button placedelete;
+    private Button completedelete;
     private Button next_btn;
-
-
+    Drawable color;
+    int first = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_setting);
+        placedelete = (Button)findViewById(R.id.placedelete);
+        completedelete = (Button)findViewById(R.id.deletecomplete);
         next_btn = (Button)findViewById(R.id.next_btn);
+        color = placedelete.getBackground();
         Intent intent = getIntent();
         centerLat = intent.getDoubleExtra("Lat", 0);
         centerLng = intent.getDoubleExtra("Lng",0);
@@ -57,21 +65,7 @@ public class MapSettingActivity extends AppCompatActivity
                 return true;
             }
         });
-//        naverMapFragment.getView().setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                System.out.println("터치됨@@@@@@@@@@@@@@@@@@@@@@@@@@");
-//                Log.d("터치","터치돰@@@@@@@@");
-//                return true;
-//            }
-//        });
-//
-//        naverMapFragment.getView().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                System.out.println("클릭됨@@@@@@@@@@@@@@@@@@");
-//            }
-//        });
+
       /*  if(Build.VERSION.SDK_INT >= 26) {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel notificationChannel = new NotificationChannel("channel1", "1번채널", NotificationManager.IMPORTANCE_DEFAULT);
@@ -82,12 +76,39 @@ public class MapSettingActivity extends AppCompatActivity
             notificationChannel.setVibrationPattern(new long[]{100, 200, 100, 200});
             notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
             notificationManager.createNotificationChannel(notificationChannel);
-        }
+        }*/
 
-*/
+      placedelete.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              if(first == 0){
+                  naverMapFragment.gestureFunc();
+                  first = 1;
+              }
+              if(NaverMapFragment.flag == 0 ){
+                  NaverMapFragment.flag = 1;
+                  placedelete.setBackgroundColor(Color.RED);
+              }else{
+                  NaverMapFragment.flag = 0;
+                  placedelete.setBackground(color);
+              }
+
+          }
+      });
+
+      completedelete.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              naverMapFragment.detachView();
+              NaverMapFragment.flag = 0;
+              first = 0;
+              placedelete.setBackground(color);
+          }
+      });
 
 
-        next_btn.setOnClickListener(new View.OnClickListener() {
+
+      next_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), GPSService.class);

@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,23 +15,30 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.utils.GridAdapter;
+import com.example.woo.myapplication.utils.MapAdater;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraAnimation;
@@ -56,7 +65,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 
-public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
+public class NaverMapFragment extends Fragment  implements OnMapReadyCallback {
     MapFragment mapFragment;
     public static double zoomLevel;
     public static double centerLat;
@@ -72,7 +81,14 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
     public ArrayList<PolygonOverlay> squareOverlay;
     TextView mapSizeTextView;
     FragmentTransaction fragmentTransaction;
-    private GestureDetector detector;
+    private RecyclerView recyclerView;
+    private MapAdater adapter;
+    private RelativeLayout relativeLayout;
+    private GestureDetector gestureDetector;
+    private RecyclerView.OnItemTouchListener onItemTouchListener;
+    static public int flag = 0;
+
+    //ArrayList<Integer> placeIndex;//삭제된 장소는 값이 1로 되어있음
 
     public static NaverMapFragment newInstance() {
         NaverMapFragment fragment = new NaverMapFragment();
@@ -81,7 +97,23 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         return fragment;
     }
 
+    public void detachView(){
+        relativeLayout.removeView(recyclerView);
+    }
 
+    public void gestureFunc(){
+        recyclerView = new RecyclerView(getContext());
+        GridLayoutManager mGridmanager = new GridLayoutManager(getContext(),8);
+        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+        adapter = new MapAdater(dm.widthPixels/8);
+        recyclerView.setLayoutManager(mGridmanager);
+        recyclerView.setAdapter(adapter);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        params.addRule(RelativeLayout.CENTER_VERTICAL);
+        relativeLayout.addView(recyclerView,params);
+        recyclerView.addOnItemTouchListener(onItemTouchListener);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,41 +126,6 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
             fragmentTransaction.add(R.id.navermap, mapFragment).addToBackStack(null).commit();
         }
 
-        detector = new GestureDetector(new GestureDetector.OnGestureListener() {
-            @Override
-            public boolean onDown(MotionEvent e) {
-                System.out.println("onDown");
-                return true;
-            }
-
-            @Override
-            public void onShowPress(MotionEvent e) {
-                System.out.println("onShowPress");
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                System.out.println("onSingleTap");
-                return true;
-            }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                System.out.println("onScroll");
-                return true;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-                System.out.println("onLongPress");
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                System.out.println("onFiling");
-                return true;
-            }
-        });
 
 //        LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //        view = inflater.inflate(R.layout.fragment_map,null);
@@ -143,6 +140,7 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_map, container, true);
         view = rootView.findViewById(R.id.navermap);
+        relativeLayout = rootView.findViewById(R.id.relativeLayout);
         mapSizeTextView = rootView.findViewById(R.id.mapSizeText);
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -152,21 +150,6 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
                 return true;
             }
         });
-       /* view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                System.out.println("터치됨@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                Log.d("터치","터치돰@@@@@@@@");
-                return true;
-            }
-        });
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("클릭됨@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                Log.d("터치","터치돰@@@@@@@@");
-            }
-        });*/
         return rootView;
     }
 
@@ -183,6 +166,83 @@ public class NaverMapFragment extends Fragment implements OnMapReadyCallback {
         naverMap.getUiSettings().setZoomControlEnabled(false);
         naverMap.getUiSettings().setTiltGesturesEnabled(false);
         naverMap.getUiSettings().setScrollGesturesEnabled(false);
+
+        gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
+            @Override
+            public boolean onDown(MotionEvent e) {
+                System.out.println("ondowne.getX()@@@@@@@@@@@@@@@@@@@@@@@@@@ : "+e.getX());
+                return true;
+            }
+
+            @Override
+            public void onShowPress(MotionEvent e) {
+                System.out.println("onshowpresse.getX()@@@@@@@@@@@@@@@@@@@@@@@@@@ : "+e.getX());
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                System.out.println("onsingletapupe.getX()@@@@@@@@@@@@@@@@@@@@@@@@@@ : "+e.getX());
+                return true;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                System.out.println("onscrolle.getX()@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + e1.getX());
+
+                View view = recyclerView.findChildViewUnder(e1.getX(), e1.getY());
+                View view2 = recyclerView.findChildViewUnder(e2.getX(), e2.getY());
+                if (flag == 1) {
+                    System.out.println("flag 11111111111111111111111111111");
+                    if (view != null) {
+                        view.setBackgroundColor(Color.RED);
+                    }
+                    if (view2 != null) {
+                        view2.setBackgroundColor(Color.RED);
+                    }
+                } else if (flag == 0) {
+                    System.out.println("flag 000000000000000000000000000000000000");
+                    if (view != null) {
+                        view.setBackgroundColor(Color.argb(90,255,255,255));
+                    }
+
+                    if (view2 != null) {
+                        view2.setBackgroundColor(Color.argb(90,255,255,255));                    }
+                }
+                return true;
+            }
+            @Override
+            public void onLongPress(MotionEvent e) {
+                System.out.println("onLonge.getX()@@@@@@@@@@@@@@@@@@@@@@@@@@ : "+e.getX());
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                System.out.println("onfillige.getX()@@@@@@@@@@@@@@@@@@@@@@@@@@ : "+e1.getX());
+                return true;
+            }
+        });
+
+
+
+        onItemTouchListener = new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent e) {
+                gestureDetector.onTouchEvent(e);
+                return true;
+            }
+
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent e) {
+                gestureDetector.onTouchEvent(e);
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean b) {
+
+            }
+        };
+
+
 
         // 이전의 액티비티로 부터 설정해주었던 centerLat, centerLng 값을 받아서 지도 중심을 설정
         centerLatLng = new LatLng(centerLat,centerLng);
