@@ -84,9 +84,9 @@ public class MainActivity extends Activity {
         search = (EditText)findViewById(R.id.search);
 
         adapter = new MpersonAdapter();
-        if(MyGlobals.getInstance().getUser().getU_email().equals("admin") == false){
+        /*if(MyGlobals.getInstance().getUser().getU_email().equals("admin") == false){
             fab_btn.hide();
-        }
+        }*/
         if( (MyGlobals.getInstance().getRetrofit() == null) || (MyGlobals.getInstance().getRetrofitExService() ==null) ) {
             retrofit = new Retrofit.Builder().baseUrl(MyGlobals.RetrofitExService.URL).addConverterFactory(GsonConverterFactory.create()).build();
             retroService = retrofit.create(MyGlobals.RetrofitExService.class);

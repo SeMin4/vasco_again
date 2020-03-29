@@ -29,12 +29,12 @@
     <string name="mpersonName">실종자 이름</string>
     <string name="mpersonString">실종 위치</string>
     <string name="mpersonPhoto">실종자 사진</string>
-    <string name="MpersonDesc">구체적인 세부사항</string>
-    <string name="selectDate">-클릭하여 실종일자를 선택해주세요</string>
+    <string name="MpersonDesc">구체적인 세부사항을 입력해주세요</string>
+    <string name="selectDate">실종일자를 선택해주세요</string>
     <string name="changeDate">변경</string>
     <string name="searchLocation">검색</string>
     <string name="insertMperson">실종자 추가</string>
-    <string name="selectAge">-실종자 생년월일을 입력해주세요</string>
+    <string name="selectAge">실종자 생년월일을 선택해주세요</string>
 
     <string name="label_map_type">유형:</string>
     <string name="label_scale_type">축적:</string>

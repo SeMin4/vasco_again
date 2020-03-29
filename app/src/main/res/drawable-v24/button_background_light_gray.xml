@@ -2,13 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--원래상태일때-->
-    <item>
+    <item android:state_pressed="false">
         <shape android:shape="rectangle">
-            <corners android:radius="80dp">
+            <corners android:radius="50dp">
             </corners>
-            <solid android:color="@color/marsala">
-
-            </solid>
+            <solid android:color="@color/light_light_gray"/>
 
         </shape>
 
@@ -18,11 +16,9 @@
     <item android:state_pressed="true">
 
         <shape android:shape="rectangle">
-            <corners android:radius="80dp">
+            <corners android:radius="50dp">
             </corners>
-            <solid android:color="@color/colorGray">
-
-            </solid>
+            <solid android:color="@color/light_gray"/>
 
         </shape>
     </item>

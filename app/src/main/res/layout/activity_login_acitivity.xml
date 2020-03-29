@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/login_layout"
     android:layout_width="match_parent"
-    android:background="@color/white"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical"
@@ -16,14 +15,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/white">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:background="@color/white"
                 android:gravity="center|bottom"
                 android:paddingBottom="20dp"
                 android:text="VascoRoad"
@@ -54,7 +51,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="40dp"
                 android:layout_marginTop="13dp"
-                android:background="@drawable/custom_edit_text_bg"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="15dp"
+                android:background="@drawable/bg_border_burgundy"
                 android:cursorVisible="true"
                 android:drawableLeft="@drawable/ic_person"
                 android:drawablePadding="15dp"
@@ -70,7 +69,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="40dp"
                 android:layout_marginTop="13dp"
-                android:background="@drawable/custom_edit_text_bg"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="15dp"
+                android:background="@drawable/bg_border_burgundy"
                 android:cursorVisible="true"
                 android:drawableLeft="@drawable/ic_lock"
                 android:drawablePadding="15dp"

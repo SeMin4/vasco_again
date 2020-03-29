@@ -10,96 +10,146 @@
     android:id="@+id/insertMperson_layout">
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:textStyle="bold"
-                android:textColor="#ffffff"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="25dp"
-                android:paddingVertical="11dp"
-                android:background="@color/burgundy"
-                android:text="@string/addMperson">
-            </TextView>
+                android:paddingHorizontal="20dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/burgundy">
+                <TextView
 
+                    android:layout_width="match_parent"
+                    android:textColor="#ffffff"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:paddingVertical="11dp"
+                    android:text="@string/addMperson"
+                    /><!--
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:minWidth="0dp"
+                    android:id="@+id/insert"
+                    android:text="완료"
+                    android:textSize="15sp"
+                    android:textColor="#ffffff"
+                    android:background="#00ff0000"
+                    />-->
+            </RelativeLayout>
+
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginVertical="7dp"
+                android:background="@drawable/bg_light_gray_round"
+                android:gravity="center|left"
+                android:hint="@string/mpersonPhoto"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_add_a_photo_selector"
+                android:textSize="10pt"
+                android:elevation="3dp"/>
 
             <EditText
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginVertical="7dp"
                 android:id="@+id/mperson_name"
                 tools:ignore="LabelFor"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:inputType="textNoSuggestions"
                 android:importantForAutofill="no"
                 android:cursorVisible="true"
+                android:textSize="15sp"
                 android:hint="@string/mpersonName"
-                android:background="@drawable/form">
+                android:background="@drawable/custom_edit_text_light_gray"
+                android:drawableLeft="@drawable/ic_person_outline_selector"
+                android:drawablePadding="15dp"
+                android:elevation="3dp">
             </EditText>
 
             <TextView
                 android:id="@+id/mperson_age"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginVertical="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center|left"
-                android:textSize="10pt"
-                android:background="@drawable/form"
-                android:text="@string/selectAge">
+                android:background="@drawable/custom_edit_text_light_gray"
+                android:drawableLeft="@drawable/ic_calendar_selector"
+                android:drawablePadding="15dp"
+                android:hint="@string/selectAge"
+                android:textSize="15sp"
+                android:elevation="3dp">
             </TextView>
 
 
             <TextView
                 android:id="@+id/mperson_select_date"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginVertical="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center|left"
-                android:textSize="10pt"
-                android:background="@drawable/form"
-                android:text="@string/selectDate">
+                android:textSize="15sp"
+                android:background="@drawable/custom_edit_text_light_gray"
+                android:drawableLeft="@drawable/ic_calendar_selector"
+                android:drawablePadding="15dp"
+                android:hint="@string/selectDate"
+                android:elevation="3dp">
             </TextView>
 
-            <LinearLayout
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="13dp"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/search_location"
-                    tools:ignore="LabelFor"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:inputType="textNoSuggestions"
-                    android:importantForAutofill="no"
+                    android:layout_marginVertical="7dp"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/custom_edit_text_light_gray"
                     android:cursorVisible="true"
-                    android:hint="지역"
-                    android:background="@drawable/form">
-                </EditText>
+                    android:drawableLeft="@drawable/ic_location_selector"
+                    android:drawablePadding="15dp"
+                    android:elevation="3dp"
+                    android:hint="실종 지역"
+                    android:importantForAutofill="no"
+                    android:inputType="textNoSuggestions"
+                    android:textSize="15sp"
+                    tools:ignore="LabelFor"
+                    android:layout_toLeftOf="@id/getLocation_btn"/>
+
                 <Button
                     android:id="@+id/getLocation_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#ffffff"
-                    android:textStyle="bold"
-                    android:background="@color/colorGray"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignBaseline="@id/search_location"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/bg_button_border_burgundy"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="20dp"
                     android:text="@string/searchLocation"
-                    >
-                </Button>
+                    android:textColor="@color/burgundy"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/mperson_missing_address"
@@ -110,42 +160,58 @@
                 android:gravity="center|left"
                 android:text="TextView" />
 
-            <EditText
-                android:id="@+id/mperson_description"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="특이사항"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:gravity="center|left"
-                android:textSize="10pt"
-                android:background="@drawable/form"
-                android:hint="@string/MpersonDesc">
-            </EditText>
+                android:layout_marginVertical="5dp"/>
 
-            <ImageView
-                android:id="@+id/imageView"
+            <!--<EditText
+                android:id="@+id/mperson_description"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:paddingHorizontal="10dp"
                 android:gravity="center|left"
-                android:textSize="10pt"
-                android:background="@drawable/form"
-                android:src="@drawable/default_unusual_photo"
-                android:hint="@string/mpersonPhoto">
-            </ImageView>
+                android:hint="@string/MpersonDesc"
+                android:textSize="15sp"
+                android:background="@drawable/custom_background_cream"
+                android:inputType="textMultiLine"/>-->
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:paddingHorizontal="10dp"
+                    android:background="@drawable/custom_background_cream">
+                    <EditText
+                        android:id="@+id/mperson_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center|left"
+                        android:hint="@string/MpersonDesc"
+                        android:textSize="15sp"
+                        android:layout_gravity="center_vertical"
+                        android:backgroundTint="#00ff0000"
+                        android:inputType="textMultiLine">
+                    </EditText>
+                </ScrollView>
 
 
             <Button
-                android:layout_marginHorizontal="40dp"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="10dp"
                 android:id="@+id/insert"
                 android:textColor="#ffffff"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:background="@drawable/button_background2"
+                android:background="@drawable/button_background_burgundy"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:text="@string/insertMperson"
                 >
             </Button>

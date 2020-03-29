@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:background="#eeeeee"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/custom_dialog_bg"
     android:orientation="vertical"
     tools:context=".ui.activity.LoginErrorActivity">
 
@@ -12,50 +14,65 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
+            android:id="@+id/error_title"
+            android:textColor="@color/burgundy"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:textSize="20sp"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
             android:text="@string/roomDeleteCheckTitle"
-            android:background="@color/burgundy">
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="#00ff0000">
         </TextView>
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:src="@drawable/divider_burgundy"/>
+
     <LinearLayout
-        android:padding="24dp"
-        android:orientation="vertical"
+        android:padding="20dp"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="방 비밀번호 :"
             android:textColor="#000"
-            android:textSize = "15sp"
-            android:text="@string/roomPassword"
-            android:layout_marginBottom="10dp">
+            android:textSize = "15sp">
         </TextView>
-
         <EditText
             android:id="@+id/room_delete_password"
             tools:ignore="LabelFor"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:inputType="textNoSuggestions|textPassword"
             android:importantForAutofill="no"
             android:cursorVisible="true"
-            android:hint="@string/login_password"
-            android:background="@drawable/form">
+            android:hint="@string/login_password">
         </EditText>
-
     </LinearLayout>
+
     <Button
         android:id="@+id/room_delete_confirm_btn"
         android:layout_width="match_parent"
+        android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="@string/confirm">
-
-    </Button>
+        android:minHeight="0dp"
+        android:padding="12dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="7dp"
+        android:textSize="15sp"
+        android:text="@string/confirm"
+        android:textColor="@color/dark_gray"
+        android:background="@drawable/button_background_gray"
+        style="?android:attr/borderlessButtonStyle"
+        />
 </LinearLayout>

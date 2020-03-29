@@ -25,6 +25,7 @@ import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.data.Color;
 import com.example.woo.myapplication.data.DepartmentData;
 import com.example.woo.myapplication.data.User;
+import com.example.woo.myapplication.ui.addListenerOnTextChange;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +65,8 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
         user_name = (TextView)findViewById(R.id.user_name);
         my_room_list_view = (ListView)findViewById(R.id.my_room_list);
 
+        change_password.addTextChangedListener(new addListenerOnTextChange(this, change_password, R.drawable.ic_lock_outline_selector, R.drawable.ic_lock_outline_burgundy));
+        change_check_password.addTextChangedListener(new addListenerOnTextChange(this, change_check_password, R.drawable.ic_lock_outline_selector, R.drawable.ic_lock_outline_burgundy));
 
         roomListAdapter = new MyRoomListAdapter(this);
         my_room_list_view.setAdapter(roomListAdapter);

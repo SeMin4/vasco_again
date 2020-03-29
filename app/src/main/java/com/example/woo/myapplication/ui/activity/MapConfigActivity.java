@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.annotation.NonNull;
@@ -43,6 +44,8 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
     LinearLayout MapConfigLayout;
     Button nextMapSettingBtn;
     Marker marker;
+    GradientDrawable drawable;
+    FrameLayout frameLayout;
     double clickLat;
     double clickLng;
     @Override
@@ -51,8 +54,13 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
         setContentView(R.layout.activity_map_config);
         FragmentManager fm = getSupportFragmentManager();
         MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.navermap);
+        drawable = (GradientDrawable) getApplicationContext().getDrawable(R.drawable.bg_border_burgundy);
+        frameLayout = (FrameLayout) findViewById(R.id.naverMap_Config);
+        frameLayout.setBackground(drawable);
+        frameLayout.setClipToOutline(true);
         if(mapFragment == null){
             mapFragment = MapFragment.newInstance();
+
             fm.beginTransaction().add(R.id.naverMap_Config, mapFragment).commit();
         }
         mapFragment.getMapAsync(this);
