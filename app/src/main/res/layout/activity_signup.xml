@@ -62,14 +62,18 @@
 
                 <Button
                     android:id="@+id/sign_up_email_check_btn"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginRight="30dp"
-                    android:layout_gravity="center"
+                    android:background="@drawable/bg_button_border_burgundy"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp"
                     android:minHeight="0dp"
                     android:minWidth="0dp"
-                    android:background="@drawable/ic_check_circle_selector"
-                    style="?android:attr/borderlessButtonStyle"/>
+                    android:text="중복체크"
+                    android:textColor="@color/burgundy"
+                    android:layout_gravity="center_vertical"
+                    />
 
             </LinearLayout>
 
