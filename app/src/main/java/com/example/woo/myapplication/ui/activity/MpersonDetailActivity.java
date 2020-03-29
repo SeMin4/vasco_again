@@ -3,7 +3,10 @@ package com.example.woo.myapplication.ui.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -170,6 +173,8 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
         TextView place = (TextView)findViewById(R.id.TextView_Place);
         TextView desc = (TextView)findViewById(R.id.TextView_Characteristic);
         TextView age = (TextView)findViewById(R.id.TextView_Age);
+        //실종자 사진 자르기
+        GradientDrawable drawable = (GradientDrawable) getApplicationContext().getDrawable(R.drawable.iv_circle);
         //이름 장소 시간 사진 특징 +나이
         name.setText((CharSequence)selected.getP_name());
         time.setText((CharSequence)selected.getP_time());
@@ -183,6 +188,11 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
                 Double.parseDouble(selected.getP_place_longitude())
         );
 
+        //실종자 이미지 자르기
+        profile.setBackground(drawable);
+        profile.setClipToOutline(true);
+        profile.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
         if(selected.getP_photo() == null){
             profile.setImageResource(R.drawable.boy);
         }
@@ -190,7 +200,6 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
             float rotation = 0;
             Picasso.with(getApplicationContext())
                     .load(SERVER_HOST_PATH + "/" + selected.getP_photo())
-                    .fit()
                     .rotate(0f)
                     .into(profile);
         }

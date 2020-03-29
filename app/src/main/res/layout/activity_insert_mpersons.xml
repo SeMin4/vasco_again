@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@color/white"
             android:paddingBottom="10dp">
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -54,17 +53,18 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:layout_marginHorizontal="50dp"
-                android:layout_marginVertical="10dp"
+                android:layout_marginVertical="7dp"
                 android:background="@drawable/bg_light_gray_round"
                 android:gravity="center|left"
                 android:hint="@string/mpersonPhoto"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_add_a_photo_selector"
-                android:textSize="10pt" />
+                android:textSize="10pt"
+                android:elevation="3dp"/>
 
             <EditText
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="5dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginVertical="7dp"
                 android:id="@+id/mperson_name"
                 tools:ignore="LabelFor"
                 android:layout_width="match_parent"
@@ -76,13 +76,14 @@
                 android:hint="@string/mpersonName"
                 android:background="@drawable/custom_edit_text_light_gray"
                 android:drawableLeft="@drawable/ic_person_outline_selector"
-                android:drawablePadding="15dp">
+                android:drawablePadding="15dp"
+                android:elevation="3dp">
             </EditText>
 
             <TextView
                 android:id="@+id/mperson_age"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="5dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginVertical="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center|left"
@@ -90,14 +91,15 @@
                 android:drawableLeft="@drawable/ic_calendar_selector"
                 android:drawablePadding="15dp"
                 android:hint="@string/selectAge"
-                android:textSize="15sp">
+                android:textSize="15sp"
+                android:elevation="3dp">
             </TextView>
 
 
             <TextView
                 android:id="@+id/mperson_select_date"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="5dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginVertical="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center|left"
@@ -105,47 +107,49 @@
                 android:background="@drawable/custom_edit_text_light_gray"
                 android:drawableLeft="@drawable/ic_calendar_selector"
                 android:drawablePadding="15dp"
-                android:hint="@string/selectDate">
+                android:hint="@string/selectDate"
+                android:elevation="3dp">
             </TextView>
 
-            <LinearLayout
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="5dp"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="10">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/search_location"
-                    tools:ignore="LabelFor"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_weight="8"
-                    android:inputType="textNoSuggestions"
-                    android:importantForAutofill="no"
-                    android:cursorVisible="true"
-                    android:hint="실종 지역"
-                    android:textSize="15sp"
+                    android:layout_marginVertical="7dp"
+                    android:layout_marginLeft="30dp"
                     android:background="@drawable/custom_edit_text_light_gray"
+                    android:cursorVisible="true"
                     android:drawableLeft="@drawable/ic_location_selector"
-                    android:drawablePadding="15dp">
-                </EditText>
+                    android:drawablePadding="15dp"
+                    android:elevation="3dp"
+                    android:hint="실종 지역"
+                    android:importantForAutofill="no"
+                    android:inputType="textNoSuggestions"
+                    android:textSize="15sp"
+                    tools:ignore="LabelFor"
+                    android:layout_toLeftOf="@id/getLocation_btn"/>
+
                 <Button
                     android:id="@+id/getLocation_btn"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="0dp"
-                    android:paddingVertical="10dp"
-                    android:layout_weight="2"
+                    android:minWidth="0dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignBaseline="@id/search_location"
                     android:layout_marginLeft="10dp"
-                    android:textColor="@color/burgundy"
+                    android:layout_marginRight="30dp"
                     android:background="@drawable/bg_button_border_burgundy"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="20dp"
                     android:text="@string/searchLocation"
-                    >
-                </Button>
+                    android:textColor="@color/burgundy"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/mperson_missing_address"

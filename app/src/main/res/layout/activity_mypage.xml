@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/my_page_layout"
-        android:background="@color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:weightSum="14">
@@ -21,6 +20,7 @@
             android:text="회원정보"
             android:layout_marginTop="20dp"
             android:layout_marginHorizontal="30dp"
+            android:layout_marginBottom="10dp"
             android:textSize="20sp"
             android:textColor="@color/black"
             android:textStyle="bold"
@@ -31,14 +31,11 @@
             android:layout_weight="8"
             android:weightSum="8"
             android:orientation="vertical"
-            android:layout_marginHorizontal="20dp"
-            android:paddingVertical="5dp">
+            android:layout_marginHorizontal="20dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.6"
-                android:paddingHorizontal="10dp"
-                android:weightSum="10"
                 android:orientation="horizontal"
                 >
 
@@ -47,11 +44,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="5dp"
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/custom_edit_text_light_gray"
                     android:drawableLeft="@drawable/ic_mail_outline_burgundy"
                     android:drawablePadding="15dp"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp"
+                    android:elevation="3dp"/>
 
                 <!--<TextView
                     android:layout_width="0dp"
@@ -72,13 +72,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.6"
-                android:paddingHorizontal="10dp"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/change_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="5dp"
                     android:layout_gravity="center_vertical"
                     android:drawableLeft="@drawable/ic_lock_outline_selector"
                     android:drawablePadding="15dp"
@@ -89,7 +90,8 @@
                     tools:ignore="LabelFor"
                     android:textSize="15sp"
                     android:textColorHint="@color/gray"
-                    android:background="@drawable/custom_edit_text_light_gray"/>
+                    android:background="@drawable/custom_edit_text_light_gray"
+                    android:elevation="3dp"/>
 
                 <!--<TextView
                     android:layout_width="0dp"
@@ -117,7 +119,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="1.6"
                 android:weightSum="10"
-                android:paddingHorizontal="10dp"
                 android:orientation="horizontal">
                 <EditText
                     android:id="@+id/change_check_password"
@@ -125,7 +126,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="8.4"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="5dp"
                     android:drawableLeft="@drawable/ic_lock_outline_selector"
                     android:drawablePadding="15dp"
                     android:cursorVisible="true"
@@ -135,7 +137,8 @@
                     tools:ignore="LabelFor"
                     android:textSize="15sp"
                     android:textColorHint="@color/gray"
-                    android:background="@drawable/custom_edit_text_light_gray"/>
+                    android:background="@drawable/custom_edit_text_light_gray"
+                    android:elevation="3dp"/>
                 <!--<TextView
                     android:layout_width="0dp"
                     android:layout_weight="3.5"
@@ -161,6 +164,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="12dp"
+                    android:layout_marginRight="10dp"
                     android:background="@drawable/bg_button_border_burgundy"
                     android:text="@string/change"
                     android:textColor="@color/burgundy"
@@ -172,7 +176,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.6"
-                android:paddingHorizontal="10dp"
                 android:weightSum="10"
                 android:orientation="horizontal">
 
@@ -180,12 +183,15 @@
                     android:id="@+id/user_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="5dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:background="@drawable/custom_edit_text_light_gray"
                     android:drawableLeft="@drawable/ic_person_outline_burgundy"
                     android:drawablePadding="15dp"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp"
+                    android:elevation="3dp"/>
                 <!--<TextView
                     android:layout_width="0dp"
                     android:layout_weight="3.5"
@@ -207,8 +213,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="1.6"
                 android:weightSum="10"
-                android:paddingVertical="5dp"
-                android:paddingHorizontal="10dp"
                 android:orientation="horizontal">
                 <!--<TextView
                     android:layout_weight="3.5"
@@ -222,10 +226,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="5dp"
                     android:layout_weight="8.4"
                     android:background="@drawable/custom_edit_text_light_gray"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:elevation="3dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -245,7 +251,8 @@
                     android:layout_weight="1.6"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="7.5dp"
+                    android:layout_marginVertical="12.5dp"
+                    android:layout_marginRight="10dp"
                     android:background="@drawable/bg_button_border_burgundy"
                     android:text="@string/change"
                     android:textColor="@color/burgundy"

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#b42f2f</color>
-    <color name="colorPrimaryDark">#b42f2f</color>
-    <color name="colorAccent">#b42f2f</color>
+    <color name="colorPrimary">#b82025</color>
+    <color name="colorPrimaryDark">#b82025</color>
+    <color name="colorAccent">#b82025</color>
     <color name = "colorGray">#82868c</color>
-    <color name="primary">#C83631</color>
-    <color name="primary_dark">#C83631</color>
-    <color name="accent">#C83631</color>
+    <color name="primary">#b82025</color>
+    <color name="primary_dark">#b82025</color>
+    <color name="accent">#b82025</color>
     <color name="black">#000000</color>
     <color name="gray">#BCBCC1</color>
     <color name="gold">#BC8D49</color>
@@ -16,14 +16,14 @@
     <color name="light_blue">#97BEC5</color>
     <color name="light_purple">#ABA8C5</color>
     <color name="light_gold">#BCB89D</color>
-    <color name="light_light_gray">#f7f7f7</color>
+    <color name="light_light_gray">#f5f5f5</color>
     <color name="white">#FFFFFF</color>
     <color name="line">#FFFFFF</color>
-    <color name="impossible">#C83631</color>
+    <color name="impossible">#b82025</color>
     <color name="finish">#F5C102</color>
-    <color name = "burgundy">#b42f2f</color>
+    <color name = "burgundy">#b82025</color>
     <color name="dark_burgundy">#812121</color>
     <color name = "marsala">#8a3b3b</color>
     <color name = "cream">#f7f6e2</color>
-    <color name = "dark_cream">#deddcb</color>
+    <color name = "dark_cream">#e7e7da</color>
 </resources>
