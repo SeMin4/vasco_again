@@ -35,7 +35,11 @@
     <string name="searchLocation">검색</string>
     <string name="insertMperson">실종자 추가</string>
     <string name="selectAge">실종자 생년월일을 선택해주세요</string>
-
+    <string name="manageDepartment">소속 관리</string>
+    <string name="addDepartment">소속 추가</string>
+    <string name="DepartmentName">소속명</string>
+    <string name="messageChangeColor">클릭하여 색상 설정</string>
+    <string name="color">색상</string>
     <string name="label_map_type">유형:</string>
     <string name="label_scale_type">축적:</string>
     <string name="label_button_reset">초기화</string>

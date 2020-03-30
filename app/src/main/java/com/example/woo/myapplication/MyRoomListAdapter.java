@@ -70,6 +70,7 @@ public class MyRoomListAdapter extends BaseAdapter implements View.OnClickListen
         myRoomList.add(item);
     }
 
+    //deletebtn Tag 의 값을 이용하여 처리
     public void onClick(View v){
         //MyPageActivity 의 onlistBtnClick()함수 호출
         if(this.listBtnClickListener != null){

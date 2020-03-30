@@ -24,8 +24,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.activity.PasswordActivity"
-                    android:theme="@style/PasswordTheme"></activity>
+        <activity android:name=".ui.activity.InsertDepartmentActivity"
+            android:theme="@android:style/Theme.Dialog"
+            ></activity>
+        <activity
+            android:name=".ui.activity.PasswordActivity"
+            android:theme="@style/PasswordTheme" />
 
         <service
             android:name=".ui.activity.GPSService"
