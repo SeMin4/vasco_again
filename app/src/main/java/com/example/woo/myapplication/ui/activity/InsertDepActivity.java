@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,7 +12,6 @@ import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.OverlapExamineData;
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.data.DepartmentData;
-import com.naver.maps.map.overlay.OverlayImage;
 
 import java.util.ArrayList;
 
@@ -92,7 +90,6 @@ public class InsertDepActivity extends AppCompatActivity {
                                 finish();
                             }
                         }
-
                         @Override
                         public void onFailure(Call<OverlapExamineData> call, Throwable t) {
                             Toast.makeText(getApplicationContext(),"부서추가 실패입니다.",Toast.LENGTH_SHORT).show();
@@ -108,8 +105,8 @@ public class InsertDepActivity extends AppCompatActivity {
             @Override
             public void onCancel(AmbilWarnaDialog dialog) {
 
-            }
 
+            }
             @Override
             public void onOk(AmbilWarnaDialog dialog, int color) {
                 tColor2 = color;
