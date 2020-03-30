@@ -93,6 +93,10 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
             public void onResponse(Call<ArrayList<DepartmentData>> call, Response<ArrayList<DepartmentData>> response) {
                 Log.d("부서","부서 onResponse");
                 ArrayList<DepartmentData> data = response.body();
+                if(data == null){
+                    Toast.makeText(getApplicationContext(), "부서정보를 받아오지 못했습니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 for(int i =0;i<data.size();i++)
                 {
                     depList.add(data.get(i).getDepartment());

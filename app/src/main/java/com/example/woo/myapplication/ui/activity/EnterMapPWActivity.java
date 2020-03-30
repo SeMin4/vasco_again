@@ -72,7 +72,7 @@ public class EnterMapPWActivity extends Activity {
                     //방에입장한다.
                     Toast.makeText(getApplicationContext(), "방에 입장하셨습니다.", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent();
-                    intent.putExtra("mapInfoIndex", mapInfo_index);
+                    intent.putExtra("mapInfoIndex", mapInfo_index); //이건 무엇?
                     setResult(RESULT_OK, intent);
                     finish();
                 }

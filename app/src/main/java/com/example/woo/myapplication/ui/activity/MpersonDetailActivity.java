@@ -127,6 +127,10 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
             public void onResponse(Call<ArrayList<MapInfo>> call, Response<ArrayList<MapInfo>> response) {
                 System.out.println("onResponse@@@@@@@@@@@@");
                 maplist = response.body();
+                if(maplist == null){
+                    Toast.makeText(getApplicationContext(),"지도정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 System.out.println("maplist _size : "+maplist.size());
                 for(int i =0;i<maplist.size();i++){
                     adapter.addItem(maplist.get(i));

@@ -102,6 +102,10 @@ public class MainActivity extends Activity {
             public void onResponse(Call<ArrayList<Mperson>> call, Response<ArrayList<Mperson>> response) {
                 Log.d("리스트뷰","onResponse");
                 ArrayList<Mperson> persons = response.body();
+                if(persons == null){
+                    Toast.makeText(getApplicationContext(),"실종자 리스트를 띄울 수 없습니다.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 for(int i=0;i<persons.size();i++){
                     Log.d("리스트뷰",persons.get(i).getP_name());
                     adapter.addItem(persons.get(i));
@@ -200,7 +204,13 @@ public class MainActivity extends Activity {
                 System.out.println("onResponse 호출됨@@@@@@@@@@@@@@@@");
                 ArrayList<MyRoomItem> maplist = response.body();
                 System.out.println("size :" +maplist.size());
-                //MyRoomItem maplist = response.body()
+                if(maplist == null){
+                    Toast.makeText(getApplicationContext(), "지도를 받아오지 못했습니다.", Toast.LENGTH_SHORT).show();
+                    System.out.println("지도를 받아오지 못했습니다");
+                }else{
+                    Toast.makeText(getApplicationContext(), "지도를 받아왔습니다..", Toast.LENGTH_SHORT).show();
+                    System.out.println("지도를 받아왔습니다.");
+                }
                 MyGlobals.getInstance().setMaplist(maplist);
                 Intent intent1 = new Intent(getApplicationContext(),MyPageActivity.class);
                 startActivity(intent1);
