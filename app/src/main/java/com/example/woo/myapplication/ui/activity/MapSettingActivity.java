@@ -46,22 +46,25 @@ public class MapSettingActivity extends AppCompatActivity
 
     FragmentManager fm;
     FragmentTransaction fragmentTransaction;
-    FrameLayout frameLayout;
+
     NaverMapFragment naverMapFragment;
     private Button placedelete;
+    private Button placerecovery;
     private Button completedelete;
     private Button next_btn;
+
+    private int placedeleteFlag = 0;
     Drawable color;
-    int first = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_setting);
         placedelete = (Button)findViewById(R.id.placedelete);
+        placerecovery = (Button)findViewById(R.id.placerecovery);
         completedelete = (Button)findViewById(R.id.deletecomplete);
         next_btn = (Button)findViewById(R.id.next_btn);
-        color = placedelete.getBackground();
+        color = placedelete.getBackground(); //본래의 색
         Intent intent = getIntent();
         pid = intent.getStringExtra("pid");
         centerLat = intent.getDoubleExtra("Lat", 0);
@@ -77,16 +80,6 @@ public class MapSettingActivity extends AppCompatActivity
 
 
 
-        frameLayout = (FrameLayout)findViewById(R.id.naverMap_Setting);
-        frameLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                System.out.println("터치됨@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                Log.d("터치","터치돰@@@@@@@@");
-                return true;
-            }
-        });
-
       /*  if(Build.VERSION.SDK_INT >= 26) {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel notificationChannel = new NotificationChannel("channel1", "1번채널", NotificationManager.IMPORTANCE_DEFAULT);
@@ -99,39 +92,55 @@ public class MapSettingActivity extends AppCompatActivity
             notificationManager.createNotificationChannel(notificationChannel);
         }*/
 
+      //구역 삭제
       placedelete.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-              if(first == 0){
-                  naverMapFragment.gestureFunc();
-                  first = 1;
-              }
-              if(NaverMapFragment.flag == 0 ){
-                  NaverMapFragment.flag = 1;
+              if (placedeleteFlag == 0) {
+                  naverMapFragment.gestureFunc(); //리사이클러뷰 올림
+                  placedeleteFlag = 1; //1이면 리사이클러뷰 안올리기
                   placedelete.setBackgroundColor(Color.RED);
-              }else{
-                  NaverMapFragment.flag = 0;
-                  placedelete.setBackground(color);
+              }else {
+                  placedelete.setBackgroundColor(Color.RED);
+                  placerecovery.setBackground(color);
               }
-
+              NaverMapFragment.flag = 1;
           }
       });
+
+      placerecovery.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              if(placedeleteFlag == 1) {
+                  placedelete.setBackground(color);
+                  placerecovery.setBackgroundColor(Color.RED);
+                  NaverMapFragment.flag = 0;
+              }
+          }
+      });
+
 
       completedelete.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
               naverMapFragment.detachView();
+              //naverMapFragment.placeIndex = new ArrayList<>(64);
               NaverMapFragment.flag = 0;
-              first = 0;
+              placedeleteFlag = 0;
               placedelete.setBackground(color);
+              placerecovery.setBackground(color);
           }
       });
 
 
 
+      //navermap에있는 arraylist넘기기
       next_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                for(int i =0;i<naverMapFragment.placeIndex.size();i++){
+                    System.out.println(""+i+" : "+naverMapFragment.placeIndex.get(i));
+                }
 //<<<<<<< HEAD
                 FindMapFragment.map_radius = NaverMapFragment.map_radius;
 //                Intent intent = new Intent(getApplicationContext(), GPSService.class);
@@ -188,6 +197,8 @@ public class MapSettingActivity extends AppCompatActivity
                 info.setM_center_place_string(centerLocation);
                 info.setM_center_point_latitude(""+centerLat);
                 info.setM_center_point_longitude(""+centerLng);
+                //수색 구역 설정한 arraylist넘기기
+                info.setPlaceIndex(naverMapFragment.placeIndex);
                 info.setM_find_latitude(null);
                 info.setM_find_longitude(null);
                 intent.putExtra("mapinfo",info);

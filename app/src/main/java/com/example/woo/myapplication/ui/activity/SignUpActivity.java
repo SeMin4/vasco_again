@@ -159,7 +159,6 @@ public class SignUpActivity extends AppCompatActivity {
         sign_up_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String sign_up_password_str = sign_up_password.getText().toString();
                 String sign_up_check_password_str = sign_up_check_password.getText().toString();
                 if (sign_up_email.getText().toString().equals("") || sign_up_password.getText().toString().equals("") || sign_up_check_password.getText().toString().equals("") || sign_up_name.getText().toString().equals("") /*|| sign_up_department.getText().toString().equals("")*/) {
@@ -173,8 +172,6 @@ public class SignUpActivity extends AppCompatActivity {
                 } else if (sign_up_password_str.equals(sign_up_check_password_str)) {
                     if(sign_up_email_same.equals(sign_up_email.getText().toString())){
                         HashMap<String, String> input = new HashMap<>();
-//                        input.put("email", "admin");
-//                        input.put("password", "knuvasco");
                         input.put("email", sign_up_email.getText().toString());
                         input.put("password", sign_up_password.getText().toString());
                         input.put("department", sign_up_department.getSelectedItem().toString());

@@ -15,11 +15,15 @@ import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
 
+import java.util.ArrayList;
+
 public class GPSService extends Service {
     static  final String TAG="service";
    // Notification noti;
    public static final String NOTIFICATION_CHANNEL_ID = "10001";
     private int count = 0;
+    private ArrayList<Integer> placeIndex;
+    private String mid;
 
     public GPSService() {
 
@@ -76,8 +80,13 @@ public class GPSService extends Service {
 
 
         Intent gpsIntent = new Intent(this, MapActivity.class);
+        //여기서 넘기기전에 mid랑 placeindex정보 넘겨야한다..
+        placeIndex = (ArrayList<Integer>) intent.getSerializableExtra("placeIndex");
+        mid = intent.getStringExtra("mid");
+       // Log.d("mapActivity","gpsservice mid : "+mid);
+        gpsIntent.putExtra("mid",mid);
+        gpsIntent.putExtra("placeIndex",placeIndex);
         gpsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
         startActivity(gpsIntent);
 
         Toast myToast = Toast.makeText(this.getApplicationContext(),"app 종료", Toast.LENGTH_LONG);

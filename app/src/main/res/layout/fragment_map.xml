@@ -33,14 +33,5 @@
 
     </TextView>
 
-    <!--    <android.support.v7.widget.RecyclerView-->
-<!--        android:id="@+id/map_grid_recycler"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_marginTop="100dp"-->
-<!--        android:layout_marginBottom="100dp">-->
-
-<!--    </android.support.v7.widget.RecyclerView>-->
-
 
 </RelativeLayout>

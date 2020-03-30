@@ -11,6 +11,7 @@ import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +44,12 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     public static int map_radius;
     public ArrayList<PolygonOverlay> squareOverlay;
     public IdleListener cameraIdleListener;
+    private ArrayList<Integer> placeIndex; //수색구역 정보
 
 
+    public void setPlaceIndex(ArrayList<Integer> placeIndex) {
+        this.placeIndex = placeIndex;
+    }
 
     // TODO: Rename and change types and number of parameters
     public static FindMapFragment newInstance() {
@@ -159,15 +164,18 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         @SuppressLint("WrongThread")
         @Override
         protected  Void doInBackground(Void... voids){
-
+            //여기서 placeIndex사용하기 ,알고리즘 생각하기
             // 백그라운드 내에서 해당하는 폴리곤 오버레이 객체를 계속해서 만들어 내는 중.......
             LatLng lineLatLng = centerLatLng.offset(map_radius/8*3,-1* map_radius / 2);
             LatLng drawLatLng = centerLatLng.offset(map_radius/8*3,-1* map_radius / 2);
-            for(int i = 0; i< 64; i++){
-                if(i != 0 && i % 8 == 0){
-                    lineLatLng = lineLatLng.offset(-1*map_radius/8,0);
+            for(int i = 0; i< 64; i++) {
+                if (i != 0 && i % 8 == 0) {
+                    lineLatLng = lineLatLng.offset(-1 * map_radius / 8, 0);
                     drawLatLng = lineLatLng;
                 }
+                Log.d("mapActivity", "doingBackground");
+                Log.d("mapActivity","placeIndex : "+placeIndex);
+
                 PolygonOverlay polygonOverlay = new PolygonOverlay();
                 //getFourCornerLatLng 함수는 가장 남서쪽에 있는 좌표를 기준을 하여 총 사각형을 그릴수 있는 4개의 좌표를 알아내는 함수 (남서쪽, 북서쪽, 북동쪽, 남동쪽) 순서의 리스트 값을 반환한다.
                 polygonOverlay.setCoords(getFourCornerLatLng(drawLatLng));
@@ -180,6 +188,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 publishProgress(polygonOverlay);
                 // 다음 객체에 해당하는 4개의 점의 좌표를 알기 위해 그전에 polygonOverlay의 남동쪽 좌표 값을 다음 폴리곤 오버레이의 남서쪽 좌표 객제 를 생성하는 부분이다.
                 drawLatLng = getFourCornerLatLng(drawLatLng).get(3);
+
             }
 
             return null;

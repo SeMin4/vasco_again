@@ -2,6 +2,7 @@ package com.example.woo.myapplication.ui.activity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -42,19 +43,35 @@ public class MapActivity extends AppCompatActivity {
     FragmentManager fm;
     FragmentTransaction fragmentTransaction;
     FindMapFragment findMapFragment;
-
+    private String mid;
+    private ArrayList<Integer> placeIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_activity);
+        Intent intent = getIntent();
+        if(intent != null){
+            mid = intent.getStringExtra("mid");
+            placeIndex = (ArrayList<Integer>)intent.getSerializableExtra("placeIndex");
+          //  Log.d("mapActivity","mid : "+mid);
+          //  Log.d("mapActivity","placeIndex : "+placeIndex);
+        }
         fm = getSupportFragmentManager();
         findMapFragment = (FindMapFragment)fm.findFragmentById(R.id.naverMap_findMap) ;
         if(findMapFragment ==  null){
+            System.out.println("placeIndex 설정");
             findMapFragment = FindMapFragment.newInstance();
+            if(placeIndex != null) {
+                Log.d("mapActivity","placeIndex 설정");
+                findMapFragment.setPlaceIndex(placeIndex);
+            }
             fragmentTransaction = fm.beginTransaction();
             fragmentTransaction.add(R.id.naverMap_findMap_layout, findMapFragment);
             fragmentTransaction.commit();
+        }else{
+            System.out.println("placeIndex 설정2");
+            findMapFragment.setPlaceIndex(placeIndex);
         }
         photoView = (PhotoView) findViewById(R.id.photo_view);
         distance = 2.5;

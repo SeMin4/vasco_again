@@ -1,6 +1,7 @@
 package com.example.woo.myapplication.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class MapInfo implements Serializable {
 
@@ -17,6 +18,9 @@ public class MapInfo implements Serializable {
     private String m_center_point_longitude;
     private String m_find_latitude;
     private String m_find_longitude;
+    private ArrayList<Integer> placeIndex;
+
+
 
     public String getM_id() {
         return m_id;
@@ -120,5 +124,13 @@ public class MapInfo implements Serializable {
 
     public void setM_find_longitude(String m_find_longitude) {
         this.m_find_longitude = m_find_longitude;
+    }
+
+    public ArrayList<Integer> getPlaceIndex() {
+        return placeIndex;
+    }
+
+    public void setPlaceIndex(ArrayList<Integer> placeIndex) {
+        this.placeIndex = placeIndex;
     }
 }
