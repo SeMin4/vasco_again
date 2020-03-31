@@ -271,7 +271,7 @@ public class InsertMpersonActivity extends AppCompatActivity {
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog dialog = new DatePickerDialog(
-                        getApplicationContext(),
+                        InsertMpersonActivity.this,
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                         mAgeSetListener,
                         year,month,day);
@@ -286,6 +286,9 @@ public class InsertMpersonActivity extends AppCompatActivity {
                 month  = month + 1;
                 String  Date = year + "년 " + month + "월 " + dayOfMonth +"일";
                 Mperson_age.setText(Date);
+
+                //drawable 컬러 변경 -> 날짜 선택했음 표시
+                Mperson_age.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar_burgundy, 0, 0, 0);
             }
 
         };
@@ -299,7 +302,7 @@ public class InsertMpersonActivity extends AppCompatActivity {
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog dialog = new DatePickerDialog(
-                        getApplicationContext(),
+                        InsertMpersonActivity.this,
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                         mDateSetListener,
                         year,month,day);
@@ -314,6 +317,9 @@ public class InsertMpersonActivity extends AppCompatActivity {
                 month  = month + 1;
                 String  Date = year + "년 " + month + "월 " + dayOfMonth +"일";
                 Mperson_select_date.setText(Date);
+
+                //drawable 컬러 변경 -> 날짜 선택했음 표시
+                Mperson_select_date.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar_burgundy, 0, 0, 0);
             }
 
         };
