@@ -1,9 +1,7 @@
 package com.example.woo.myapplication.ui.view;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,13 +18,15 @@ import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.PolygonOverlay;
+import com.naver.maps.map.util.FusedLocationSource;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +43,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     public static int map_radius;
     public ArrayList<PolygonOverlay> squareOverlay;
     public IdleListener cameraIdleListener;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
+    private FusedLocationSource locationSource;
 
 
 
@@ -67,6 +69,9 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         squareOverlay = new ArrayList<PolygonOverlay>();
         mapFragment.getMapAsync(this);
         findMapFragment = fm.findFragmentById(R.id.findmap);
+
+        locationSource = new FusedLocationSource(this,LOCATION_PERMISSION_REQUEST_CODE);
+
     }
 
     @Override
@@ -84,13 +89,25 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull NaverMap naverMap){
         naverMap.getUiSettings().setZoomControlEnabled(false);
+        naverMap.getUiSettings().setLocationButtonEnabled(true);
         naverMap.setCameraPosition(new CameraPosition(centerLatLng, 10));
+        LocationOverlay locationOverlay = naverMap.getLocationOverlay();
 
         // 지도 중심으로 부터 지도의 전체 크기의 절반 만큼 남서쪽 북동쪽 부분으로 바운드를 결정하고 그 부분을 볼 수 있는 부분으로 카메라를 옮김.
         naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius*-1/2,map_radius*-1/2),centerLatLng.offset(map_radius/2,map_radius/2))));
 
         //네이버맵의 맵 설정을 위성 맵으로 설정
         naverMap.setMapType(NaverMap.MapType.Satellite);
+
+        naverMap.setLocationSource(locationSource);
+        naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
+        naverMap.addOnLocationChangeListener(location ->
+                locationOverlay.setPosition(new LatLng(location.getLatitude(),location.getLongitude()))
+        );
+
+        locationOverlay.setVisible(true);
+        locationOverlay.setCircleRadius(100);
+        //uiSettings.setLocationButtonEnabled(true);
 
         //AsynTask를 extend 해서 비동기적으로 뒤에 해당하는 격자표 그리기.
         FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(naverMap);
