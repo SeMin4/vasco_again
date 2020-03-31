@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
@@ -28,11 +29,12 @@ public class InsertDepActivity extends AppCompatActivity implements DepartmentLi
     private int tColor2;
     protected ListView departListView;
     private MyGlobals.RetrofitExService retrofitExService;
-    private ArrayList<String> depList;
-    private ArrayList<String> color;
+    static ArrayList<String> depList;
+    static ArrayList<String> color;
     private ArrayList<DepartmentData> departList ;
     static DepartmentListAdapter departmentListAdapter;
     private Button addDepart_btn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +50,7 @@ public class InsertDepActivity extends AppCompatActivity implements DepartmentLi
         addDepart_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), InsertDepartmentActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ManageDepartmentPopUp.class);
                 intent.putExtra("depList", depList);
                 intent.putExtra("colorList", color);
                 startActivity(intent);
@@ -77,17 +79,17 @@ public class InsertDepActivity extends AppCompatActivity implements DepartmentLi
             }
         });
         departListView.setLongClickable(true);
-        departListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "click postion : " + position + ",   " + id , Toast.LENGTH_LONG).show();
-                Log.d("long click", "click1");
-            }
-        });
+
         departListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "long click postion : " + position + ",   " + id , Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(), DepartmentListClickPopup.class);
+                intent.putExtra("selectPosition", position);
+                intent.putExtra("depList", depList);
+                intent.putExtra("colorList", color);
+                startActivity(intent);
+
+//                Toast.makeText(getApplicationContext(), "long click postion : " + position + ",   " + id , Toast.LENGTH_LONG).show();
                 Log.d("long click", "click2");
                 return true;
             }
@@ -123,7 +125,7 @@ public class InsertDepActivity extends AppCompatActivity implements DepartmentLi
 
     @Override
     public  void onDepartListBtnClick(int position){
-        Toast.makeText(getApplicationContext(), "listclick :" + position,Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), "listclick :" + position,Toast.LENGTH_LONG).show();
 //        Intent intent = new Intent (getApplicationContext(), RoomDeleteActivity.class);
 //        intent.putExtra("position", position);
 //        intent.putExtra("mapId",roomListAdapter.myRoomList.get(position).getM_id());

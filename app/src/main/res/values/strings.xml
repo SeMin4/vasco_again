@@ -36,7 +36,12 @@
     <string name="insertMperson">실종자 추가</string>
     <string name="selectAge">실종자 생년월일을 선택해주세요</string>
     <string name="manageDepartment">소속 관리</string>
+    <string name="modifyDepartment">소속 수정</string>
+    <string name="addDepartmentTitle">소속 추가</string>
     <string name="addDepartment">소속 추가</string>
+    <string name="modifyDepartmentTitle">소속 수정</string>
+    <string name="deleteDepartmentTitle">정말로 삭제 하시겠습니까?</string>
+    <string name="modify">수정</string>
     <string name="DepartmentName">소속명</string>
     <string name="messageChangeColor">클릭하여 색상 설정</string>
     <string name="color">색상</string>
@@ -66,6 +71,7 @@
     <string name="settings_pwd_equal">비밀번호가 일치</string>
     <string name="settings_pwd_not_equal">비밀번호가 불일치</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="deleteDepartment">소속 삭제</string>
     <string-array name="map_types">
         <item>기본</item>
         <item>위성</item>

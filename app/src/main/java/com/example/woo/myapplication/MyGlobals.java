@@ -77,10 +77,16 @@ public class MyGlobals {
     }
 
     public interface RetrofitExService{ //interface 선언
-        public static final String URL = "http://13.125.174.158:9000/"; //서버 주소와 포트번호
+        public static final String URL = "http://13.125.174.158:9001/"; //서버 주소와 포트번호
 
         @GET("/get/department")
         Call<ArrayList<DepartmentData>> getDepartmentData();
+
+        @GET("/modify/department?") //부서 정보 수정
+        Call<DepartmentData> modifyDepartmentData(@Query("origin_department") String origin_depart, @Query("new_department") String new_depart, @Query("color") String color);
+
+        @GET("/delete/department?") //부서 정보 삭제
+        Call<DepartmentData> deleteDepartmentData(@Query("department") String department);
 
         @GET("/mperson")
         Call<ArrayList<Mperson>> getData();
@@ -99,6 +105,7 @@ public class MyGlobals {
 
         @GET("/get/detail/data?") //기존지도에서 트래킹 정보얻어오기
         Call<ArrayList<DetailData>> getMapDetailData(@Query("mid") String mid);
+
 
         @FormUrlEncoded
         @POST("/examine")

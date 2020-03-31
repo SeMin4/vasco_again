@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/custom_dialog_bg"
+    tools:context=".ui.activity.DepartmentListClickPopup">
+
+    <Button
+        android:id="@+id/departmentModifyBtn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="@string/modifyDepartment"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:background="#00ff0000">
+
+    </Button>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:src="@drawable/divider_burgundy" />
+    <Button
+        android:id="@+id/departmentDeleteBtn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="@string/deleteDepartment"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:background="#00ff0000">
+
+    </Button>
+</LinearLayout>
