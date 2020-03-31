@@ -153,12 +153,12 @@
 
             <TextView
                 android:id="@+id/mperson_missing_address"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginVertical="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:gravity="center|left"
-                android:text="TextView" />
+                android:text="TextView"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -168,7 +168,8 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="5dp"/>
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"/>
 
             <!--<EditText
                 android:id="@+id/mperson_description"
