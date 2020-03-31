@@ -75,6 +75,8 @@ public class EnterMapPWActivity extends Activity {
                     intent.putExtra("mapInfoIndex", mapInfo_index);
                     setResult(RESULT_OK, intent);
                     finish();
+
+
                 }
                 else if(data.getOverlap_examine().equals("wrong")){
                     Toast.makeText(getApplicationContext(), "비밀번호를 다시 확인하세요.", Toast.LENGTH_LONG).show();
