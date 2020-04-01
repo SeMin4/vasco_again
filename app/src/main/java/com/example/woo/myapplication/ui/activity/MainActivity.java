@@ -162,7 +162,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 toggleFab();
-                Intent intent = new Intent(getApplicationContext(), InsertDepActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ManageDepartmentActivity.class);
                 startActivity(intent);
             }
         });

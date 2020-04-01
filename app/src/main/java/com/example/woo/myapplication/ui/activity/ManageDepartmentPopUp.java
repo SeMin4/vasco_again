@@ -87,11 +87,11 @@ public class ManageDepartmentPopUp extends Activity {
                                     Toast.makeText(getApplicationContext(), "다음에 다시 시도해 주시기 바랍니다.", Toast.LENGTH_SHORT).show();
                                 }else {
                                     Toast.makeText(getApplicationContext(), "부서 수정 성공입니다.", Toast.LENGTH_SHORT).show();
-                                    InsertDepActivity.departmentListAdapter.departList.get(selectPosition).setDepartment(department);
-                                    InsertDepActivity.departmentListAdapter.departList.get(selectPosition).setColor(_color_str);
-                                    InsertDepActivity.departmentListAdapter.notifyDataSetChanged();
-                                    InsertDepActivity.depList.set(selectPosition, department);
-                                    InsertDepActivity.color.set(selectPosition,_color_str);
+                                    ManageDepartmentActivity.departmentListAdapter.departList.get(selectPosition).setDepartment(department);
+                                    ManageDepartmentActivity.departmentListAdapter.departList.get(selectPosition).setColor(_color_str);
+                                    ManageDepartmentActivity.departmentListAdapter.notifyDataSetChanged();
+                                    ManageDepartmentActivity.depList.set(selectPosition, department);
+                                    ManageDepartmentActivity.color.set(selectPosition,_color_str);
                                     Intent intent1 = new Intent();
                                     setResult(RESULT_OK, intent);
                                     finish();
@@ -131,10 +131,10 @@ public class ManageDepartmentPopUp extends Activity {
                                     Toast.makeText(getApplicationContext(), "색상이 겹칩니다. 다른색상을 선택해주세요.", Toast.LENGTH_SHORT).show();
                                 }else {
                                     Toast.makeText(getApplicationContext(), "부서추가 성공입니다..", Toast.LENGTH_SHORT).show();
-                                    InsertDepActivity.departmentListAdapter.addItem(department,_color_str);
-                                    InsertDepActivity.departmentListAdapter.notifyDataSetChanged();
-                                    InsertDepActivity.depList.add(department);
-                                    InsertDepActivity.color.add(_color_str);
+                                    ManageDepartmentActivity.departmentListAdapter.addItem(department,_color_str);
+                                    ManageDepartmentActivity.departmentListAdapter.notifyDataSetChanged();
+                                    ManageDepartmentActivity.depList.add(department);
+                                    ManageDepartmentActivity.color.add(_color_str);
 
                                     finish();
                                 }

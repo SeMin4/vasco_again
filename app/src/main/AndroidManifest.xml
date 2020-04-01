@@ -42,7 +42,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".ui.activity.InsertDepActivity" />
+        <activity android:name=".ui.activity.ManageDepartmentActivity" />
         <activity android:name=".ui.activity.MapActivity" />
         <activity android:name=".ui.activity.MapSettingActivity" />
         <activity android:name=".ui.activity.MapConfigActivity" />

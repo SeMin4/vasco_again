@@ -23,7 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
-public class InsertDepActivity extends AppCompatActivity implements DepartmentListAdapter.ListBtnClickListener{
+public class ManageDepartmentActivity extends AppCompatActivity implements DepartmentListAdapter.ListBtnClickListener{
 
     private String tColor = null;
     private int tColor2;

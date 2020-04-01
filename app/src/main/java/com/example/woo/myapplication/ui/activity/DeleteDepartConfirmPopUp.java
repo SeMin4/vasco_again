@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -59,10 +58,10 @@ public class DeleteDepartConfirmPopUp extends Activity {
                         }
                         else{
                             Toast.makeText(getApplicationContext(), "부서 삭제 성공입니다.", Toast.LENGTH_SHORT).show();
-                            InsertDepActivity.departmentListAdapter.departList.remove(selectPosition);
-                            InsertDepActivity.departmentListAdapter.notifyDataSetChanged();
-                            InsertDepActivity.depList.remove(selectPosition);
-                            InsertDepActivity.color.remove(selectPosition);
+                            ManageDepartmentActivity.departmentListAdapter.departList.remove(selectPosition);
+                            ManageDepartmentActivity.departmentListAdapter.notifyDataSetChanged();
+                            ManageDepartmentActivity.depList.remove(selectPosition);
+                            ManageDepartmentActivity.color.remove(selectPosition);
                             Intent intent1 = new Intent();
                             setResult(RESULT_OK, intent);
                             finish();
