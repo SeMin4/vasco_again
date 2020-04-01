@@ -1,6 +1,8 @@
 package com.example.woo.myapplication.data;
 
-public class DepartmentData {
+import java.io.Serializable;
+
+public class DepartmentData implements Serializable {
     String checked;
     String u_department;
     String color;

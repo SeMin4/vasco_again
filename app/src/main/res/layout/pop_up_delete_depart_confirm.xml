@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_dialog_bg"
+    android:orientation="vertical"
+    tools:context=".ui.activity.DeleteDepartConfirmPopUp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#00ff0000"
+            android:gravity="center"
+            android:text="@string/deleteDepartmentTitle"
+            android:textColor="@color/burgundy"
+            android:textSize="18sp"
+            android:textStyle="bold"></TextView>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:src="@drawable/divider_burgundy" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="4"
+            android:orientation="horizontal"
+            android:padding="0dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/DepartmentName"
+                android:textColor="@color/burgundy"
+                android:textSize="15sp"
+                android:textStyle="bold">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/delete_departmentName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:background="#00FF0000"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:padding="10dp" />
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="7dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/delete_cancel_btn"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="7dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_background_gray"
+            android:minHeight="0dp"
+            android:padding="12dp"
+            android:text="@string/label_button_cancel"
+            android:textColor="@color/dark_gray"
+            android:textSize="15sp"
+
+            />
+
+        <Button
+            android:id="@+id/delete_confirm_btn"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/button_background_gray"
+            android:backgroundTint="@color/burgundy"
+            android:backgroundTintMode="multiply"
+            android:minHeight="0dp"
+            android:padding="12dp"
+            android:text="@string/confirm"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+
+            />
+    </LinearLayout>
+
+</LinearLayout>

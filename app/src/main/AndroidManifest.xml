@@ -24,8 +24,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.activity.PasswordActivity"
-                    android:theme="@style/PasswordTheme"></activity>
+        <activity
+            android:name=".ui.activity.DeleteDepartConfirmPopUp"
+            android:theme="@android:style/Theme.Dialog"></activity>
+        <activity
+            android:name=".ui.activity.DepartmentListClickPopup"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".ui.activity.ManageDepartmentPopUp"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".ui.activity.PasswordActivity"
+            android:theme="@style/PasswordTheme" />
 
         <service
             android:name=".ui.activity.GPSService"
