@@ -34,8 +34,6 @@ import java.util.List;
 
 public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
-
-
     MapFragment mapFragment;
     FragmentTransaction fragmentTransaction;
     Fragment findMapFragment;
@@ -198,12 +196,9 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 // 다음 객체에 해당하는 4개의 점의 좌표를 알기 위해 그전에 polygonOverlay의 남동쪽 좌표 값을 다음 폴리곤 오버레이의 남서쪽 좌표 객제 를 생성하는 부분이다.
                 drawLatLng = getFourCornerLatLng(drawLatLng).get(3);
             }
-
             return null;
         }
-
     }
-
 
     public List<LatLng> getFourCornerLatLng(LatLng standardLatLng){
         return Arrays.asList(
