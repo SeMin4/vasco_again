@@ -12,21 +12,27 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="@string/manageDepartment"
-        android:gravity="center"
-        android:textSize="20pt">
-
-    </TextView>
+        android:text="소속 관리"
+        android:layout_marginHorizontal="30dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:gravity="left|center_vertical"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
-        android:padding="5dp">
+        android:layout_weight="8.2"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/bg_border_burgundy"
+        android:backgroundTint="@color/white"
+        android:elevation="10dp">
         <ListView
             android:id="@+id/department_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:layout_marginHorizontal="25dp"
+            android:paddingVertical="5dp"
             android:clipToPadding="false"
             android:footerDividersEnabled="false"
 
@@ -39,9 +45,15 @@
         android:id="@+id/addDepartmentBtn"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/addDepartment" />
-
+        android:layout_weight="0.8"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_gravity="center"
+        android:text="@string/addDepartment"
+        android:textColor="@color/white"
+        android:background="@drawable/button_background_burgundy"
+        android:elevation="10dp"/>
 
 
 
