@@ -54,7 +54,7 @@
                 android:adjustViewBounds="true"
                 android:layout_marginHorizontal="50dp"
                 android:layout_marginVertical="7dp"
-                android:background="@drawable/bg_light_gray_round"
+                android:background="@drawable/custom_edit_text_light_gray"
                 android:gravity="center|left"
                 android:hint="@string/mpersonPhoto"
                 android:scaleType="centerInside"

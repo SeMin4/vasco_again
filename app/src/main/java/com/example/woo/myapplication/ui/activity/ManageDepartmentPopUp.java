@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +39,7 @@ public class ManageDepartmentPopUp extends Activity {
     private MyGlobals.RetrofitExService retrofitExService;
     private int selectPosition;
     private TextView manageDepartmentTitle;
+    private GradientDrawable drawable;
 
 
     @Override
@@ -58,11 +60,15 @@ public class ManageDepartmentPopUp extends Activity {
         select_color_btn = (Button)findViewById(R.id.selectColor_btn);
         confirm_btn = (Button)findViewById(R.id.button_accept_depart);
         cancel_btn = (Button)findViewById(R.id.button_cancel_depart);
+        drawable = (GradientDrawable) getApplicationContext().getDrawable(R.drawable.iv_corners_rounded);
+
         if(getSelectPosition() != -1){//부서 수정의 경우
             manageDepartmentTitle.setText(getString(R.string.modifyDepartmentTitle));
             confirm_btn.setText(getString(R.string.modify));
             departmentEditText.setText(departNameList.get(getSelectPosition()));
-            select_color_btn.setBackgroundColor(Integer.parseInt(departColorList.get(getSelectPosition())));
+            drawable.setColor(Integer.parseInt(departColorList.get(getSelectPosition())));
+            select_color_btn.setBackground(drawable);
+            select_color_btn.setClipToOutline(true);
             _color_int = Integer.parseInt(departColorList.get(getSelectPosition()));
             _color_str = departColorList.get(getSelectPosition());
             String original_department = departNameList.get(getSelectPosition());
@@ -110,6 +116,11 @@ public class ManageDepartmentPopUp extends Activity {
         }
 
         else{//부서 추가의 경우
+
+            drawable.setColor(getResources().getColor(R.color.cream));
+            select_color_btn.setBackground(drawable);
+            select_color_btn.setClipToOutline(true);
+
             confirm_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -184,7 +195,9 @@ public class ManageDepartmentPopUp extends Activity {
                 _color_int = color;
                 _color_str = ""+_color_int;
                 Log.d("색상",_color_str);
-                select_color_btn.setBackgroundColor(_color_int);
+                drawable.setColor(_color_int);
+                select_color_btn.setBackground(drawable);
+                select_color_btn.setClipToOutline(true);
             }
         });
         colorPicker.show();
