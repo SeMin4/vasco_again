@@ -180,7 +180,11 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 //getFourCornerLatLng 함수는 가장 남서쪽에 있는 좌표를 기준을 하여 총 사각형을 그릴수 있는 4개의 좌표를 알아내는 함수 (남서쪽, 북서쪽, 북동쪽, 남동쪽) 순서의 리스트 값을 반환한다.
                 polygonOverlay.setCoords(getFourCornerLatLng(drawLatLng));
                 polygonOverlay.setOutlineColor(Color.WHITE);
-                polygonOverlay.setColor(Color.TRANSPARENT);
+                if(placeIndex.get(i) == 1){
+                    polygonOverlay.setColor(Color.BLACK);
+                }else {
+                    polygonOverlay.setColor(Color.TRANSPARENT);
+                }
                 polygonOverlay.setOutlineWidth(2);
                 polygonOverlay.setTag(i);
                 squareOverlay.add(polygonOverlay);
