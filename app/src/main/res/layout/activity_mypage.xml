@@ -288,7 +288,8 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:clipToPadding="false"
-                android:footerDividersEnabled="false"
+                android:layout_marginHorizontal="10dp"
+                android:divider="@null"
                 />
 
         </LinearLayout>

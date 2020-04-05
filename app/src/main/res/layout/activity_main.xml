@@ -177,7 +177,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/fab_sub2"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_add_burgundy"
+            android:src="@drawable/ic_person_add_burgundy"
             android:layout_marginBottom="15dp"
             android:layout_marginRight="20dp"
             android:backgroundTint="#FFFFFF"
