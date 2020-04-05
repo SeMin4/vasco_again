@@ -39,6 +39,7 @@
     <string name="modifyDepartment">소속 수정</string>
     <string name="addDepartmentTitle">소속 추가</string>
     <string name="addDepartment">소속 추가</string>
+    <string name="selectDepartmentTitle">소속 선택</string>
     <string name="modifyDepartmentTitle">소속 수정</string>
     <string name="deleteDepartmentTitle">정말로 삭제 하시겠습니까?</string>
     <string name="modify">수정</string>
@@ -49,6 +50,7 @@
     <string name="label_scale_type">축적:</string>
     <string name="label_button_reset">초기화</string>
     <string name="label_popup_location">현위치: </string>
+    <string name="notify_department">기존의 소속이 삭제되었으므로 소속을 선택해주세요.</string>
 
     <string name="label_unusual_location">특이사항 기록</string>
     <string name="label_button_save">저장</string>

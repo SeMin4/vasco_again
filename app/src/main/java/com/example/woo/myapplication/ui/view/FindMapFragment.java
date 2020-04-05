@@ -35,8 +35,6 @@ import java.util.List;
 
 public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
-
-
     MapFragment mapFragment;
     FragmentTransaction fragmentTransaction;
     Fragment findMapFragment;
@@ -214,12 +212,9 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 drawLatLng = getFourCornerLatLng(drawLatLng).get(3);
 
             }
-
             return null;
         }
-
     }
-
 
     public List<LatLng> getFourCornerLatLng(LatLng standardLatLng){
         return Arrays.asList(

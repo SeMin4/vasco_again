@@ -62,6 +62,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (MyGlobals.getInstance().getUser().getU_department() == null){
+            Intent intent = new Intent(getApplicationContext(), SelectDepartmentPopUp.class);
+            startActivity(intent);
+        }
         _MainActivity = MainActivity.this;
         if(_InsertMpersons != null){
             _InsertMpersons.finish();
