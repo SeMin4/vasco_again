@@ -1,6 +1,7 @@
 package com.example.woo.myapplication.utils;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,11 +53,16 @@ public class DepartmentListAdapter extends BaseAdapter implements View.OnClickLi
         TextView departmentNameTextView = (TextView) convertView.findViewById(R.id.department_name);
         Button modifyButton = (Button) convertView.findViewById(R.id.department_modify);
 
+        GradientDrawable drawable= (GradientDrawable) context.getDrawable(R.drawable.iv_circle);
+
         DepartmentData departmentData = departList.get(position);
+
+        drawable.setColor(parseInt(departmentData.getColor()));
 
         departmentNameTextView.setText(departmentData.getDepartment());
         modifyButton.setTag(position);
-        modifyButton.setBackgroundColor(parseInt(departmentData.getColor()));
+        modifyButton.setBackground(drawable);
+        modifyButton.setClipToOutline(true);
         modifyButton.setOnClickListener(this);
 
         return convertView;
