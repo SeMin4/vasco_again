@@ -17,6 +17,7 @@ import com.example.woo.myapplication.OverlapExamineData;
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.data.MapInfo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit2.Call;
@@ -77,10 +78,12 @@ public class PasswordActivity extends Activity {
                             }else{
                                 Toast.makeText(getApplicationContext(), "방 만들기 성공입니다..", Toast.LENGTH_SHORT).show();
                                 String mid = data.getM_id();
-                                System.out.println("mid : "+mid);
+                                ArrayList<Integer> placeIndex = info.getPlaceIndex();
+                               // Log.d("mapActivity","password mid : "+mid);
                                 //다음화면으로 이동한다(서비스있는 부분 적어주기),mid도 필요할거 같아서 서버에서 가저왔음
                                 Intent intent = new Intent(getApplicationContext(), GPSService.class);
-
+                                intent.putExtra("mid",mid);
+                                intent.putExtra("placeIndex",placeIndex);
                                 if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                                     startService(intent);
                                 } else {

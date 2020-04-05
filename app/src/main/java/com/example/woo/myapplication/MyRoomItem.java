@@ -1,10 +1,18 @@
 package com.example.woo.myapplication;
 
 public class MyRoomItem {
+    String check;
     String m_id;
     String p_name;
     String m_center_place_string;
 
+    public String getCheck() {
+        return check;
+    }
+
+    public void setCheck(String check) {
+        this.check = check;
+    }
 
     public String getM_id() {
         return m_id;

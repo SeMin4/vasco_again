@@ -30,11 +30,17 @@
             android:layout_weight="1"
             android:text="구역 삭제"/>
         <Button
+            android:id="@+id/placerecovery"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="구역 회복"/>
+        <Button
             android:id="@+id/deletecomplete"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="구역 삭제 취소"/>
+            android:text="구역 설정 취소"/>
         <Button
             android:id="@+id/next_btn"
             android:layout_width="0dp"

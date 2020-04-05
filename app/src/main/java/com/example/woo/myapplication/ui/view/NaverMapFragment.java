@@ -71,15 +71,8 @@ public class NaverMapFragment extends Fragment  implements OnMapReadyCallback {
     public static double centerLat;
     public static double centerLng;
     public LatLng centerLatLng;
-    Fragment naverFragment;
     public static boolean moving_camera = false;
-    Fragment naverMapfragment;
-//<<<<<<< HEAD
     public static int map_radius = 1280;
-//=======
-    MapView view;
-//    int map_radius = 1280;
-//>>>>>>> gesture_func
     public EventListener eventListener;
     public IdleListener cameraIdleListener;
     public ArrayList<PolygonOverlay> squareOverlay;
@@ -91,8 +84,8 @@ public class NaverMapFragment extends Fragment  implements OnMapReadyCallback {
     private GestureDetector gestureDetector;
     private RecyclerView.OnItemTouchListener onItemTouchListener;
     static public int flag = 0;
+    public ArrayList<Integer> placeIndex;
 
-    //ArrayList<Integer> placeIndex;//삭제된 장소는 값이 1로 되어있음
 
     public static NaverMapFragment newInstance() {
         NaverMapFragment fragment = new NaverMapFragment();
@@ -105,17 +98,24 @@ public class NaverMapFragment extends Fragment  implements OnMapReadyCallback {
         relativeLayout.removeView(recyclerView);
     }
 
-    public void gestureFunc(){
+    public void gestureFunc(){ //add recyclerview도 포함
+        placeIndex = new ArrayList<>();
+        for(int i=0;i<64;i++){
+            placeIndex.add(0);
+        }
         recyclerView = new RecyclerView(getContext());
         GridLayoutManager mGridmanager = new GridLayoutManager(getContext(),8);
         DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
         adapter = new MapAdater(dm.widthPixels/8);
         recyclerView.setLayoutManager(mGridmanager);
         recyclerView.setAdapter(adapter);
+        //relativee 중심에 리사이클러뷰 위치지정
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         params.addRule(RelativeLayout.CENTER_VERTICAL);
+        //리사이클러뷰 추가
         relativeLayout.addView(recyclerView,params);
+        //리사이클러뷰에 터치 리스너 넣기
         recyclerView.addOnItemTouchListener(onItemTouchListener);
     }
 
@@ -130,12 +130,8 @@ public class NaverMapFragment extends Fragment  implements OnMapReadyCallback {
             fragmentTransaction.add(R.id.navermap, mapFragment).addToBackStack(null).commit();
         }
 
-
-//        LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        view = inflater.inflate(R.layout.fragment_map,null);
         squareOverlay = new ArrayList<PolygonOverlay>();
         mapFragment.getMapAsync(this);
-        naverMapfragment = fm.findFragmentById(R.id.navermap);
 
     }
 
@@ -143,17 +139,8 @@ public class NaverMapFragment extends Fragment  implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_map, container, true);
-        view = rootView.findViewById(R.id.navermap);
         relativeLayout = rootView.findViewById(R.id.relativeLayout);
         mapSizeTextView = rootView.findViewById(R.id.mapSizeText);
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                System.out.println("터치됨@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                Log.d("터치","터치돰@@@@@@@@");
-                return true;
-            }
-        });
         return rootView;
     }
 
@@ -171,13 +158,32 @@ public class NaverMapFragment extends Fragment  implements OnMapReadyCallback {
         naverMap.getUiSettings().setTiltGesturesEnabled(false);
         naverMap.getUiSettings().setScrollGesturesEnabled(false);
 
-//<<<<<<< HEAD
+
         // 이전의 액티비티로 부터 설정해주었던 centerLat, centerLng 값을 받아서 지도 중심을 설정 // 다음 findMapActivity의 센터값도 설정 해줌.
-//=======
+
+
+        //getsture 관련 함수
         gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
             @Override
             public boolean onDown(MotionEvent e) {
                 System.out.println("ondowne.getX()@@@@@@@@@@@@@@@@@@@@@@@@@@ : "+e.getX());
+                View view = recyclerView.findChildViewUnder(e.getX(),e.getY());
+                if(flag == 1){
+                    if(view != null){
+                        view.setBackgroundColor(Color.RED);
+                        int index = recyclerView.getChildLayoutPosition(view);
+                        placeIndex.set(index,1);
+                        Log.d("index","index : "+index);
+                    }
+                }else if(flag == 0){
+                    if(view != null){
+                        view.setBackgroundColor(Color.argb(90,255,255,255));
+                        int index = recyclerView.getChildLayoutPosition(view);
+                        placeIndex.set(index,0);
+                        Log.d("index","index : "+index);
+                    }
+                }
+
                 return true;
             }
 
@@ -198,22 +204,33 @@ public class NaverMapFragment extends Fragment  implements OnMapReadyCallback {
 
                 View view = recyclerView.findChildViewUnder(e1.getX(), e1.getY());
                 View view2 = recyclerView.findChildViewUnder(e2.getX(), e2.getY());
-                if (flag == 1) {
-                    System.out.println("flag 11111111111111111111111111111");
+                if (flag == 1) { //삭제
                     if (view != null) {
                         view.setBackgroundColor(Color.RED);
+                        int index = recyclerView.getChildLayoutPosition(view);
+                        placeIndex.set(index,1);
+                        Log.d("index","index : "+index);
                     }
                     if (view2 != null) {
                         view2.setBackgroundColor(Color.RED);
+                        int index = recyclerView.getChildLayoutPosition(view2);
+                        placeIndex.set(index,1);
+                        Log.d("index","index : "+index);
                     }
-                } else if (flag == 0) {
-                    System.out.println("flag 000000000000000000000000000000000000");
+                } else if (flag == 0) { //회복
                     if (view != null) {
                         view.setBackgroundColor(Color.argb(90,255,255,255));
+                        int index = recyclerView.getChildLayoutPosition(view);
+                        placeIndex.set(index,0);
+                        Log.d("index","index : "+index);
                     }
 
                     if (view2 != null) {
-                        view2.setBackgroundColor(Color.argb(90,255,255,255));                    }
+                        view2.setBackgroundColor(Color.argb(90,255,255,255));
+                        int index = recyclerView.getChildLayoutPosition(view2);
+                        placeIndex.set(index,0);
+                        Log.d("index","index : "+index);
+                    }
                 }
                 return true;
             }
@@ -230,7 +247,7 @@ public class NaverMapFragment extends Fragment  implements OnMapReadyCallback {
         });
 
 
-
+        //리사이클러뷰 터치 리스너
         onItemTouchListener = new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent e) {
@@ -252,7 +269,6 @@ public class NaverMapFragment extends Fragment  implements OnMapReadyCallback {
 
 
         // 이전의 액티비티로 부터 설정해주었던 centerLat, centerLng 값을 받아서 지도 중심을 설정
-//>>>>>>> gesture_func
         centerLatLng = new LatLng(centerLat,centerLng);
         FindMapFragment.centerLatLng = centerLatLng;
 
@@ -459,13 +475,6 @@ public class NaverMapFragment extends Fragment  implements OnMapReadyCallback {
         @Override
         protected void onProgressUpdate(PolygonOverlay... values) {
             values[0].setMap(getNaverMap());
-            values[0].setOnClickListener(new Overlay.OnClickListener() {
-                @Override
-                public boolean onClick(@NonNull Overlay overlay) {
-                    values[0].setColor(getResources().getColor(R.color.noArea));
-                    return true;
-                }
-            });
             super.onProgressUpdate(values);
         }
 

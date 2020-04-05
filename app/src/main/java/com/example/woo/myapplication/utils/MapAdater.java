@@ -49,14 +49,16 @@ public class MapAdater extends RecyclerView.Adapter<MapAdater.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MapAdater.ViewHolder viewHolder, int i) {
         Log.d("색상",""+viewHolder.linearLayout.getBackground());
+        //cell 배경색 지정
         viewHolder.linearLayout.setBackgroundColor(Color.argb(90,255,255,255));
+        //cell 크기 지정
         GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams)viewHolder.linearLayout.getLayoutParams();
         params.width = width;
         params.height = width;
         viewHolder.linearLayout.requestLayout();
     }
 
-    @Override
+    @Override//총 그리드 개수는 64개
     public int getItemCount() {
         return 64;
     }

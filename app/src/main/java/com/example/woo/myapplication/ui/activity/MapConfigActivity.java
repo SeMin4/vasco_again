@@ -66,7 +66,6 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
         frameLayout.setClipToOutline(true);
         if(mapFragment == null){
             mapFragment = MapFragment.newInstance();
-
             fm.beginTransaction().add(R.id.naverMap_Config, mapFragment).commit();
         }
         mapFragment.getMapAsync(this);
