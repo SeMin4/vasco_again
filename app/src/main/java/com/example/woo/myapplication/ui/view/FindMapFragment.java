@@ -151,7 +151,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
                         path.setMap(naverMap);
 
-                    } else {//gps 신호가 튄경우
+                    } else if (maxDistance>=euclidean){//gps 신호가 튄경우
                         if (count <=5){
                             count++;
                         }
