@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.woo.myapplication.R;
 import com.naver.maps.geometry.LatLng;
@@ -54,10 +53,9 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     double longitude;
     double prevLat;
     double prevLong;
-    double distance = 2.5;
+    double minDistance = 2.5;
+    double maxDistance = 10;
     int flag =0;
-    TextView text1;
-    TextView text2;
     int count;
     // TODO: Rename and change types and number of parameters
     public static FindMapFragment newInstance() {
@@ -134,13 +132,18 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                     prevLat = latitude;
                     //통신(서보로 정보 보내기)
                     flag = 1;
+                    coords.add(new LatLng(latitude, longitude));
+
+                    path.setCoords(coords);
+
+                    path.setMap(naverMap);
 
                 } else if (flag == 1) {
-                    if (Math.sqrt((prevLong - longitude) * (prevLong - longitude) + (prevLat - latitude) * (prevLat - latitude)) <= distance) {
+                    double euclidean =Math.sqrt((prevLong - longitude) * (prevLong - longitude) + (prevLat - latitude) * (prevLat - latitude));
+                    if (minDistance <= euclidean && euclidean <= maxDistance) {
 
                         prevLong = longitude;
                         prevLat = latitude;
-                        distance = 2.5;
 
                         coords.add(new LatLng(latitude, longitude));
 
@@ -152,16 +155,12 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         if (count <=5){
                             count++;
                         }
-
                         else{
                             prevLong = longitude;
                             prevLat = latitude;
-                            distance = 2.5;
 
                             coords.add(new LatLng(latitude, longitude));
-
                             path.setCoords(coords);
-
                             path.setMap(naverMap);
 
                             count =0;
