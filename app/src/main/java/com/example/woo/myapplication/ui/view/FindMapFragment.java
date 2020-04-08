@@ -2,6 +2,7 @@ package com.example.woo.myapplication.ui.view;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,9 +11,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
 import com.naver.maps.geometry.LatLng;
@@ -24,6 +30,7 @@ import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.LocationOverlay;
+import com.naver.maps.map.overlay.Overlay;
 import com.naver.maps.map.overlay.PolygonOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
 
@@ -38,9 +45,11 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     MapFragment mapFragment;
     FragmentTransaction fragmentTransaction;
     Fragment findMapFragment;
+    private NaverMap naverMap;
     public static LatLng centerLatLng;
     public static int map_radius;
     public ArrayList<PolygonOverlay> squareOverlay;
+    public ArrayList<PolygonOverlay> squareOverlay2;
     public IdleListener cameraIdleListener;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
@@ -48,6 +57,18 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
     private ArrayList<Integer> placeIndex; //수색구역 정보
 
+    //zoom in-out button 정보
+    Button zoom_in_btn;
+    Button zoom_out_btn;
+    private LatLng zoomCenterLatLng;
+
+
+
+    private int zoom_level;
+
+
+
+    private int[] click_index  = new int[2];
 
 
     public void setPlaceIndex(ArrayList<Integer> placeIndex) {
@@ -85,23 +106,109 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_find_map, container, true);
+        FrameLayout frameLayout = (FrameLayout)rootView.findViewById(R.id.frame_lay);
+        TextView textView = new TextView(rootView.getContext());
+        zoom_in_btn = rootView.findViewById(R.id.zoom_in_btn);
+        zoom_out_btn = rootView.findViewById(R.id.zoom_out_btn);
+        zoom_in_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getZoom_level() == 0){
+                    if(getClick_index(getZoom_level()) == -1){
+                        Toast.makeText(getContext(), "확대할 부분을 클릭해주세요", Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        getNaverMap().moveCamera(CameraUpdate.fitBounds(new LatLngBounds(squareOverlay.get(getClick_index(getZoom_level())).getBounds().getSouthWest(), squareOverlay.get(getClick_index(getZoom_level())).getBounds().getNorthEast())));
+                        squareOverlay.get(getClick_index(getZoom_level())).setColor(Color.TRANSPARENT);
+                        for(int i = 0; i<squareOverlay.size(); ++i){
+                            squareOverlay.get(i).setMap(null);
+                        }
+//                    getNaverMap().setMinZoom(getNaverMap().getCameraPosition().zoom);
+//                    getNaverMap().setMaxZoom(getNaverMap().getCameraPosition().zoom);
+                        setZoomCenterLatLng(getNaverMap().getCameraPosition().target);
+                        map_radius /= 8;
+                        FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(getNaverMap(), getZoomCenterLatLng(), map_radius);
+                        gridMapMakeTask.execute();
+                        setZoom_level(1);
+                        textView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT));
+                        textView.setGravity(Gravity.TOP);
+                        textView.setText("몇 행 몇열 확대 버전");
+                        textView.setBackgroundColor(Color.WHITE);
+                        textView.setTextColor(Color.BLACK);
+                        textView.setTextSize(30);
+                        frameLayout.addView(textView);
+
+                    }
+
+                }
+                else{
+                    Toast.makeText(getContext(),"더 이상 확대 할 수 없습니다.", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+        zoom_out_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getZoom_level() == 1){
+                    setZoom_level(0);
+                    setClick_index(-1,0);
+                    map_radius *= 8;
+                    getNaverMap().moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius*-1/2,map_radius*-1/2),centerLatLng.offset(map_radius/2,map_radius/2))));
+                    for(int i = 0; i<squareOverlay.size(); ++i){
+                        squareOverlay.get(i).setMap(null);
+                    }
+//                getNaverMap().setMinZoom(getNaverMap().getCameraPosition().zoom);
+//                getNaverMap().setMaxZoom(getNaverMap().getCameraPosition().zoom);
+                    FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(getNaverMap(), centerLatLng, map_radius);
+                    gridMapMakeTask.execute();
+                    frameLayout.removeView(textView);
+                }
+                else{
+                    Toast.makeText(getContext(),"더 이상 축소 할 수 없습니다.", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
         return  rootView;
     }
 
+//    5120 / 8 = 640
+//    640 / 8 = 80
+//    80 / 8 = 10
 
+//    2560 / 8 = 320
+//    320 / 8 = 40
+//    40 / 8 = 5
 
+//    1280 / 8 = 160
+//    160 / 8 = 20
+//    20 / 8 = 2....
 
     @UiThread
     @Override
     public void onMapReady(@NonNull NaverMap naverMap){
+        //처음 줌레벨을 설정하고 줌레벨에 해당하는 클릭 인덱스 값이 없으므로 -1으로 설정
+        setZoom_level(0);
+        setNaverMap(naverMap);
+        setClick_index(-1,getZoom_level());
         naverMap.getUiSettings().setZoomControlEnabled(false);
         naverMap.getUiSettings().setLocationButtonEnabled(true);
+        naverMap.getUiSettings().setScrollGesturesEnabled(false);
+        naverMap.setOnMapDoubleTapListener(new NaverMap.OnMapDoubleTapListener() {
+            @Override
+            public boolean onMapDoubleTap(@NonNull PointF pointF, @NonNull LatLng latLng) {
+                return true;
+            }
+        });
         naverMap.setCameraPosition(new CameraPosition(centerLatLng, 10));
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
 
         // 지도 중심으로 부터 지도의 전체 크기의 절반 만큼 남서쪽 북동쪽 부분으로 바운드를 결정하고 그 부분을 볼 수 있는 부분으로 카메라를 옮김.
         naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius*-1/2,map_radius*-1/2),centerLatLng.offset(map_radius/2,map_radius/2))));
-
+        naverMap.setExtent(new LatLngBounds(centerLatLng.offset(map_radius*-1/2,map_radius*-1/2),centerLatLng.offset(map_radius/2,map_radius/2)));
+//        naverMap.setMinZoom(naverMap.getCameraPosition().zoom);
+//        naverMap.setMaxZoom(naverMap.getCameraPosition().zoom);
         //네이버맵의 맵 설정을 위성 맵으로 설정
         naverMap.setMapType(NaverMap.MapType.Satellite);
 
@@ -116,7 +223,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         //uiSettings.setLocationButtonEnabled(true);
 
         //AsynTask를 extend 해서 비동기적으로 뒤에 해당하는 격자표 그리기.
-        FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(naverMap);
+        FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(naverMap, centerLatLng, map_radius);
         gridMapMakeTask.execute();
     }
 
@@ -139,11 +246,15 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
     private class FindMapMakeTask extends AsyncTask<Void, PolygonOverlay, Void> implements Serializable{
         private NaverMap naverMap;
+        private LatLng centerLatLng;
+        private int map_radius;
         public FindMapMakeTask(){
             super();
         }
-        public FindMapMakeTask(NaverMap naverMap){
+        public FindMapMakeTask(NaverMap naverMap, LatLng centerLatLng, int map_radius){
             this.naverMap = naverMap;
+            this.centerLatLng = centerLatLng;
+            this.map_radius = map_radius;
         }
         public NaverMap getNaverMap() {
             return naverMap;
@@ -184,11 +295,11 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         protected  Void doInBackground(Void... voids){
             //여기서 placeIndex사용하기 ,알고리즘 생각하기
             // 백그라운드 내에서 해당하는 폴리곤 오버레이 객체를 계속해서 만들어 내는 중.......
-            LatLng lineLatLng = centerLatLng.offset(map_radius/8*3,-1* map_radius / 2);
-            LatLng drawLatLng = centerLatLng.offset(map_radius/8*3,-1* map_radius / 2);
+            LatLng lineLatLng = this.centerLatLng.offset(this.map_radius/8*3,-1* this.map_radius / 2);
+            LatLng drawLatLng = this.centerLatLng.offset(this.map_radius/8*3,-1* this.map_radius / 2);
             for(int i = 0; i< 64; i++) {
                 if (i != 0 && i % 8 == 0) {
-                    lineLatLng = lineLatLng.offset(-1 * map_radius / 8, 0);
+                    lineLatLng = lineLatLng.offset(-1 * this.map_radius / 8, 0);
                     drawLatLng = lineLatLng;
                 }
                 Log.d("mapActivity", "doingBackground");
@@ -197,6 +308,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 PolygonOverlay polygonOverlay = new PolygonOverlay();
                 //getFourCornerLatLng 함수는 가장 남서쪽에 있는 좌표를 기준을 하여 총 사각형을 그릴수 있는 4개의 좌표를 알아내는 함수 (남서쪽, 북서쪽, 북동쪽, 남동쪽) 순서의 리스트 값을 반환한다.
                 polygonOverlay.setCoords(getFourCornerLatLng(drawLatLng));
+
                 polygonOverlay.setOutlineColor(Color.WHITE);
                 if(placeIndex != null) {
                     if (placeIndex.get(i) == 1) {
@@ -209,6 +321,29 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 polygonOverlay.setOutlineWidth(2);
                 polygonOverlay.setTag(i);
+                if(getZoom_level() == 0){
+                    polygonOverlay.setOnClickListener(new Overlay.OnClickListener() {
+                        @Override
+                        public boolean onClick(@NonNull Overlay overlay) {
+                            //원래 색칠되어 있으면 색칠 된 부분을 투명으로 변경
+                            if(getClick_index(getZoom_level()) != -1){
+                                squareOverlay.get(getClick_index(getZoom_level())).setColor(Color.TRANSPARENT);
+                            }
+                            //다른 인덱스값을 클릭한 인덱스 값으로 지정
+                            if(getClick_index(getZoom_level()) != (Integer)overlay.getTag()){
+                                ((PolygonOverlay)overlay).setColor(Color.RED);
+                                setClick_index((Integer)overlay.getTag(),getZoom_level());
+                            }
+                            else{//원래 색칠되어 있는 부분을 클릭한 경우
+                                setClick_index(-1, getZoom_level());
+                            }
+
+                            return false;
+                        }
+                    });
+                }
+
+
                 squareOverlay.add(polygonOverlay);
                 // 메인스레드로 넘겨 줌. 안드로이드의 특성상 메인 스레드가 아니면 UI를 건드릴수 없기 때문에 객체만 만들고 메인스레드로 넘겨서 메인스레드는 UI를 변경함.
                 publishProgress(polygonOverlay);
@@ -228,5 +363,42 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 standardLatLng.offset(0,map_radius/8)
         );
     }
+
+
+    //전체 줌레벨 설정
+    public int getZoom_level() {
+        return zoom_level;
+    }
+
+    public void setZoom_level(int zoom_level) {
+        this.zoom_level = zoom_level;
+    }
+
+
+    //클릭된 인덱스 설정
+    public int getClick_index(int level) {
+        return click_index[level];
+    }
+    //클릭된 인덱스 설정
+    public void setClick_index(int click_index, int level) {
+        this.click_index[level] = click_index;
+    }
+
+    //zoom 했을때 새로운 맵의 center 값
+    public LatLng getZoomCenterLatLng() {
+        return zoomCenterLatLng;
+    }
+
+    public void setZoomCenterLatLng(LatLng zoomCenterLatLng) {
+        this.zoomCenterLatLng = zoomCenterLatLng;
+    }
+
+    public void setNaverMap(NaverMap naverMap){
+        this.naverMap = naverMap;
+    }
+    public NaverMap getNaverMap(){
+        return  this.naverMap;
+    }
+
 
 }
