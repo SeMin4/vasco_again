@@ -88,12 +88,11 @@ public class GPSService extends Service {
 
         Intent gpsIntent = new Intent(this, MapActivity.class);
         //여기서 넘기기전에 mid랑 placeindex정보 넘겨야한다..
-        placeIndex = (ArrayList<Integer>) intent.getSerializableExtra("placeIndex");
         existFlag = intent.getIntExtra("existFlag",-1);
-
        // Log.d("mapActivity","gpsservice mid : "+mid);
 
         if(existFlag == 0){//방을 만드는 경우
+            placeIndex = (ArrayList<Integer>) intent.getSerializableExtra("placeIndex");
             gpsIntent.putExtra("mid",intent.getStringExtra("mid"));
             gpsIntent.putExtra("placeIndex",placeIndex);
             gpsIntent.putExtra("existFlag",existFlag);

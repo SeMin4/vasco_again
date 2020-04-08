@@ -2,7 +2,11 @@ package com.example.woo.myapplication.ui.view;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+
 import android.graphics.PointF;
+
+import android.location.Location;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,13 +34,18 @@ import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.LocationOverlay;
+
 import com.naver.maps.map.overlay.Overlay;
+
+import com.naver.maps.map.overlay.PathOverlay;
+
 import com.naver.maps.map.overlay.PolygonOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -55,6 +64,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
 
+
     private ArrayList<Integer> placeIndex; //수색구역 정보
 
     //zoom in-out button 정보
@@ -71,9 +81,24 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     private int[] click_index  = new int[2];
 
 
+    private NaverMap.OnLocationChangeListener onLocationChangeListener;
+    double latitude;
+    double longitude;
+    double prevLat;
+    double prevLong;
+    double minDistance = 2.5;
+    double maxDistance = 10;
+    int flag =0;
+    int count;
+
+
+
     public void setPlaceIndex(ArrayList<Integer> placeIndex) {
         this.placeIndex = placeIndex;
     }
+
+
+
 
     // TODO: Rename and change types and number of parameters
     public static FindMapFragment newInstance() {
@@ -99,7 +124,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
         locationSource = new FusedLocationSource(this,LOCATION_PERMISSION_REQUEST_CODE);
 
-    }
+}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -203,7 +228,9 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         });
         naverMap.setCameraPosition(new CameraPosition(centerLatLng, 10));
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-
+        List<LatLng> coords = new ArrayList<>();
+        PathOverlay path = new PathOverlay();
+        count = 0;
         // 지도 중심으로 부터 지도의 전체 크기의 절반 만큼 남서쪽 북동쪽 부분으로 바운드를 결정하고 그 부분을 볼 수 있는 부분으로 카메라를 옮김.
         naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius*-1/2,map_radius*-1/2),centerLatLng.offset(map_radius/2,map_radius/2))));
         naverMap.setExtent(new LatLngBounds(centerLatLng.offset(map_radius*-1/2,map_radius*-1/2),centerLatLng.offset(map_radius/2,map_radius/2)));
@@ -214,10 +241,66 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
         naverMap.setLocationSource(locationSource);
         naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
-        naverMap.addOnLocationChangeListener(location ->
-                locationOverlay.setPosition(new LatLng(location.getLatitude(),location.getLongitude()))
+        Collections.addAll(coords,
+                new LatLng(37.57152, 126.97714),
+                new LatLng(37.56607, 126.98268),
+                new LatLng(37.56445, 126.97707),
+                new LatLng(37.55855, 126.97822)
         );
+        path.setCoords(coords);
 
+
+        onLocationChangeListener = new NaverMap.OnLocationChangeListener() {
+            @Override
+            public void onLocationChange(@NonNull Location location) {
+
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                if (flag == 0) {
+                    prevLong = longitude;
+                    prevLat = latitude;
+                    //통신(서보로 정보 보내기)
+                    flag = 1;
+                    coords.add(new LatLng(latitude, longitude));
+
+                    path.setCoords(coords);
+
+                    path.setMap(naverMap);
+
+                } else if (flag == 1) {
+                    double euclidean =Math.sqrt((prevLong - longitude) * (prevLong - longitude) + (prevLat - latitude) * (prevLat - latitude));
+                    if (minDistance <= euclidean && euclidean <= maxDistance) {
+
+                        prevLong = longitude;
+                        prevLat = latitude;
+
+                        coords.add(new LatLng(latitude, longitude));
+
+                        path.setCoords(coords);
+
+                        path.setMap(naverMap);
+
+                    } else if (maxDistance>=euclidean){//gps 신호가 튄경우
+                        if (count <=5){
+                            count++;
+                        }
+                        else{
+                            prevLong = longitude;
+                            prevLat = latitude;
+
+                            coords.add(new LatLng(latitude, longitude));
+                            path.setCoords(coords);
+                            path.setMap(naverMap);
+
+                            count =0;
+                        }
+                    }
+
+                }
+            }
+        };
+
+        naverMap.addOnLocationChangeListener(onLocationChangeListener);
         locationOverlay.setVisible(true);
         locationOverlay.setCircleRadius(100);
         //uiSettings.setLocationButtonEnabled(true);
@@ -225,6 +308,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         //AsynTask를 extend 해서 비동기적으로 뒤에 해당하는 격자표 그리기.
         FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(naverMap, centerLatLng, map_radius);
         gridMapMakeTask.execute();
+
+
     }
 
     private class IdleListener implements NaverMap.OnCameraIdleListener{
@@ -310,10 +395,14 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 polygonOverlay.setCoords(getFourCornerLatLng(drawLatLng));
 
                 polygonOverlay.setOutlineColor(Color.WHITE);
-                if(placeIndex != null) {
-                    if (placeIndex.get(i) == 1) {
-                        polygonOverlay.setColor(Color.BLACK);
-                    } else {
+                if(getZoom_level() != 1){
+                    if(placeIndex != null) {
+                        if (placeIndex.get(i) == 1) {
+                            polygonOverlay.setColor(Color.BLACK);
+                        } else {
+                            polygonOverlay.setColor(Color.TRANSPARENT);
+                        }
+                    }else{
                         polygonOverlay.setColor(Color.TRANSPARENT);
                     }
                 }else{
