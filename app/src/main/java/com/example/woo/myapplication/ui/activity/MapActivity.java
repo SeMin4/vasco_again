@@ -57,14 +57,13 @@ public class MapActivity extends AppCompatActivity {
             fragmentTransaction.commit();
         }
         photoView = (PhotoView) findViewById(R.id.photo_view);
-        distance = 2.5;
+        distance = 10;
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         isGPSEnabled = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         isNetworkEnabled = manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         locationList = new ArrayList<>();
         flag = 0;
-        text1=(TextView)findViewById(R.id.textView);
-        text2=(TextView)findViewById(R.id.textView2);
+
         photoView.setImageResource(R.drawable.test);
 
 
@@ -121,8 +120,7 @@ public class MapActivity extends AppCompatActivity {
                     double longitude = location.getLongitude();
                     double latitude = location.getLatitude();
                     Log.d("Mapaaa","location");
-                    text1.setText("위도"+latitude);
-                    text2.setText("경도"+longitude);
+
                     Log.d("위치정보", "위치정보 : "
                             + provider + " 위도 : " + latitude+ " 경도 : " + longitude + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                     if(flag == 0){
@@ -133,13 +131,18 @@ public class MapActivity extends AppCompatActivity {
 
                     }else if(flag == 1){
                         if(Math.sqrt( (prevLong-longitude)*(prevLong-longitude) + (prevLat-latitude)*(prevLat-latitude) ) <= distance){
-                            Log.d("gps정보","prevLong : "+prevLong+" prevLat : "+prevLat+" curLong : "+longitude+ " curLat : "+latitude);
-                            prevLong = longitude;
-                            prevLat = latitude;
-                            distance = 2.5;
+
+                                Log.d("gps정보", "prevLong : " + prevLong + " prevLat : " + prevLat + " curLong : " + longitude + " curLat : " + latitude);
+                                prevLong = longitude;
+                                prevLat = latitude;
+                                distance = 10;
+
+                                text1.setText("위도"+latitude);
+                                text2.setText("경도"+longitude);
+
                         }else{//gps 신호가 튄경우
                             Log.d("gps정보","튄 경우 :prevLong : "+prevLong+" prevLat : "+prevLat+" curLong : "+longitude+ " curLat : "+latitude);
-                            distance += 2.5;
+                            distance += 10;
                         }
 
                     }
@@ -162,7 +165,7 @@ public class MapActivity extends AppCompatActivity {
             };
             ArrayList<String> providerList =(ArrayList<String>)manager.getProviders(false);
             for(String name : providerList){
-                manager.requestLocationUpdates(name,0,0,gpsLocationListener);
+                manager.requestLocationUpdates(name,1000,0,gpsLocationListener);
             }
         }else{
             Toast.makeText(getApplicationContext(),"Gps를 켜주세요.",Toast.LENGTH_SHORT).show();

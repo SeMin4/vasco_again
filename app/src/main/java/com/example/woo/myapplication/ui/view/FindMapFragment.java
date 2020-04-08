@@ -2,6 +2,7 @@ package com.example.woo.myapplication.ui.view;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.woo.myapplication.R;
 import com.naver.maps.geometry.LatLng;
@@ -23,12 +25,14 @@ import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.LocationOverlay;
+import com.naver.maps.map.overlay.PathOverlay;
 import com.naver.maps.map.overlay.PolygonOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -45,9 +49,16 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     public IdleListener cameraIdleListener;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
-
-
-
+    private NaverMap.OnLocationChangeListener onLocationChangeListener;
+    double latitude;
+    double longitude;
+    double prevLat;
+    double prevLong;
+    double distance = 2.5;
+    int flag =0;
+    TextView text1;
+    TextView text2;
+    int count;
     // TODO: Rename and change types and number of parameters
     public static FindMapFragment newInstance() {
         FindMapFragment fragment = new FindMapFragment();
@@ -72,7 +83,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
         locationSource = new FusedLocationSource(this,LOCATION_PERMISSION_REQUEST_CODE);
 
-    }
+}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,7 +103,9 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         naverMap.getUiSettings().setLocationButtonEnabled(true);
         naverMap.setCameraPosition(new CameraPosition(centerLatLng, 10));
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-
+        List<LatLng> coords = new ArrayList<>();
+        PathOverlay path = new PathOverlay();
+        count = 0;
         // 지도 중심으로 부터 지도의 전체 크기의 절반 만큼 남서쪽 북동쪽 부분으로 바운드를 결정하고 그 부분을 볼 수 있는 부분으로 카메라를 옮김.
         naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius*-1/2,map_radius*-1/2),centerLatLng.offset(map_radius/2,map_radius/2))));
 
@@ -101,10 +114,65 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
         naverMap.setLocationSource(locationSource);
         naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
-        naverMap.addOnLocationChangeListener(location ->
-                locationOverlay.setPosition(new LatLng(location.getLatitude(),location.getLongitude()))
+        Collections.addAll(coords,
+                new LatLng(37.57152, 126.97714),
+                new LatLng(37.56607, 126.98268),
+                new LatLng(37.56445, 126.97707),
+                new LatLng(37.55855, 126.97822)
         );
+        path.setCoords(coords);
 
+
+        onLocationChangeListener = new NaverMap.OnLocationChangeListener() {
+            @Override
+            public void onLocationChange(@NonNull Location location) {
+
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                if (flag == 0) {
+                    prevLong = longitude;
+                    prevLat = latitude;
+                    //통신(서보로 정보 보내기)
+                    flag = 1;
+
+                } else if (flag == 1) {
+                    if (Math.sqrt((prevLong - longitude) * (prevLong - longitude) + (prevLat - latitude) * (prevLat - latitude)) <= distance) {
+
+                        prevLong = longitude;
+                        prevLat = latitude;
+                        distance = 2.5;
+
+                        coords.add(new LatLng(latitude, longitude));
+
+                        path.setCoords(coords);
+
+                        path.setMap(naverMap);
+
+                    } else {//gps 신호가 튄경우
+                        if (count <=5){
+                            count++;
+                        }
+
+                        else{
+                            prevLong = longitude;
+                            prevLat = latitude;
+                            distance = 2.5;
+
+                            coords.add(new LatLng(latitude, longitude));
+
+                            path.setCoords(coords);
+
+                            path.setMap(naverMap);
+
+                            count =0;
+                        }
+                    }
+
+                }
+            }
+        };
+
+        naverMap.addOnLocationChangeListener(onLocationChangeListener);
         locationOverlay.setVisible(true);
         locationOverlay.setCircleRadius(100);
         //uiSettings.setLocationButtonEnabled(true);
@@ -112,6 +180,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         //AsynTask를 extend 해서 비동기적으로 뒤에 해당하는 격자표 그리기.
         FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(naverMap);
         gridMapMakeTask.execute();
+
+       drawLines(naverMap);
     }
 
     private class IdleListener implements NaverMap.OnCameraIdleListener{
@@ -212,6 +282,32 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 standardLatLng.offset(map_radius/8,map_radius/8),
                 standardLatLng.offset(0,map_radius/8)
         );
+    }
+
+
+    public void drawLines(NaverMap naverMap){
+
+     /*   Collections.addAll(coords,
+
+                new LatLng(37.57152, 126.97714),
+                new LatLng(37.56607, 126.98268),
+                new LatLng(37.56445, 126.97707),
+                new LatLng(37.55855, 126.97822)
+        );
+        path.setCoords(coords);
+
+        if(locationSource.getLastLocation() !=null) {
+            Location location = locationSource.getLastLocation();
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+
+            coords.add(new LatLng(latitude,longitude));
+// 아직 반영되지 않음
+            path.setCoords(coords);
+// 반영됨
+
+            path.setMap(naverMap);
+        }*/
     }
 
 }
