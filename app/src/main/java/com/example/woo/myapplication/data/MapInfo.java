@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MapInfo implements Serializable {
-
     private String m_id;
     private String p_id;
     private String m_password;

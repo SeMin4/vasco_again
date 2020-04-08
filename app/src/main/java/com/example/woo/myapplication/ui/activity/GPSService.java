@@ -13,9 +13,15 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.data.MapInfo;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GPSService extends Service {
     static  final String TAG="service";
@@ -24,7 +30,8 @@ public class GPSService extends Service {
     private int count = 0;
     private ArrayList<Integer> placeIndex;
     private String mid;
-
+    private MyGlobals.RetrofitExService retrofitExService;
+    private int existFlag = -1;
     public GPSService() {
 
     }
@@ -82,16 +89,39 @@ public class GPSService extends Service {
         Intent gpsIntent = new Intent(this, MapActivity.class);
         //여기서 넘기기전에 mid랑 placeindex정보 넘겨야한다..
         placeIndex = (ArrayList<Integer>) intent.getSerializableExtra("placeIndex");
-        mid = intent.getStringExtra("mid");
-       // Log.d("mapActivity","gpsservice mid : "+mid);
-        gpsIntent.putExtra("mid",mid);
-        gpsIntent.putExtra("placeIndex",placeIndex);
-        gpsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(gpsIntent);
+        existFlag = intent.getIntExtra("existFlag",-1);
 
-        Toast myToast = Toast.makeText(this.getApplicationContext(),"app 종료", Toast.LENGTH_LONG);
-     //   stopForeground(true);
+       // Log.d("mapActivity","gpsservice mid : "+mid);
+
+        if(existFlag == 0){//방을 만드는 경우
+            gpsIntent.putExtra("mid",intent.getStringExtra("mid"));
+            gpsIntent.putExtra("placeIndex",placeIndex);
+            gpsIntent.putExtra("existFlag",existFlag);
+            gpsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(gpsIntent);
+        }else if(existFlag == 1){//기존방 입장
+            //mid를 통해서 map_radius랑 map_center가져오기
+            MapInfo mapInfo = (MapInfo)intent.getSerializableExtra("mapInfo");
+            String mid = mapInfo.getM_id();
+            //일단 나중에 placeIndex 관련 데이터도 받아서 보내기
+            String findLat = mapInfo.getM_find_latitude();
+            String findLng = mapInfo.getM_find_longitude();
+            String centerLat = mapInfo.getM_center_point_latitude();
+            String centerLng = mapInfo.getM_center_point_longitude();
+            String mapRadius = mapInfo.getM_size();
+            gpsIntent.putExtra("mid",mid);
+            gpsIntent.putExtra("existFlag",existFlag);
+            gpsIntent.putExtra("centerLat",centerLat);
+            gpsIntent.putExtra("centerLng",centerLng);
+            gpsIntent.putExtra("mapRadius",mapRadius);
+            gpsIntent.putExtra("findLat",findLat);
+            gpsIntent.putExtra("findLng",findLng);
+            gpsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(gpsIntent);
+        }
         return super.onStartCommand(intent, flags, startId);
+       // Toast myToast = Toast.makeText(this.getApplicationContext(),"app 종료", Toast.LENGTH_LONG);
+     //   stopForeground(true);
     }
 
 
