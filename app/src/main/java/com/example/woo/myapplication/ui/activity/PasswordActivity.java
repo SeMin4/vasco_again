@@ -31,6 +31,7 @@ public class PasswordActivity extends Activity {
     private EditText repassword;
     private Button confirm;
     private MapInfo info;
+    private EditText roomTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +48,11 @@ public class PasswordActivity extends Activity {
         password = (EditText)findViewById(R.id.password);
         repassword = (EditText)findViewById(R.id.repassword);
         confirm = (Button)findViewById(R.id.confirm);
+        roomTitle = (EditText)findViewById(R.id.roomTitle);
         info = (MapInfo)getIntent().getSerializableExtra("mapinfo");
         System.out.println("info : "+info.getM_owner());
+
+        roomTitle.setText(info.getM_center_place_string());
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +69,7 @@ public class PasswordActivity extends Activity {
                     input.put("m_size",info.getM_size());
                     input.put("m_unit_scale",info.getM_unit_scale());
                     input.put("m_rotation",info.getM_rotation());
-                    input.put("m_center_place_string",info.getM_center_place_string());
+                    input.put("m_center_place_string",roomTitle.getText().toString());
                     input.put("m_center_point_latitude",info.getM_center_point_latitude());
                     input.put("m_center_point_longitude",info.getM_center_point_longitude());
                     retrofitExService.postMapMake(input).enqueue(new Callback<OverlapExamineData>() {
@@ -83,7 +87,8 @@ public class PasswordActivity extends Activity {
                                 //다음화면으로 이동한다(서비스있는 부분 적어주기),mid도 필요할거 같아서 서버에서 가저왔음
                                 Intent intent = new Intent(getApplicationContext(), GPSService.class);
                                 intent.putExtra("mid",mid);
-                                intent.putExtra("placeIndex",placeIndex);
+                                if(placeIndex!=null)
+                                    intent.putExtra("placeIndex",placeIndex);
                                 if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                                     startService(intent);
                                 } else {

@@ -138,9 +138,10 @@ public class MapSettingActivity extends AppCompatActivity
       next_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(int i =0;i<naverMapFragment.placeIndex.size();i++){
-                    System.out.println(""+i+" : "+naverMapFragment.placeIndex.get(i));
+                for (int i = 0; i < naverMapFragment.placeIndex.size(); i++) {
+                    System.out.println("" + i + " : " + naverMapFragment.placeIndex.get(i));
                 }
+
 //<<<<<<< HEAD
                 FindMapFragment.map_radius = NaverMapFragment.map_radius;
 //                Intent intent = new Intent(getApplicationContext(), GPSService.class);

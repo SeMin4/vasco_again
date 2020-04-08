@@ -138,6 +138,10 @@ public class NaverMapFragment extends Fragment  implements OnMapReadyCallback {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        placeIndex = new ArrayList<>();
+        for(int i=0;i<64;i++){
+            placeIndex.add(0);
+        }
         View rootView =  inflater.inflate(R.layout.fragment_map, container, true);
         relativeLayout = rootView.findViewById(R.id.relativeLayout);
         mapSizeTextView = rootView.findViewById(R.id.mapSizeText);
