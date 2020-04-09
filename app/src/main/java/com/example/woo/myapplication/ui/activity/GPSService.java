@@ -111,6 +111,7 @@ public class GPSService extends Service {
                 @Override
                 public void onResponse(Call<ArrayList<PlaceIndex>> call, Response<ArrayList<PlaceIndex>> response) {
                     ArrayList<PlaceIndex> list = response.body();
+                    Log.d("index","list : "+list);
                     if(list == null || list.size() == 0){
 
                     }else{

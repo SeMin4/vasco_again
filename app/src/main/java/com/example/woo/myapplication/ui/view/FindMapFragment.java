@@ -387,8 +387,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                     lineLatLng = lineLatLng.offset(-1 * this.map_radius / 8, 0);
                     drawLatLng = lineLatLng;
                 }
-                Log.d("mapActivity", "doingBackground");
-                Log.d("mapActivity","placeIndex : "+placeIndex);
+               // Log.d("mapActivity", "doingBackground");
+              //  Log.d("mapActivity","placeIndex : "+placeIndex);
 
                 PolygonOverlay polygonOverlay = new PolygonOverlay();
                 //getFourCornerLatLng 함수는 가장 남서쪽에 있는 좌표를 기준을 하여 총 사각형을 그릴수 있는 4개의 좌표를 알아내는 함수 (남서쪽, 북서쪽, 북동쪽, 남동쪽) 순서의 리스트 값을 반환한다.
