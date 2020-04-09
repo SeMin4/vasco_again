@@ -58,6 +58,23 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_activity);
+        try {
+            Log.d("emiiter","들아엄1");
+            mSocket = IO.socket("http://13.125.174.158:9001");
+            if(mSocket == null){
+                Log.d("emiiter","msocket  null");
+            }else {
+                mSocket.connect();
+                Log.d("emiiter","msocket  connect");
+            }
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } //웹소켓 생성
+
+
+
+
         Intent intent = getIntent();
         if (intent != null) {
             mid = intent.getStringExtra("mid");
@@ -93,6 +110,7 @@ public class MapActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
             }
             findMapFragment.setPlaceIndex(placeIndex);
+            findMapFragment.setmSocket(mSocket);
 
         }else if(existFlag == 0) { //방만들기
             fm = getSupportFragmentManager();
@@ -106,10 +124,19 @@ public class MapActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
             }
             findMapFragment.setPlaceIndex(placeIndex);
+            findMapFragment.setmSocket(mSocket);
 
         }
 
-
+        mSocket.on("makeRoom",makeRoom);
+        try{
+            JSONObject data = new JSONObject();
+            data.put("uid",MyGlobals.getInstance().getUser().getU_id());
+            data.put("mid",mid);
+            mSocket.emit("makeRoom",data);
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 //        photoView = (PhotoView) findViewById(R.id.photo_view);
 //        distance = 2.5;
@@ -121,30 +148,7 @@ public class MapActivity extends AppCompatActivity {
 //        text1 = (TextView) findViewById(R.id.textView);
 //        text2 = (TextView) findViewById(R.id.textView2);
 //        photoView.setImageResource(R.drawable.test);
-        try {
-            Log.d("emiiter","들아엄1");
-            mSocket = IO.socket("http://13.125.174.158:9001");
-            if(mSocket == null){
-                Log.d("emiiter","msocket  null");
-            }else {
-                mSocket.connect();
-                Log.d("emiiter","msocket  connect");
-            }
 
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } //웹소켓 생성
-
-
-        mSocket.on("makeRoom",makeRoom);
-        try{
-            JSONObject data = new JSONObject();
-            data.put("uid",MyGlobals.getInstance().getUser().getU_id());
-            data.put("mid",mid);
-            mSocket.emit("makeRoom",data);
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
 
 
 
