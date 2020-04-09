@@ -1,10 +1,7 @@
 package com.example.woo.myapplication.ui.activity;
 
 import android.Manifest;
-
-import android.content.Context;
 import android.content.Intent;
-
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,8 +17,6 @@ import android.widget.Toast;
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.ui.view.FindMapFragment;
-
-import com.github.chrisbanes.photoview.PhotoView;
 import com.naver.maps.geometry.LatLng;
 
 import org.json.JSONException;
@@ -385,6 +380,7 @@ public class MapActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         mSocket.close();
     }
 

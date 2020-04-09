@@ -2,11 +2,8 @@ package com.example.woo.myapplication.ui.view;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-
 import android.graphics.PointF;
-
 import android.location.Location;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,11 +32,8 @@ import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.LocationOverlay;
-
 import com.naver.maps.map.overlay.Overlay;
-
 import com.naver.maps.map.overlay.PathOverlay;
-
 import com.naver.maps.map.overlay.PolygonOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
 
@@ -68,7 +62,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     public ArrayList<PolygonOverlay> squareOverlay;
     public ArrayList<PolygonOverlay> squareOverlay2;
     public IdleListener cameraIdleListener;
-
+    View view;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
 
@@ -79,7 +73,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     Button zoom_in_btn;
     Button zoom_out_btn;
     private LatLng zoomCenterLatLng;
-
+//    View heatmapView;
 
 
     private int zoom_level;
@@ -146,6 +140,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_find_map, container, true);
+//        heatmapView = (View)getView().findViewById(R.id.info_heatmap);
         FrameLayout frameLayout = (FrameLayout)rootView.findViewById(R.id.frame_lay);
         TextView textView = new TextView(rootView.getContext());
         zoom_in_btn = rootView.findViewById(R.id.zoom_in_btn);
@@ -277,8 +272,19 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         );
         path.setCoords(coords);
 
-
+//        InfoWindow infoWindow = new InfoWindow();
+//
+//        infoWindow.setAdapter(new InfoWindow.ViewAdapter() {
+//            @NonNull
+//            @Override
+//            public View getView(@NonNull InfoWindow infoWindow) {
+//                return heatmapView;
+//            }
+//        });
+//
+//        infoWindow.setPosition();
         onLocationChangeListener = new NaverMap.OnLocationChangeListener() {
+
             @Override
             public void onLocationChange(@NonNull Location location) {
 
@@ -460,7 +466,22 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                             }
                         });
                     }
-
+                    double rate =0;
+                    if(i>=10 && i<=18){
+                        rate = 0.3;
+                    }
+                    else if(i>=20 && i%5 ==0)
+                    {
+                        rate=0.6;
+                    }
+                    else if(i>=57){
+                        rate = 0.8;
+                    }
+                    else if (i>=35 && i<=40){
+                        rate =1;
+                    }
+                    showHeatMap(polygonOverlay, rate);
+                  //  polygonOverlay.setColor(Color.BLUE);
                 }
 
 
@@ -472,6 +493,27 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
             }
             return null;
+        }
+
+        protected void showHeatMap(PolygonOverlay polygonOverlay, double rate){
+          //  double rate = 0.3;
+
+            if (rate>=0.2 && rate <= 0.4){
+                polygonOverlay.setColor(Color.argb(82,255,255,153));
+            }
+            else if(rate >=0.4 && rate <=0.6){
+                polygonOverlay.setColor(Color.argb(150,255,255,153));
+            }
+            else if(rate >=0.6 && rate <=0.8){
+                polygonOverlay.setColor(Color.argb(180,255,255,153));
+            }
+            else if (rate<=0.2){
+                polygonOverlay.setColor(Color.argb(0,255,255,153));
+            }
+            else{
+                polygonOverlay.setColor(Color.argb(220,255,255,153));
+            }
+
         }
     }
 
