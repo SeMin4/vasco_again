@@ -184,7 +184,7 @@ public class ManageDepartmentPopUp extends Activity {
     }
 
     public void openColorPicker() {
-        AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(this,_color_int, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+        AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(this,0xff0000ff, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
             public void onCancel(AmbilWarnaDialog dialog) {
 
@@ -192,8 +192,8 @@ public class ManageDepartmentPopUp extends Activity {
             }
             @Override
             public void onOk(AmbilWarnaDialog dialog, int color) {
-                _color_int = color;
-                _color_str = ""+_color_int;
+                _color_int = color; //int
+                _color_str = ""+_color_int; //str
                 Log.d("색상",_color_str);
                 drawable.setColor(_color_int);
                 select_color_btn.setBackground(drawable);
