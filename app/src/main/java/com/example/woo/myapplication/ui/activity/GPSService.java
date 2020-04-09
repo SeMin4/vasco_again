@@ -118,23 +118,23 @@ public class GPSService extends Service {
                             int index = Integer.parseInt(list.get(i).getMd_index());
                             placeIndex.set(index,1);
                         }
-                        Log.d("index","placeIndex : "+placeIndex);
-                        String findLat = mapInfo.getM_find_latitude();
-                        String findLng = mapInfo.getM_find_longitude();
-                        String centerLat = mapInfo.getM_center_point_latitude();
-                        String centerLng = mapInfo.getM_center_point_longitude();
-                        String mapRadius = mapInfo.getM_size();
-                        gpsIntent.putExtra("mid",mid);
-                        gpsIntent.putExtra("existFlag",existFlag);
-                        gpsIntent.putExtra("centerLat",centerLat);
-                        gpsIntent.putExtra("centerLng",centerLng);
-                        gpsIntent.putExtra("mapRadius",mapRadius);
-                        gpsIntent.putExtra("findLat",findLat);
-                        gpsIntent.putExtra("findLng",findLng);
-                        gpsIntent.putExtra("placeIndex",placeIndex);
-                        gpsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(gpsIntent);
                     }
+                    Log.d("index","placeIndex : "+placeIndex);
+                    String findLat = mapInfo.getM_find_latitude();
+                    String findLng = mapInfo.getM_find_longitude();
+                    String centerLat = mapInfo.getM_center_point_latitude();
+                    String centerLng = mapInfo.getM_center_point_longitude();
+                    String mapRadius = mapInfo.getM_size();
+                    gpsIntent.putExtra("mid",mid);
+                    gpsIntent.putExtra("existFlag",existFlag);
+                    gpsIntent.putExtra("centerLat",centerLat);
+                    gpsIntent.putExtra("centerLng",centerLng);
+                    gpsIntent.putExtra("mapRadius",mapRadius);
+                    gpsIntent.putExtra("findLat",findLat);
+                    gpsIntent.putExtra("findLng",findLng);
+                    gpsIntent.putExtra("placeIndex",placeIndex);
+                    gpsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(gpsIntent);
                 }
 
                 @Override
