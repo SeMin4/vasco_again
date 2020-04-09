@@ -256,6 +256,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 //
 //        infoWindow.setPosition();
         onLocationChangeListener = new NaverMap.OnLocationChangeListener() {
+
             @Override
             public void onLocationChange(@NonNull Location location) {
 
