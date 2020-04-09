@@ -74,6 +74,7 @@ public class MapActivity extends AppCompatActivity {
             String fLat = intent.getStringExtra("findLat");
             String fLng = intent.getStringExtra("findLng");
             String mRadius = intent.getStringExtra("mapRadius");
+            placeIndex = (ArrayList<Integer>)intent.getSerializableExtra("placeIndex");
             if(fLat != null)
                 findLat = fLat;
             if(fLng != null)
@@ -91,6 +92,7 @@ public class MapActivity extends AppCompatActivity {
                 fragmentTransaction.add(R.id.naverMap_findMap_layout, findMapFragment);
                 fragmentTransaction.commit();
             }
+            findMapFragment.setPlaceIndex(placeIndex);
 
         }else if(existFlag == 0) { //방만들기
             fm = getSupportFragmentManager();
