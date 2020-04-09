@@ -24,6 +24,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
@@ -42,11 +43,18 @@ import com.naver.maps.map.overlay.PathOverlay;
 import com.naver.maps.map.overlay.PolygonOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
 
 public class FindMapFragment extends Fragment implements OnMapReadyCallback {
@@ -75,11 +83,17 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
 
     private int zoom_level;
-
-
-
     private int[] click_index  = new int[2];
 
+    private Socket mSocket;
+
+    public Socket getmSocket() {
+        return mSocket;
+    }
+
+    public void setmSocket(Socket mSocket) {
+        this.mSocket = mSocket;
+    }
 
     private NaverMap.OnLocationChangeListener onLocationChangeListener;
     double latitude;
@@ -90,6 +104,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     double maxDistance = 10;
     int flag =0;
     int count;
+    int tmplat = 0, tmplng = 100;
 
 
 
@@ -168,6 +183,19 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 else{
                     Toast.makeText(getContext(),"더 이상 확대 할 수 없습니다.", Toast.LENGTH_LONG).show();
+//                    mSocket.on("drawLatLng",drawLatLng); 그리는거
+                    try{
+                        JSONObject data = new JSONObject();
+                        data.put("Lat", tmplat);
+                        data.put("Lng", tmplng);
+                        tmplat++;
+                        tmplng--;
+                        mSocket.emit("sendLatLng", data);
+//                        data.put("mid",mid);
+//                        mSocket.emit("makeRoom",data);
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }
@@ -411,25 +439,28 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 polygonOverlay.setOutlineWidth(2);
                 polygonOverlay.setTag(i);
                 if(getZoom_level() == 0){
-                    polygonOverlay.setOnClickListener(new Overlay.OnClickListener() {
-                        @Override
-                        public boolean onClick(@NonNull Overlay overlay) {
-                            //원래 색칠되어 있으면 색칠 된 부분을 투명으로 변경
-                            if(getClick_index(getZoom_level()) != -1){
-                                squareOverlay.get(getClick_index(getZoom_level())).setColor(Color.TRANSPARENT);
-                            }
-                            //다른 인덱스값을 클릭한 인덱스 값으로 지정
-                            if(getClick_index(getZoom_level()) != (Integer)overlay.getTag()){
-                                ((PolygonOverlay)overlay).setColor(Color.RED);
-                                setClick_index((Integer)overlay.getTag(),getZoom_level());
-                            }
-                            else{//원래 색칠되어 있는 부분을 클릭한 경우
-                                setClick_index(-1, getZoom_level());
-                            }
+                    if(!((placeIndex != null) && (placeIndex.get(i) == 1))){
+                        polygonOverlay.setOnClickListener(new Overlay.OnClickListener() {
+                            @Override
+                            public boolean onClick(@NonNull Overlay overlay) {
+                                //원래 색칠되어 있으면 색칠 된 부분을 투명으로 변경
+                                if(getClick_index(getZoom_level()) != -1){
+                                    squareOverlay.get(getClick_index(getZoom_level())).setColor(Color.TRANSPARENT);
+                                }
+                                //다른 인덱스값을 클릭한 인덱스 값으로 지정
+                                if(getClick_index(getZoom_level()) != (Integer)overlay.getTag()){
+                                    ((PolygonOverlay)overlay).setColor(Color.RED);
+                                    setClick_index((Integer)overlay.getTag(),getZoom_level());
+                                }
+                                else{//원래 색칠되어 있는 부분을 클릭한 경우
+                                    setClick_index(-1, getZoom_level());
+                                }
 
-                            return false;
-                        }
-                    });
+                                return false;
+                            }
+                        });
+                    }
+
                 }
 
 
