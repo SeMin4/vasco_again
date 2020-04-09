@@ -32,6 +32,7 @@ public class PasswordActivity extends Activity {
     private Button confirm;
     private MapInfo info;
     private EditText roomTitle;
+    private String index = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,13 @@ public class PasswordActivity extends Activity {
 
         roomTitle.setText(info.getM_center_place_string());
 
+        ArrayList<Integer> placeIndex = info.getPlaceIndex();
+        for(int i =0;i<64;i++){
+            if(placeIndex.get(i) == 1){
+                index = index+i+"@";
+            }
+        }
+
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +80,7 @@ public class PasswordActivity extends Activity {
                     input.put("m_center_place_string",roomTitle.getText().toString());
                     input.put("m_center_point_latitude",info.getM_center_point_latitude());
                     input.put("m_center_point_longitude",info.getM_center_point_longitude());
+                    input.put("index",index);
                     retrofitExService.postMapMake(input).enqueue(new Callback<OverlapExamineData>() {
                         @Override
                         public void onResponse(Call<OverlapExamineData> call, Response<OverlapExamineData> response) {
@@ -82,7 +91,7 @@ public class PasswordActivity extends Activity {
                             }else{
                                 Toast.makeText(getApplicationContext(), "방 만들기 성공입니다..", Toast.LENGTH_SHORT).show();
                                 String mid = data.getM_id();
-                                ArrayList<Integer> placeIndex = info.getPlaceIndex();
+                               // ArrayList<Integer> placeIndex = info.getPlaceIndex();
                                // Log.d("mapActivity","password mid : "+mid);
                                 //다음화면으로 이동한다(서비스있는 부분 적어주기),mid도 필요할거 같아서 서버에서 가저왔음
                                 Intent intent = new Intent(getApplicationContext(), GPSService.class);

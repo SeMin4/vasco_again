@@ -133,29 +133,31 @@ public class MapActivity extends AppCompatActivity {
             e.printStackTrace();
         } //웹소켓 생성
 
-        if (existFlag == 0) { //방새로만들기
-            mSocket.on("makeRoom",makeRoom);
-            try{
-                JSONObject data = new JSONObject();
-                data.put("uid",MyGlobals.getInstance().getUser().getU_id());
-                data.put("mid",mid);
-                mSocket.emit("makeRoom",data);
-            }catch (JSONException e) {
-                e.printStackTrace();
-            }
 
-        } else if(existFlag == 1){//기존의 방입장
-            Log.d("emiiter","방입장");
-            mSocket.on("attendRoom",attendRoom);
-            try{
-                JSONObject data = new JSONObject();
-                data.put("uid",MyGlobals.getInstance().getUser().getU_id());
-                data.put("mid",mid);
-                mSocket.emit("attendRoom",data);
-            }catch (JSONException e){
-                e.printStackTrace();
-            }
+        mSocket.on("makeRoom",makeRoom);
+        try{
+            JSONObject data = new JSONObject();
+            data.put("uid",MyGlobals.getInstance().getUser().getU_id());
+            data.put("mid",mid);
+            mSocket.emit("makeRoom",data);
+        }catch (JSONException e) {
+            e.printStackTrace();
         }
+
+
+
+//        else if(existFlag == 1){//기존의 방입장
+//            Log.d("emiiter","방입장");
+//            mSocket.on("attendRoom",attendRoom);
+//            try{
+//                JSONObject data = new JSONObject();
+//                data.put("uid",MyGlobals.getInstance().getUser().getU_id());
+//                data.put("mid",mid);
+//                mSocket.emit("attendRoom",data);
+//            }catch (JSONException e){
+//                e.printStackTrace();
+//            }
+//        }
 
 
 //        // GPS 프로바이더 사용 가능 여부
@@ -398,14 +400,14 @@ public class MapActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(),"연결 이 완료 이후 방생성 완료",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"연결 이 완료 이후 방입장 완료",Toast.LENGTH_SHORT).show();
                     }
                     });
                 }else{
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(),"방생성 실패. 위치정보가 기록이 안됩니다.",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"방입장 실패. 위치정보가 기록이 안됩니다.",Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -414,45 +416,45 @@ public class MapActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(),"방생성 실패. 위치정보가 기록이 안됩니다.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"방입장 실패. 위치정보가 기록이 안됩니다.",Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         }
     };
 
-    private Emitter.Listener attendRoom = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            try{
-                JSONObject receivedData = (JSONObject)args[0];
-                String check = (String)receivedData.get("check");
-                if(check.equals("success")){
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),"연결 이 완료 이후 방참여 완료",Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }else{
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),"방참여 실패. 위치정보가 기록이 안됩니다.",Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }catch (JSONException e){
-                e.printStackTrace();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),"방참여 실패. 위치정보가 기록이 안됩니다.",Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-    };
+//    private Emitter.Listener attendRoom = new Emitter.Listener() {
+//        @Override
+//        public void call(Object... args) {
+//            try{
+//                JSONObject receivedData = (JSONObject)args[0];
+//                String check = (String)receivedData.get("check");
+//                if(check.equals("success")){
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(getApplicationContext(),"연결 이 완료 이후 방참여 완료",Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                }else{
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(getApplicationContext(),"방참여 실패. 위치정보가 기록이 안됩니다.",Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                }
+//            }catch (JSONException e){
+//                e.printStackTrace();
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(getApplicationContext(),"방참여 실패. 위치정보가 기록이 안됩니다.",Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        }
+//    };
 //    private Emitter.Listener onConnect = new Emitter.Listener() {
 //        @Override
 //        public void call(Object... args) {

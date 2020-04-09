@@ -9,6 +9,7 @@ import com.example.woo.myapplication.data.MapInfo;
 import com.example.woo.myapplication.data.Mperson;
 import com.example.woo.myapplication.data.NotCompleteList;
 import com.example.woo.myapplication.data.Not_Complete_Data;
+import com.example.woo.myapplication.data.PlaceIndex;
 import com.example.woo.myapplication.data.User;
 
 import java.util.ArrayList;
@@ -79,8 +80,8 @@ public class MyGlobals {
     public interface RetrofitExService{ //interface 선언
         public static final String URL = "http://13.125.174.158:9001/"; //서버 주소와 포트번호
 
-        @GET("/get/mapInfo?")
-        Call<MapInfo> getMapInfo();
+        @GET("/get/placeIndex?")
+        Call<ArrayList<PlaceIndex>> getPlaceIndex(@Query("mid") String mid);
 
         @GET("/get/department")
         Call<ArrayList<DepartmentData>> getDepartmentData();

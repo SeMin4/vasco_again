@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.data.MapInfo;
+import com.example.woo.myapplication.data.PlaceIndex;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,6 @@ public class GPSService extends Service {
    // Notification noti;
    public static final String NOTIFICATION_CHANNEL_ID = "10001";
     private int count = 0;
-    private ArrayList<Integer> placeIndex;
     private String mid;
     private MyGlobals.RetrofitExService retrofitExService;
     private int existFlag = -1;
@@ -92,7 +92,7 @@ public class GPSService extends Service {
        // Log.d("mapActivity","gpsservice mid : "+mid);
 
         if(existFlag == 0){//방을 만드는 경우
-            placeIndex = (ArrayList<Integer>) intent.getSerializableExtra("placeIndex");
+            ArrayList<Integer> placeIndex = (ArrayList<Integer>) intent.getSerializableExtra("placeIndex");
             gpsIntent.putExtra("mid",intent.getStringExtra("mid"));
             gpsIntent.putExtra("placeIndex",placeIndex);
             gpsIntent.putExtra("existFlag",existFlag);
@@ -103,20 +103,46 @@ public class GPSService extends Service {
             MapInfo mapInfo = (MapInfo)intent.getSerializableExtra("mapInfo");
             String mid = mapInfo.getM_id();
             //일단 나중에 placeIndex 관련 데이터도 받아서 보내기
-            String findLat = mapInfo.getM_find_latitude();
-            String findLng = mapInfo.getM_find_longitude();
-            String centerLat = mapInfo.getM_center_point_latitude();
-            String centerLng = mapInfo.getM_center_point_longitude();
-            String mapRadius = mapInfo.getM_size();
-            gpsIntent.putExtra("mid",mid);
-            gpsIntent.putExtra("existFlag",existFlag);
-            gpsIntent.putExtra("centerLat",centerLat);
-            gpsIntent.putExtra("centerLng",centerLng);
-            gpsIntent.putExtra("mapRadius",mapRadius);
-            gpsIntent.putExtra("findLat",findLat);
-            gpsIntent.putExtra("findLng",findLng);
-            gpsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(gpsIntent);
+            ArrayList<Integer> placeIndex = new ArrayList<>();
+            for(int i =0;i<64;i++)
+                placeIndex.add(0);
+            retrofitExService = MyGlobals.getInstance().getRetrofitExService();
+            retrofitExService.getPlaceIndex(mid).enqueue(new Callback<ArrayList<PlaceIndex>>() {
+                @Override
+                public void onResponse(Call<ArrayList<PlaceIndex>> call, Response<ArrayList<PlaceIndex>> response) {
+                    ArrayList<PlaceIndex> list = response.body();
+                    if(list == null || list.size() == 0){
+
+                    }else{
+                        for(int i=0;i<list.size();i++){
+                            int index = Integer.parseInt(list.get(i).getMd_index());
+                            placeIndex.set(index,1);
+                        }
+                        Log.d("index","placeIndex : "+placeIndex);
+                        String findLat = mapInfo.getM_find_latitude();
+                        String findLng = mapInfo.getM_find_longitude();
+                        String centerLat = mapInfo.getM_center_point_latitude();
+                        String centerLng = mapInfo.getM_center_point_longitude();
+                        String mapRadius = mapInfo.getM_size();
+                        gpsIntent.putExtra("mid",mid);
+                        gpsIntent.putExtra("existFlag",existFlag);
+                        gpsIntent.putExtra("centerLat",centerLat);
+                        gpsIntent.putExtra("centerLng",centerLng);
+                        gpsIntent.putExtra("mapRadius",mapRadius);
+                        gpsIntent.putExtra("findLat",findLat);
+                        gpsIntent.putExtra("findLng",findLng);
+                        gpsIntent.putExtra("placeIndex",placeIndex);
+                        gpsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(gpsIntent);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<PlaceIndex>> call, Throwable t) {
+
+                }
+            });
+
         }
         return super.onStartCommand(intent, flags, startId);
        // Toast myToast = Toast.makeText(this.getApplicationContext(),"app 종료", Toast.LENGTH_LONG);
