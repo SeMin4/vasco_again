@@ -11,7 +11,6 @@ import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,13 +41,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -95,6 +92,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         this.mSocket = mSocket;
     }
 
+    int mycolor;
     private NaverMap.OnLocationChangeListener onLocationChangeListener;
     double latitude;
     double longitude;
@@ -245,7 +243,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
     @UiThread
     @Override
-    public void onMapReady(@NonNull NaverMap naverMap){
+        public void onMapReady(@NonNull NaverMap naverMap){
         //처음 줌레벨을 설정하고 줌레벨에 해당하는 클릭 인덱스 값이 없으므로 -1으로 설정
         setZoom_level(0);
         setNaverMap(naverMap);
@@ -263,6 +261,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
         List<LatLng> coords = new ArrayList<>();
         PathOverlay path = new PathOverlay();
+        mycolor = Integer.parseInt(MyGlobals.getInstance().getUser().getColor());
         count = 0;
         // 지도 중심으로 부터 지도의 전체 크기의 절반 만큼 남서쪽 북동쪽 부분으로 바운드를 결정하고 그 부분을 볼 수 있는 부분으로 카메라를 옮김.
         naverMap.moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius*-1/2,map_radius*-1/2),centerLatLng.offset(map_radius/2,map_radius/2))));
@@ -281,7 +280,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 new LatLng(37.55855, 126.97822)
         );
         path.setCoords(coords);
-
+        path.setColor(mycolor);
 //        InfoWindow infoWindow = new InfoWindow();
 //
 //        infoWindow.setAdapter(new InfoWindow.ViewAdapter() {
@@ -319,9 +318,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         prevLat = latitude;
 
                         coords.add(new LatLng(latitude, longitude));
-
                         path.setCoords(coords);
-
                         path.setMap(naverMap);
 
                     } else if (maxDistance>=euclidean){//gps 신호가 튄경우
