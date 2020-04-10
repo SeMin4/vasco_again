@@ -45,10 +45,11 @@ public class MapActivity extends AppCompatActivity {
     FindMapFragment findMapFragment;
     private String mid;
     private ArrayList<Integer> placeIndex;
-    private Socket mSocket;
+    public static Socket mSocket;
     private int existFlag = -1;
     private String findLat = null;
     private String findLng = null;;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

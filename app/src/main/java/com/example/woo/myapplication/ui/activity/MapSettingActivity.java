@@ -163,24 +163,25 @@ public class MapSettingActivity extends AppCompatActivity
                         if(list != null){
                             if(list.size() == 0){
                                 Toast.makeText(getApplicationContext(), "구글지도에 제공되지 않는 위치입니다.", Toast.LENGTH_LONG).show();
+                                centerLocation = "제공되지 않는 장소 입니다.";
                             }else{
                                 String s1 = list.get(0).getCountryName(); //국가명
-                                if(s1 != null || !(s1.trim().equals("null")))
+                                if(s1 != null)
                                     centerLocation += s1+" ";
                                 String s2 = list.get(0).getAdminArea(); // 시
-                                if(s2 != null || !(s2.trim().equals("null")))
+                                if(s2 != null)
                                     centerLocation += s2+" ";
                                 String s3 = list.get(0).getLocality(); // 구 메인
-                                if(s3 != null || !(s3.trim().equals("null")))
+                                if(s3 != null )
                                     centerLocation += s3+" ";
                                 String s4 = list.get(0).getSubLocality(); //구 서브데이터
-                                if(s4 != null || !(s4.trim().equals("null")))
+                                if(s4 != null)
                                     centerLocation += s4+" ";
                                 String s5 = list.get(0).getThoroughfare(); // 동
-                                if(s5 != null || !(s5.trim().equals("null")))
+                                if(s5 != null)
                                     centerLocation += s5+" ";
                                 String s6 = list.get(0).getSubThoroughfare(); // 번지
-                                if(s2 != null || !(s6.trim().equals("null")))
+                                if(s6 != null)
                                     centerLocation += s6+" ";
                             }
                         }
@@ -188,6 +189,7 @@ public class MapSettingActivity extends AppCompatActivity
                         e.printStackTrace();
 //>>>>>>> maplist
                     }
+                    Log.d("location","location : "+centerLocation);
 
                     MapInfo info = new MapInfo();
                     info.setP_id(pid);
