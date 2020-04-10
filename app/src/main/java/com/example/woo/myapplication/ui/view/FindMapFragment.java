@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.ui.activity.MapActivity;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraPosition;
@@ -49,6 +50,7 @@ import java.util.List;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 
 public class FindMapFragment extends Fragment implements OnMapReadyCallback {
@@ -80,6 +82,10 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     private int[] click_index  = new int[2];
 
     private Socket mSocket;
+
+    public FindMapFragment(){
+        this.mSocket = MapActivity.mSocket;
+    }
 
     public Socket getmSocket() {
         return mSocket;
@@ -121,6 +127,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FragmentManager fm = getChildFragmentManager();
+        mSocket.on("drawLatLng",drawLatLng); //그림그리기 이벤트
         if(mapFragment == null){
             mapFragment = MapFragment.newInstance();
             fragmentTransaction = fm.beginTransaction();
@@ -178,7 +185,6 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 else{
                     Toast.makeText(getContext(),"더 이상 확대 할 수 없습니다.", Toast.LENGTH_LONG).show();
-//                    mSocket.on("drawLatLng",drawLatLng); 그리는거
                     try{
                         JSONObject data = new JSONObject();
                         data.put("Lat", tmplat);
@@ -561,6 +567,19 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     public NaverMap getNaverMap(){
         return  this.naverMap;
     }
+
+    //경로 그리기
+    Emitter.Listener drawLatLng = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            try{
+                JSONObject data = (JSONObject)args[0];
+                String latLng = (String)data.get("latLng");
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+        }
+    };
 
 
 }
