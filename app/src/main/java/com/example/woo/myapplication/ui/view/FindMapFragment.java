@@ -183,6 +183,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         JSONObject data = new JSONObject();
                         data.put("Lat", tmplat);
                         data.put("Lng", tmplng);
+                        int tmpidx = 1;
+                        data.put("idx", tmpidx);
                         tmplat++;
                         tmplng--;
                         mSocket.emit("sendLatLng", data);
@@ -205,7 +207,9 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                     getNaverMap().moveCamera(CameraUpdate.fitBounds(new LatLngBounds(centerLatLng.offset(map_radius*-1/2,map_radius*-1/2),centerLatLng.offset(map_radius/2,map_radius/2))));
                     for(int i = 0; i<squareOverlay.size(); ++i){
                         squareOverlay.get(i).setMap(null);
+
                     }
+                    squareOverlay.clear();
 //                getNaverMap().setMinZoom(getNaverMap().getCameraPosition().zoom);
 //                getNaverMap().setMaxZoom(getNaverMap().getCameraPosition().zoom);
                     FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(getNaverMap(), centerLatLng, map_radius);
