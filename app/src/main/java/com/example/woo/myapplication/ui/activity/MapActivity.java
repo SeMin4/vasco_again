@@ -58,8 +58,8 @@ public class MapActivity extends AppCompatActivity {
     private ArrayList<Integer> placeIndex;
     public Socket mSocket;
     private int existFlag = -1;
-    private String findLat = null;
-    private String findLng = null;
+    public static String findLat = null;
+    public static String findLng = null;
     private MyGlobals.RetrofitExService retrofitExService;
     //View view_heatmap_info;
 
@@ -166,11 +166,6 @@ public class MapActivity extends AppCompatActivity {
             findMapFragment.setmSocket(mSocket);
 
         }
-
-        if(findLng != null && findLat != null){ // 수색완료 지점
-            //marker 생성 하기
-        }
-        getTotalNotComplete();
 
         retrofitExService.getLatLng(mid).enqueue(new Callback<ArrayList<LatLngData>>() {
             @Override

@@ -7,10 +7,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.ui.view.FindMapFragment;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraUpdate;
@@ -18,20 +20,33 @@ import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.InfoWindow;
+import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.PolygonOverlay;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
+
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
     private MapView mapView;
     private double centerLat;
     private double centerLng;
     private LatLng centerLatLng;
+    private Socket mSocket;
+    private NaverMap naverMap;
+    private Marker marker = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mSocket = FindMapFragment.mSocket;
+        mSocket.on("findPeople",getComplete);
+        mSocket.on("specialThing",getNotComplete);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -44,6 +59,76 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
+
+    Emitter.Listener getComplete = new Emitter.Listener() { //다른사람이 올린 수색완료 받아오기
+        @Override
+        public void call(Object... args) {
+            try{
+                Log.d("수색완료","detailmap");
+                JSONObject data = (JSONObject)args[0];
+                String check = (String)data.get("check");
+                if(check.equals("success")){
+                    if(marker!=null){
+                        Marker prevMarker = marker;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                prevMarker.setMap(null);
+                            }
+                        });
+                    }
+                    Log.d("수색완료","if문안");
+                    //수색 완료 marker 찍기
+                    Double lat = (Double) data.get("latitude");
+                    Double lng = (Double)data.get("longitude");
+                    MapActivity.findLat = ""+lat;
+                    MapActivity.findLng = ""+lng;
+                    marker = new Marker();
+                    marker.setPosition(new LatLng(lat,lng));
+                    marker.setIconTintColor(Color.GREEN);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("수색완료","marker");
+                            Log.d("수색완료",""+naverMap);
+                            marker.setMap(naverMap);
+                        }
+                    });
+                }else{
+
+                }
+            }catch (JSONException e){
+
+            }
+        }
+    };
+
+    Emitter.Listener getNotComplete = new Emitter.Listener() { //다른사람이 올린 수색불가 특이사항 받아오기
+        @Override
+        public void call(Object... args) {
+            try{
+                JSONObject data = (JSONObject)args[0];
+                String check = (String)data.get("check");
+                if(check.equals("success")){
+                    Double lat = (Double)data.get("latitude");
+                    Double lng = (Double)data.get("longitude");
+                    //수색 불가 marker생성
+                    Marker marker = new Marker();
+                    marker.setPosition(new LatLng(lat,lng));
+                    marker.setIconTintColor(Color.RED);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            marker.setMap(naverMap);
+                        }
+                    });
+                }
+            }catch(JSONException e){
+
+            }
+
+        }
+    };
 
     @Override
     protected void onStart() {
@@ -87,9 +172,16 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
         mapView.onLowMemory();
     }
 
+
     @UiThread
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
+        this.naverMap = naverMap;
+        if(MapActivity.findLat!=null && MapActivity.findLng!= null) {
+            marker = new Marker();
+            marker.setPosition(new LatLng(Double.parseDouble(MapActivity.findLat), Double.parseDouble(MapActivity.findLng)));
+            marker.setMap(naverMap);
+        }
         naverMap.getUiSettings().setZoomControlEnabled(false);      // 지도 줌버튼 비활성화
         naverMap.getUiSettings().setLocationButtonEnabled(false);    // 현위치 버튼 활성화
         naverMap.getUiSettings().setScrollGesturesEnabled(false);   // 스크롤 제스쳐 비활성화
@@ -128,7 +220,13 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
 //            windowHashMap.put(infoWindow.hashCode(), infoWindow);
             infoWindow.setOnClickListener(overlay -> {
                 Intent intent = new Intent(getApplicationContext(),InsertDetailsPopUp.class);
+                Log.d("click","lat : "+latLng.latitude);
+                Log.d("click","lng : "+latLng.longitude);
+                intent.putExtra("lat",latLng.latitude);
+                intent.putExtra("lng",latLng.longitude);
                 infoWindow.close();
+                startActivity(intent);
+
 
 //                Intent intent = new Intent(DistrictActivity.this, DistrictRecordActivity.class);
 //                intent.putExtra("markerId", infoWindow.hashCode());
