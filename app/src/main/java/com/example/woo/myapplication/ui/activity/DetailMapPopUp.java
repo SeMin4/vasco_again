@@ -215,11 +215,14 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
         polygonOverlay.setMap(naverMap);
         //NaverMap 기본 설정 하고 폴리곤 오버레이 다시 그리기
         //지도에 해당하는 마커 다 그리기
-        for(int i = 0; i < markerLatLng.size(); ++i){
-            Marker marker = new Marker();
-            marker.setPosition(markerLatLng.get(i));
-            marker.setMap(naverMap);
+        if(markerLatLng.size() != 0 && markerLatLng != null){
+            for(int i = 0; i < markerLatLng.size(); ++i){
+                Marker marker = new Marker();
+                marker.setPosition(markerLatLng.get(i));
+                marker.setMap(naverMap);
+            }
         }
+
         naverMap.setOnMapLongClickListener((pointF, latLng) -> {
             InfoWindow infoWindow = new InfoWindow();
             infoWindow.setAlpha(0.9f);
