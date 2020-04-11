@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -29,8 +30,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
 
 import io.socket.client.Socket;
 
@@ -243,8 +242,8 @@ public class InsertDetailsPopUp extends Activity {
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             // 해당 경로에 있는 파일을 객체화(새로 파일을 만든다는 것으로 이해하면 안 됨)
             File f = new File(mCurrentPhotoPath);
-            Uri contentUri = Uri.fromFile(f);
-            mediaScanIntent.setData(contentUri);
+            Uri uri = FileProvider.getUriForFile(getApplicationContext(),"com.example.woo.myapplication.fileprovider",f);
+            mediaScanIntent.setData(uri);
             sendBroadcast(mediaScanIntent);
             Toast.makeText(this, "사진이 앨범에 저장되었습니다.", Toast.LENGTH_SHORT).show();
 
@@ -263,7 +262,7 @@ public class InsertDetailsPopUp extends Activity {
         }
         if (tempFile != null) {
             Log.d("aaa","camera");
-            Uri photoUri = Uri.fromFile(tempFile);
+            Uri photoUri = FileProvider.getUriForFile(getApplicationContext(),"com.example.woo.myapplication.fileprovider",tempFile);
             Log.d("aaa","camera2");
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             Log.d("aaa","camera3");
