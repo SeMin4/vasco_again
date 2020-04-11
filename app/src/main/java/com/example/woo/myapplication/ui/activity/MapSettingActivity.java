@@ -3,6 +3,7 @@ package com.example.woo.myapplication.ui.activity;
 import android.app.Fragment;
 import android.content.Intent;
 
+import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -44,6 +45,7 @@ public class MapSettingActivity extends AppCompatActivity
     double centerLng;
     String pid;
 
+    GradientDrawable btnDrawable;
     FragmentManager fm;
     FragmentTransaction fragmentTransaction;
 
@@ -79,6 +81,17 @@ public class MapSettingActivity extends AppCompatActivity
         }
 
 
+        btnDrawable= (GradientDrawable) getApplicationContext().getDrawable(R.drawable.btn_gray_shape_only);
+//        frameLayout = (FrameLayout)findViewById(R.id.naverMap_Setting);
+//
+//        frameLayout.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                System.out.println("터치됨@@@@@@@@@@@@@@@@@@@@@@@@@@");
+//                Log.d("터치","터치돰@@@@@@@@");
+//                return true;
+//            }
+//        });
 
       /*  if(Build.VERSION.SDK_INT >= 26) {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -96,6 +109,7 @@ public class MapSettingActivity extends AppCompatActivity
       placedelete.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+//<<<<<<< HEAD
               if (placedeleteFlag == 0) {
                   naverMapFragment.gestureFunc(); //리사이클러뷰 올림
                   placedeleteFlag = 1; //1이면 리사이클러뷰 안올리기
@@ -103,10 +117,30 @@ public class MapSettingActivity extends AppCompatActivity
               }else {
                   placedelete.setBackgroundColor(Color.RED);
                   placerecovery.setBackground(color);
-              }
-              NaverMapFragment.flag = 1;
+//=======
+//              if(first == 0){
+//                  naverMapFragment.gestureFunc();
+//                  first = 1;
+//              }
+//              if(NaverMapFragment.flag == 0 ){
+//                  NaverMapFragment.flag = 1;
+//                  btnDrawable.setColor(getResources().getColor(R.color.burgundy));
+//
+//                  placedelete.setBackground(btnDrawable);
+//                  placedelete.setClipToOutline(true);
+//                  placedelete.setTextColor(Color.WHITE);
+//                  //placedelete.setBackgroundColor(Color.RED);
+//              }else{
+//                  NaverMapFragment.flag = 0;
+//
+//                  btnDrawable.setColor(getResources().getColor(R.color.light_gray));
+//                  placedelete.setBackground(btnDrawable);
+//                  placedelete.setTextColor(Color.BLACK);
+////>>>>>>> design
+//              }
+//              NaverMapFragment.flag = 1;
           }
-      });
+      }});
 
       placerecovery.setOnClickListener(new View.OnClickListener() {
           @Override
@@ -126,9 +160,16 @@ public class MapSettingActivity extends AppCompatActivity
               naverMapFragment.detachView();
               //naverMapFragment.placeIndex = new ArrayList<>(64);
               NaverMapFragment.flag = 0;
+//<<<<<<< HEAD
               placedeleteFlag = 0;
               placedelete.setBackground(color);
               placerecovery.setBackground(color);
+//=======
+//              first = 0;
+              btnDrawable.setColor(getResources().getColor(R.color.light_gray));
+              placedelete.setBackground(btnDrawable);
+              placedelete.setTextColor(Color.BLACK);
+//>>>>>>> design
           }
       });
 
