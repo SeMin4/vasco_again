@@ -762,6 +762,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
+    @UiThread
     public void getTotalNotComplete(){ //처음 입장시 전체 수색불가 받아오기
         retrofitExService.getNotCompleteData(MapActivity.mid).enqueue(new Callback<ArrayList<Not_Complete_Data>>() {
             @Override

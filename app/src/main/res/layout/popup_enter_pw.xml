@@ -14,16 +14,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/popup_location"
-            android:textColor="@color/burgundy"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="@string/label_enter_mappw"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:background="#00ff0000">
-        </TextView>
+        android:id="@+id/popup_location"
+        android:textColor="@color/burgundy"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/label_enter_mappw"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="#00ff0000">
+    </TextView>
     </LinearLayout>
 
     <ImageView
