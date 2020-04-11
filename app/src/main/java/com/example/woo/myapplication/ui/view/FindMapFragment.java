@@ -67,7 +67,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     View view;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
-
+    public ArrayList<PathOverlay> allPathsOverlay;
 
     private ArrayList<Integer> placeIndex; //수색구역 정보
     public static Socket mSocket;
@@ -276,7 +276,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         naverMap.setCameraPosition(new CameraPosition(centerLatLng, 10));
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
         List<LatLng> coords = new ArrayList<>();
-        PathOverlay path = new PathOverlay();
+        PathOverlay myPath = new PathOverlay();
         mycolor = Integer.parseInt(MyGlobals.getInstance().getUser().getColor());
         count = 0;
         // 지도 중심으로 부터 지도의 전체 크기의 절반 만큼 남서쪽 북동쪽 부분으로 바운드를 결정하고 그 부분을 볼 수 있는 부분으로 카메라를 옮김.
@@ -295,8 +295,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 new LatLng(37.56445, 126.97707),
                 new LatLng(37.55855, 126.97822)
         );
-        path.setCoords(coords);
-        path.setColor(mycolor);
+        myPath.setCoords(coords);
+        myPath.setColor(mycolor);
 //        InfoWindow infoWindow = new InfoWindow();
 //
 //        infoWindow.setAdapter(new InfoWindow.ViewAdapter() {
@@ -330,8 +330,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                             prevLat = latitude;
 
                             coords.add(new LatLng(latitude, longitude));
-                            path.setCoords(coords);
-                            path.setMap(naverMap);
+                            myPath.setCoords(coords);
+                            myPath.setMap(naverMap);
 
                             try{
                                 JSONObject data = new JSONObject();
@@ -356,8 +356,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                                 prevLat = latitude;
 
                                 coords.add(new LatLng(latitude, longitude));
-                                path.setCoords(coords);
-                                path.setMap(naverMap);
+                                myPath.setCoords(coords);
+                                myPath.setMap(naverMap);
 
                                 try{
                                     JSONObject data = new JSONObject();
@@ -515,7 +515,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         });
                     }
                     double rate =0;
-                    if(i>=10 && i<20){
+                    if(i>=10 && i<20){ //임시로 비율 집어넣은거
                         rate = 0.3;
                     }
                     else if(i>=20 && i<30)
@@ -530,10 +530,12 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                     }else if(i == -1){
                         rate = -1.0;
                     }
-                    showHeatMap(polygonOverlay, rate);
-                  
-                }
 
+
+                    showHeatMap(polygonOverlay, rate); //연결할 때 이 줄 지우고 밑에 주석 빼기
+                  //showHeatMap(polygonOverlay, heat_map_rate[i]);
+
+                }
 
                 squareOverlay.add(polygonOverlay);
                 // 메인스레드로 넘겨 줌. 안드로이드의 특성상 메인 스레드가 아니면 UI를 건드릴수 없기 때문에 객체만 만들고 메인스레드로 넘겨서 메인스레드는 UI를 변경함.
@@ -544,34 +546,35 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
             }
             return null;
         }
-        
     }
 
-        protected void showHeatMap(PolygonOverlay polygonOverlay, double rate){
-          //  double rate = 0.3;
+    protected void showHeatMap(PolygonOverlay polygonOverlay, double rate){
+        //  double rate = 0.3;
 
-            Log.d("showHeat"," rate : "+rate);
-            if (rate>=0.2 && rate < 0.4){
-                polygonOverlay.setColor(Color.argb(82,255,255,153));
-            }
-            else if(rate >=0.4 && rate <0.6){
-                polygonOverlay.setColor(Color.argb(150,255,255,153));
-            }
-            else if(rate >=0.6 && rate <0.8){
-                polygonOverlay.setColor(Color.argb(180,255,245,153));
-            }else if(rate == -1.0){
-                polygonOverlay.setColor(Color.BLACK);
-            }
-            else if (rate<0.2){
-                polygonOverlay.setColor(Color.argb(0,255,255,153));
-            }
-            else{
-                polygonOverlay.setColor(Color.argb(220,255,233,153));
-            }
-
+        Log.d("showHeat"," rate : "+rate);
+        if (rate>=0 && rate < 0.2){
+            polygonOverlay.setColor(Color.argb(0,255,255,153));
         }
+        else if (rate>=0.2 && rate < 0.4){
+            polygonOverlay.setColor(Color.argb(82,255,255,153));
+        }
+        else if(rate >=0.4 && rate <0.6){
+            polygonOverlay.setColor(Color.argb(150,255,255,153));
+        }
+        else if(rate >=0.6 && rate <0.8){
+            polygonOverlay.setColor(Color.argb(180,255,245,153));
+        }else if(rate == -1.0){
+            polygonOverlay.setColor(Color.BLACK);
+        }
+        else if(rate>=0.8 && rate <=1){
+            polygonOverlay.setColor(Color.argb(220,255,233,153));
+        }
+        else{
+            polygonOverlay.setColor(Color.argb(0,255,255,153));
+        }
+
     }
-    
+
     public List<LatLng> getFourCornerLatLng(LatLng standardLatLng){
         return Arrays.asList(
                 standardLatLng,
@@ -626,7 +629,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 String check = (String)data.get("check");
                 String latLng = (String)data.get("latLng"); //위도경도 스트링
                 if(check.equals("success")){
-                    tokenizer(latLng);
+                    drawPaths(tokenizer(latLng), Integer.parseInt("000000"));
                 }
             }catch (JSONException e){
                 e.printStackTrace();
@@ -656,7 +659,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         }
     };
 
-    private void tokenizer (String positions){ //위도, 경도 읽어서 list에 저장
+    private ArrayList tokenizer (String positions){ //위도, 경도 읽어서 list에 저장
         ArrayList<LatLng> arrayList = new ArrayList<>();
         String[] array = positions.split("@");
         StringTokenizer token1;
@@ -669,7 +672,20 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
             arrayList.add(latLng);
         }
 
+        return arrayList;
     }
 
+    protected void drawPaths (ArrayList pathList, int pathColor){ //다른 사람들의 경로를 읽는다
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                PathOverlay path = new PathOverlay();
+                allPathsOverlay.add(path);
+                path.setColor(pathColor);
+                path.setCoords(pathList);
+                path.setMap(naverMap);
+            }
+        });
+    }
 
 }

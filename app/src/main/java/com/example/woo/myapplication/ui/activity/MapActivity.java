@@ -26,7 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -97,8 +96,6 @@ public class MapActivity extends AppCompatActivity {
 //        } catch (URISyntaxException e) {
 //            e.printStackTrace();
 //        } //웹소켓 생성
-
-        tokenizer("1111;222222@333;4444@55;6666666@777;88888@999;101010@");
 
 
         Intent intent = getIntent();
