@@ -18,18 +18,24 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
+import com.example.woo.myapplication.OverlapExamineData;
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.data.LatLngData;
+import com.example.woo.myapplication.data.Not_Complete_Data;
 import com.example.woo.myapplication.ui.view.FindMapFragment;
 import com.naver.maps.geometry.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,7 +54,7 @@ public class MapActivity extends AppCompatActivity {
     FragmentManager fm;
     FragmentTransaction fragmentTransaction;
     FindMapFragment findMapFragment;
-    private String mid;
+    public static String mid;
     private ArrayList<Integer> placeIndex;
     public Socket mSocket;
     private int existFlag = -1;
@@ -65,6 +71,7 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_activity);
+        retrofitExService = MyGlobals.getInstance().getRetrofitExService();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         LinearLayout ll = (LinearLayout)inflater.inflate(R.layout.view_heatmap_info, null);
@@ -159,7 +166,12 @@ public class MapActivity extends AppCompatActivity {
             findMapFragment.setmSocket(mSocket);
 
         }
-        retrofitExService = MyGlobals.getInstance().getRetrofitExService();
+
+        if(findLng != null && findLat != null){ // 수색완료 지점
+            //marker 생성 하기
+        }
+        getTotalNotComplete();
+
         retrofitExService.getLatLng(mid).enqueue(new Callback<ArrayList<LatLngData>>() {
             @Override
             public void onResponse(Call<ArrayList<LatLngData>> call, Response<ArrayList<LatLngData>> response) {
@@ -438,9 +450,135 @@ public class MapActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         mSocket.close();
     }
+
+
+    //수색 완료 불가 관련 코드
+
+    public void sendComplete(String lat,String lng){ //수색완료 보내기
+        try{
+            JSONObject data = new JSONObject();
+            data.put("m_id",mid);
+            data.put("m_find_latitude",lat);
+            data.put("m_find_longitude",lng);
+            mSocket.emit("findPeople",data);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+//    public void sendImage(File file){//수색불가 보내기
+//        mSocket.on("specialThing",getNotComplete);
+//        RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"),file);
+//        MultipartBody.Part part = MultipartBody.Part.createFormData("upload",file.getName(),fileReqBody);
+//        RequestBody mapId =  RequestBody.create(MediaType.parse("text/plain"),mid);
+//        retrofitExService.postNotComplete(mapId,part).enqueue(new Callback<OverlapExamineData>() {
+//            @Override
+//            public void onResponse(Call<OverlapExamineData> call, Response<OverlapExamineData> response) {
+//                OverlapExamineData data = response.body();
+//                if(data.getOverlap_examine().equals("success")){
+//                    try{
+//                        JSONObject latLng = new JSONObject();
+//                        latLng.put("ul_longitude",);
+//                        latLng.put("ul_latitude",);
+//                        latLng.put("ul_desc",);
+//                        latLng.put("ul_file",file.getName());
+//                        mSocket.emit("specialThing",latLng);
+//                    }catch (JSONException e){
+//                        e.printStackTrace();
+//                    }
+//                }else{
+//                    Toast.makeText(getApplicationContext(),"이미지 보내기 실패",Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<OverlapExamineData> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(),"이미지 보내기 실패",Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
+
+
+    Emitter.Listener getNotComplete = new Emitter.Listener() { //다른사람이 올린 수색불가 특이사항 받아오기
+        @Override
+        public void call(Object... args) {
+            try{
+                JSONObject data = (JSONObject)args[0];
+                String check = (String)data.get("check");
+                if(check.equals("success")){
+                    String lat = (String)data.get("latitude");
+                    String lng = (String)data.get("longitude");
+                    //marker생성
+                }
+            }catch(JSONException e){
+
+            }
+
+        }
+    };
+
+    Emitter.Listener getComplete = new Emitter.Listener() { //다른사람이 올린 수색완료 받아오기
+        @Override
+        public void call(Object... args) {
+            try{
+                JSONObject data = (JSONObject)args[0];
+                String check = (String)data.get("check");
+                if(check.equals("success")){
+
+                }else{
+
+                }
+            }catch (JSONException e){
+
+            }
+        }
+    };
+
+    public void getNotCompleteDetail(String lat,String lng){ //마커클릭시 세부사항 받아오기
+        retrofitExService.getNotCompleteDetail(mid,lat,lng).enqueue(new Callback<Not_Complete_Data>() {
+            @Override
+            public void onResponse(Call<Not_Complete_Data> call, Response<Not_Complete_Data> response) {
+                Not_Complete_Data data = response.body();
+                //여기서 넣기
+            }
+
+            @Override
+            public void onFailure(Call<Not_Complete_Data> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    public void getTotalNotComplete(){ //처음 입장시 전체 수색불가 받아오기
+        retrofitExService.getNotCompleteData(mid).enqueue(new Callback<ArrayList<Not_Complete_Data>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Not_Complete_Data>> call, Response<ArrayList<Not_Complete_Data>> response) {
+                ArrayList<Not_Complete_Data> list = response.body();
+                if(list != null){
+                    for(int i =0;i<list.size();i++){
+                        Not_Complete_Data data = list.get(i);
+                        String lat = data.getUl_latitude();
+                        String lng = data.getUl_longitude();
+                        //marker 만들기
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(),"수색 불가 정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Not_Complete_Data>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"수색 불가 정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    //수색 완료 불가 관련 코드
+
 
     public Socket getMsocket(){
         return this.mSocket;
@@ -485,6 +623,8 @@ public class MapActivity extends AppCompatActivity {
             }
         }
     };
+
+
 
 //    private Emitter.Listener attendRoom = new Emitter.Listener() {
 //        @Override

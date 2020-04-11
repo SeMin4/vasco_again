@@ -5,7 +5,6 @@ public class Not_Complete_Data {
     String ul_latitude;
     String ul_desc;
     String ul_file;
-    String ul_index;
 
     public String getUl_longitude() {
         return ul_longitude;
@@ -39,11 +38,4 @@ public class Not_Complete_Data {
         this.ul_file = ul_file;
     }
 
-    public String getUl_index() {
-        return ul_index;
-    }
-
-    public void setUl_index(String ul_index) {
-        this.ul_index = ul_index;
-    }
 }
