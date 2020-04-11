@@ -44,6 +44,8 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
     private Marker marker = null;
     private ArrayList<Not_Complete_Data> markerData;
     private ArrayList<LatLng> markerLatLng;
+    private int REQUEST_CODE = 1234;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,14 +244,14 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
                 startActivity(intent);
 
 
-//                Intent intent = new Intent(DistrictActivity.this, DistrictRecordActivity.class);
-//                intent.putExtra("markerId", infoWindow.hashCode());
-//                intent.putExtra("latitude", latLng.latitude);
-//                intent.putExtra("longitude", latLng.longitude);
+                intent.putExtra("markerId", infoWindow.hashCode());
+                intent.putExtra("latitude", latLng.latitude);
+                intent.putExtra("longitude", latLng.longitude);
+                startActivityForResult(intent,REQUEST_CODE);
+                infoWindow.close();
 //                intent.putExtra("mapId", mapId);
 //                intent.putExtra("index",index);
 //                startActivityForResult(intent, RECORD_REGISTER);
-
 
                 return true;
             });
@@ -266,4 +268,17 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
                 standardLatLng.offset(0,20)
         );
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+            if (requestCode == REQUEST_CODE){
+
+
+            }
+
+
+    }
+
 }

@@ -26,7 +26,9 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".ui.activity.SpecialInfoPopup"
             android:theme="@android:style/Theme.Dialog"></activity>
-        <activity android:name=".ui.activity.InsertDetailsPopUp" />
+        <activity
+            android:name=".ui.activity.InsertDetailsPopUp"
+            android:theme="@android:style/Theme.Dialog"/>
         <activity
             android:name=".ui.activity.DetailMapPopUp"
             android:theme="@android:style/Theme.Dialog" />
