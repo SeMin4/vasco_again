@@ -82,6 +82,7 @@ public class MyGlobals {
     public interface RetrofitExService{ //interface 선언
         public static final String URL = "http://13.125.174.158:9001/"; //서버 주소와 포트번호
 
+
         @GET("/get/latLng")
         Call<ArrayList<LatLngData>> getLatLng(@Query("mid") String mid);
 
@@ -103,8 +104,8 @@ public class MyGlobals {
         @GET("/complete/data?") // 완료 지점 찾기
         Call<CompleteData> getCompleteData(@Query("m_id") String m_id);
 
-        @GET("/not_complete/list?") //특정 인덱스 부분에 해당하는 수색불가정보
-        Call<ArrayList<Not_Complete_Data>> getNotCompleteList(@Query("m_id") String m_id,@Query("index")String index);
+        @GET("/not_complete/detailData?") //특정 인덱스 부분에 해당하는 수색불가정보
+        Call<Not_Complete_Data> getNotCompleteDetail(@Query("m_id") String m_id,@Query("ul_latitude") String lat,@Query("ul_longitude") String lng);
 
         @GET("/tracking/list?")
         Call<ArrayList<DetailData>> getTrackingList(@Query("m_id") String m_id, @Query("index") String index);
