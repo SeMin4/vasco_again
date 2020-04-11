@@ -1,6 +1,7 @@
 package com.example.woo.myapplication.ui.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -12,7 +13,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
+import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
@@ -23,11 +25,9 @@ import com.naver.maps.geometry.LatLng;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -51,12 +51,19 @@ public class MapActivity extends AppCompatActivity {
     private int existFlag = -1;
     private String findLat = null;
     private String findLng = null;
-    View info_heatmap;
+    //View view_heatmap_info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_activity);
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        LinearLayout ll = (LinearLayout)inflater.inflate(R.layout.view_heatmap_info, null);
+
+        LinearLayout.LayoutParams paramll = new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.FILL_PARENT);
+        addContentView(ll, paramll);
 
 //        try {
 //            Log.d("emiiter","들아엄1");
@@ -76,7 +83,7 @@ public class MapActivity extends AppCompatActivity {
 
 
 
-//        //info_heatmap=
+//        //view_heatmap_info=
 //        try {
 //            Log.d("emiiter","들아엄1");
 //            mSocket = IO.socket("http://13.125.174.158:9001");
