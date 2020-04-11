@@ -24,14 +24,16 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.woo.myapplication.MyRoomItem;
-import com.example.woo.myapplication.ui.view.MpersonItemView;
 import com.example.woo.myapplication.MyGlobals;
+import com.example.woo.myapplication.MyRoomItem;
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.data.Mperson;
+import com.example.woo.myapplication.ui.view.MpersonItemView;
+import com.naver.maps.geometry.LatLng;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -261,6 +263,8 @@ public class MainActivity extends Activity {
 
         }
     }
+
+
 
     class MpersonAdapter extends BaseAdapter implements Filterable {  //adapter 정의
 
