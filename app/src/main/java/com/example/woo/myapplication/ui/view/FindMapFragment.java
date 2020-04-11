@@ -25,7 +25,9 @@ import android.widget.Toast;
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.data.LatLngData;
+import com.example.woo.myapplication.data.Not_Complete_Data;
 import com.example.woo.myapplication.ui.activity.DetailMapPopUp;
+import com.example.woo.myapplication.ui.activity.MapActivity;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraPosition;
@@ -35,6 +37,7 @@ import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.LocationOverlay;
+import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
 import com.naver.maps.map.overlay.PathOverlay;
 import com.naver.maps.map.overlay.PolygonOverlay;
@@ -54,6 +57,9 @@ import java.util.StringTokenizer;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class FindMapFragment extends Fragment implements OnMapReadyCallback {
@@ -89,6 +95,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 //    public FindMapFragment(){
 //        this.mSocket = MapActivity.mSocket;
 //    }
+
+    private MyGlobals.RetrofitExService retrofitExService;
 
     public Socket getmSocket() {
         return mSocket;
@@ -128,7 +136,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        retrofitExService = MyGlobals.getInstance().getRetrofitExService();
         try {
             Log.d("emiiter","들아엄1");
             mSocket = IO.socket("http://13.125.174.158:9001");
@@ -391,7 +399,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         //uiSettings.setLocationButtonEnabled(true);
         mSocket.emit("heatmap");
 
-
+        getTotalNotComplete();
 
     }
 
@@ -723,6 +731,34 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
             }
 
+        });
+    }
+
+    public void getTotalNotComplete(){ //처음 입장시 전체 수색불가 받아오기
+        retrofitExService.getNotCompleteData(MapActivity.mid).enqueue(new Callback<ArrayList<Not_Complete_Data>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Not_Complete_Data>> call, Response<ArrayList<Not_Complete_Data>> response) {
+                ArrayList<Not_Complete_Data> list = response.body();
+                if(list != null){
+                    for(int i =0;i<list.size();i++){
+                        Not_Complete_Data data = list.get(i);
+                        String lat = data.getUl_latitude();
+                        String lng = data.getUl_longitude();
+                        LatLng tmpLatLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+                        Marker marker = new Marker();
+                        marker.setPosition(tmpLatLng);
+                        marker.setMap(getNaverMap());
+                        //marker 만들기
+                    }
+                }else{
+                    Toast.makeText(getContext(),"수색 불가 정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Not_Complete_Data>> call, Throwable t) {
+                Toast.makeText(getContext(),"수색 불가 정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
