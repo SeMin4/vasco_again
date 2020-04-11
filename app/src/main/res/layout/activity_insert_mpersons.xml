@@ -14,8 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingBottom="10dp">
+            android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -63,7 +62,7 @@
                 android:elevation="3dp"/>
 
             <EditText
-                android:layout_marginHorizontal="30dp"
+                android:layout_marginHorizontal="15dp"
                 android:layout_marginVertical="7dp"
                 android:id="@+id/mperson_name"
                 tools:ignore="LabelFor"
@@ -82,7 +81,7 @@
 
             <TextView
                 android:id="@+id/mperson_age"
-                android:layout_marginHorizontal="30dp"
+                android:layout_marginHorizontal="15dp"
                 android:layout_marginVertical="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -98,7 +97,7 @@
 
             <TextView
                 android:id="@+id/mperson_select_date"
-                android:layout_marginHorizontal="30dp"
+                android:layout_marginHorizontal="15dp"
                 android:layout_marginVertical="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -120,7 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginVertical="7dp"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="15dp"
                     android:background="@drawable/custom_edit_text_light_gray"
                     android:cursorVisible="true"
                     android:drawableLeft="@drawable/ic_location_selector"
@@ -142,7 +141,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignBaseline="@id/search_location"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="15dp"
                     android:background="@drawable/bg_button_border_burgundy"
                     android:paddingVertical="10dp"
                     android:paddingHorizontal="20dp"
@@ -168,7 +167,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="5dp"/>
+                android:layout_marginVertical="10dp"/>
 
             <!--<EditText
                 android:id="@+id/mperson_description"
@@ -186,8 +185,7 @@
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_marginVertical="10dp"
+                    android:layout_marginHorizontal="10dp"
                     android:paddingHorizontal="10dp"
                     android:background="@drawable/custom_background_cream">
                     <EditText
@@ -205,7 +203,7 @@
 
 
             <Button
-                android:layout_marginHorizontal="20dp"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginVertical="10dp"
                 android:id="@+id/insert"
                 android:textColor="#ffffff"

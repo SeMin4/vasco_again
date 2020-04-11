@@ -58,6 +58,7 @@ public class PasswordActivity extends Activity {
         System.out.println("info : "+info.getM_owner());
 
         roomTitle.setText(info.getM_center_place_string());
+        roomTitle.setSelection(roomTitle.getText().length());
 
         ArrayList<Integer> placeIndex = info.getPlaceIndex();
         for(int i =0;i<64;i++){

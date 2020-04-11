@@ -69,7 +69,7 @@
     <string name="zoom_out">화면 축소</string>
     <string name="reload">새로고침</string>
     <string name="label_mPerson_info">실종자 정보</string>
-    <string name="label_set_unit_scale">단위길이: </string>
+    <string name="label_set_unit_scale">단위길이</string>
     <string name="limit">미허용 시, 카메라와 갤러리를 사용할 수 없습니다.</string>
     <string name="label_create_mappw">지도 비밀번호 설정</string>
     <string name="label_enter_mappw">지도 비밀번호 확인</string>

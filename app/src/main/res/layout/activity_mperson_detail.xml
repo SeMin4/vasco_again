@@ -3,7 +3,6 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="20dp"
     >
         <TextView
 
@@ -107,7 +106,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="10dp"
-        android:paddingVertical="20dp"
+        android:layout_marginBottom="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp"
         android:background="@drawable/bg_border_burgundy"
         android:orientation="vertical">
         <LinearLayout
