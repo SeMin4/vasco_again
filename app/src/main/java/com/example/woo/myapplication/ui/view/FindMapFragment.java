@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -69,7 +70,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     View view;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
-
+    public ArrayList<PathOverlay> allPathsOverlay;
 
     private ArrayList<Integer> placeIndex; //수색구역 정보
     public static Socket mSocket;
@@ -82,7 +83,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
     private int zoom_level;
     private int[] click_index  = new int[2];
-    protected int[] heat_map_info = new int[64];
+    protected int[] heat_map_rate = new int[64];
 
 //    public FindMapFragment(){
 //        this.mSocket = MapActivity.mSocket;
@@ -164,8 +165,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mSocket.on("drawLatLng",drawLatLng); //그림그리기 이벤트
-        mSocket.on("heatmap",heatmap);
+        mSocket.on("drawLatLng",getLatLng); //그림그리기 이벤트
+        mSocket.on("heatmap",getHeatmapRate);
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_find_map, container, true);
 //        heatmapView = (View)getView().findViewById(R.id.view_heatmap_info);
@@ -207,20 +208,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 else{
                     Toast.makeText(getContext(),"더 이상 확대 할 수 없습니다.", Toast.LENGTH_LONG).show();
-                    try{
-                        JSONObject data = new JSONObject();
-                        data.put("Lat", tmplat);
-                        data.put("Lng", tmplng);
-                        int tmpidx = 1;
-                        data.put("idx", tmpidx);
-                        tmplat++;
-                        tmplng--;
-                        mSocket.emit("sendLatLng", data);
-//                        data.put("mid",mid);
-//                        mSocket.emit("makeRoom",data);
-                    }catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+
                 }
 
             }
@@ -293,7 +281,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         naverMap.setCameraPosition(new CameraPosition(centerLatLng, 10));
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
         List<LatLng> coords = new ArrayList<>();
-        PathOverlay path = new PathOverlay();
+        PathOverlay myPath = new PathOverlay();
         mycolor = Integer.parseInt(MyGlobals.getInstance().getUser().getColor());
         count = 0;
         // 지도 중심으로 부터 지도의 전체 크기의 절반 만큼 남서쪽 북동쪽 부분으로 바운드를 결정하고 그 부분을 볼 수 있는 부분으로 카메라를 옮김.
@@ -312,8 +300,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 new LatLng(37.56445, 126.97707),
                 new LatLng(37.55855, 126.97822)
         );
-        path.setCoords(coords);
-        path.setColor(mycolor);
+        myPath.setCoords(coords);
+        myPath.setColor(mycolor);
 //        InfoWindow infoWindow = new InfoWindow();
 //
 //        infoWindow.setAdapter(new InfoWindow.ViewAdapter() {
@@ -347,8 +335,22 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                             prevLat = latitude;
 
                             coords.add(new LatLng(latitude, longitude));
-                            path.setCoords(coords);
-                            path.setMap(naverMap);
+                            myPath.setCoords(coords);
+                            myPath.setMap(naverMap);
+
+                            try{
+                                JSONObject data = new JSONObject();
+                                data.put("Lat", tmplat);
+                                data.put("Lng", tmplng);
+                                int tmpidx = 1;
+                                data.put("idx", tmpidx);
+
+                                mSocket.emit("sendLatLng", data);
+//                        data.put("mid",mid);
+//                        mSocket.emit("makeRoom",data);
+                            }catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
                         } else if (maxDistance>=euclidean){//gps 신호가 튄경우
                             if (count <=5){
@@ -359,8 +361,23 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                                 prevLat = latitude;
 
                                 coords.add(new LatLng(latitude, longitude));
-                                path.setCoords(coords);
-                                path.setMap(naverMap);
+                                myPath.setCoords(coords);
+                                myPath.setMap(naverMap);
+
+                                try{
+                                    JSONObject data = new JSONObject();
+                                    data.put("Lat", tmplat);
+                                    data.put("Lng", tmplng);
+                                    int tmpidx = 1;
+                                    data.put("idx", tmpidx);
+                                    tmplat++;
+                                    tmplng--;
+                                    mSocket.emit("sendLatLng", data);
+//                        data.put("mid",mid);
+//                        mSocket.emit("makeRoom",data);
+                                }catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
                                 count =0;
                             }
@@ -503,24 +520,28 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         });
                     }
                     double rate =0;
-                    if(heat_map_info[i]>=10 && heat_map_info[i]<20){
+                    if(i>=10 && i<20){ //임시로 비율 집어넣은거
                         rate = 0.3;
                     }
-                    else if(heat_map_info[i]>=20 && heat_map_info[i]<30)
+                    else if(i>=20 && i<30)
                     {
                         rate=0.6;
                     }
-                    else if(heat_map_info[i]>=30 && heat_map_info[i]< 40){
+                    else if(i>=30 && i< 40){
                         rate = 0.8;
                     }
-                    else if (heat_map_info[i]>=40){
+                    else if (i>=40){
                         rate =1;
-                    }else if(heat_map_info[i] == -1){
+                    }else if(i == -1){
                         rate = -1.0;
                     }
+
                     showHeatMap(polygonOverlay, rate);
                   //  polygonOverlay.setColor(Color.BLUE);
+//                    showHeatMap(polygonOverlay, rate); //연결할 때 이 줄 지우고 밑에 주석 빼기
+                    //showHeatMap(polygonOverlay, heat_map_rate[i]);
                 }
+
                 else{
                     polygonOverlay.setOnClickListener(new Overlay.OnClickListener() {
                         @Override
@@ -538,6 +559,12 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 }
 
 
+
+
+
+
+
+
                 squareOverlay.add(polygonOverlay);
                 // 메인스레드로 넘겨 줌. 안드로이드의 특성상 메인 스레드가 아니면 UI를 건드릴수 없기 때문에 객체만 만들고 메인스레드로 넘겨서 메인스레드는 UI를 변경함.
                 publishProgress(polygonOverlay);
@@ -547,30 +574,33 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
             }
             return null;
         }
+    }
 
-        protected void showHeatMap(PolygonOverlay polygonOverlay, double rate){
-          //  double rate = 0.3;
+    protected void showHeatMap(PolygonOverlay polygonOverlay, double rate){
+        //  double rate = 0.3;
 
-            Log.d("showHeat"," rate : "+rate);
-            if (rate>=0.2 && rate < 0.4){
-                polygonOverlay.setColor(Color.argb(82,255,255,153));
-            }
-            else if(rate >=0.4 && rate <0.6){
-                polygonOverlay.setColor(Color.argb(150,255,255,153));
-            }
-            else if(rate >=0.6 && rate <0.8){
-                polygonOverlay.setColor(Color.argb(180,255,245,153));
-            }else if(rate == -1.0){
-                polygonOverlay.setColor(Color.BLACK);
-            }
-            else if (rate<0.2){
-                polygonOverlay.setColor(Color.argb(0,255,255,153));
-            }
-            else{
-                polygonOverlay.setColor(Color.argb(220,255,233,153));
-            }
-
+        Log.d("showHeat"," rate : "+rate);
+        if (rate>=0 && rate < 0.2){
+            polygonOverlay.setColor(Color.argb(0,255,255,153));
         }
+        else if (rate>=0.2 && rate < 0.4){
+            polygonOverlay.setColor(Color.argb(82,255,255,153));
+        }
+        else if(rate >=0.4 && rate <0.6){
+            polygonOverlay.setColor(Color.argb(150,255,255,153));
+        }
+        else if(rate >=0.6 && rate <0.8){
+            polygonOverlay.setColor(Color.argb(180,255,245,153));
+        }else if(rate == -1.0){
+            polygonOverlay.setColor(Color.BLACK);
+        }
+        else if(rate>=0.8 && rate <=1){
+            polygonOverlay.setColor(Color.argb(220,255,233,153));
+        }
+        else{
+            polygonOverlay.setColor(Color.argb(0,255,255,153));
+        }
+
     }
 
     public List<LatLng> getFourCornerLatLng(LatLng standardLatLng){
@@ -619,7 +649,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     //경로 그리기
-    Emitter.Listener drawLatLng = new Emitter.Listener() {
+    Emitter.Listener getLatLng = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             try{
@@ -627,7 +657,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 String check = (String)data.get("check");
                 String latLng = (String)data.get("latLng"); //위도경도 스트링
                 if(check.equals("success")){
-
+                    drawPaths(tokenizer(latLng), Integer.parseInt("000000"));
                 }
             }catch (JSONException e){
                 e.printStackTrace();
@@ -636,17 +666,17 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     };
 
 //    Emitter.Listener
-    Emitter.Listener heatmap = new Emitter.Listener() {
+    Emitter.Listener getHeatmapRate = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             try{
                 JSONObject data = (JSONObject)args[0];
                 Log.d("data : ", data.toString());
                 for(int i = 0; i < 64; ++i){
-                    heat_map_info[i] = (int) data.get("" + i);
+                    heat_map_rate[i] = (int) data.get("" + i);
                 }
                 for(int i = 0; i < 64; ++i){
-                    Log.d("Heat Map", "" + i + " 번째 : "+ heat_map_info[i]);
+                    Log.d("Heat Map", "" + i + " 번째 : "+ heat_map_rate[i]);
                 }
                 //AsynTask를 extend 해서 비동기적으로 뒤에 해당하는 격자표 그리기.
                 FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(naverMap, centerLatLng, map_radius);
@@ -656,5 +686,34 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
             }
         }
     };
+
+    private ArrayList tokenizer (String positions){ //위도, 경도 읽어서 list에 저장
+        ArrayList<LatLng> arrayList = new ArrayList<>();
+        String[] array = positions.split("@");
+        StringTokenizer token1;
+        LatLng latLng;
+
+        for (int i =0; i< array.length;i++){
+            token1 = new StringTokenizer(array[i] , ";");
+            latLng = new LatLng(Integer.parseInt(token1.nextToken()),Integer.parseInt(token1.nextToken()));
+            Log.d("위치받기",String.valueOf(latLng));
+            arrayList.add(latLng);
+        }
+
+        return arrayList;
+    }
+
+    protected void drawPaths (ArrayList pathList, int pathColor){ //다른 사람들의 경로를 읽는다
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                PathOverlay path = new PathOverlay();
+                allPathsOverlay.add(path);
+                path.setColor(pathColor);
+                path.setCoords(pathList);
+                path.setMap(naverMap);
+            }
+        });
+    }
 
 }

@@ -27,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -106,8 +105,6 @@ public class MapActivity extends AppCompatActivity {
 //        } catch (URISyntaxException e) {
 //            e.printStackTrace();
 //        } //웹소켓 생성
-
-        tokenizer("1111;222222@333;4444@55;6666666@777;88888@999;101010@");
 
 
         Intent intent = getIntent();
@@ -466,6 +463,9 @@ public class MapActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"연결 이 완료 이후 방입장 완료",Toast.LENGTH_SHORT).show();
                     }
                     });
+
+
+
                 }else{
                     runOnUiThread(new Runnable() {
                         @Override
@@ -537,19 +537,5 @@ public class MapActivity extends AppCompatActivity {
 //        }
 //    };
 
-    private void tokenizer (String positions){
-        ArrayList<LatLng> arrayList = new ArrayList<>();
-        String[] array = positions.split("@");
-        StringTokenizer token1;
-        LatLng latLng;
 
-        for (int i =0; i< array.length;i++){
-            token1 = new StringTokenizer(array[i] , ";");
-            latLng = new LatLng(Integer.parseInt(token1.nextToken()),Integer.parseInt(token1.nextToken()));
-            Log.d("위치받기",String.valueOf(latLng));
-            arrayList.add(latLng);
-        }
-
-
-    }
 }
