@@ -10,6 +10,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
@@ -26,6 +29,9 @@ public class InsertDetailsPopUp extends AppCompatActivity {
     private static final int PICK_FROM_ALBUM = 1;
     private static final int PICK_FROM_CAMERA = 2;
     private File tempFile;
+    ImageButton cameraBtn;
+    ImageButton galleryBtn;
+    Button completedBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,28 @@ public class InsertDetailsPopUp extends AppCompatActivity {
         setContentView(R.layout.pop_up_insert_detail);
 
         tedPermission();
+
+        cameraBtn = (ImageButton)findViewById(R.id.fromCameraBtn);
+        galleryBtn = (ImageButton)findViewById(R.id.fromGalleryBtn);
+        completedBtn = (Button)findViewById(R.id.completedBtn);
+
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        galleryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        completedBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
     }
 
     private void tedPermission() {
