@@ -46,7 +46,12 @@
         android:id="@+id/stop_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/button_background_burgundy"
+        android:text="Button"
+        android:textColor="@color/white"/>
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/photo_view"

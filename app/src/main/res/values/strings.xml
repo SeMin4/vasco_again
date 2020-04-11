@@ -45,7 +45,7 @@
     <string name="DepartmentName">소속명</string>
     <string name="messageChangeColor">클릭하여 색상 설정</string>
     <string name="color">색상</string>
-    <string name="label_map_type">유형:</string>
+    <string name="label_map_type">유형</string>
     <string name="label_scale_type">축적:</string>
     <string name="label_button_reset">초기화</string>
     <string name="label_popup_location">현위치: </string>

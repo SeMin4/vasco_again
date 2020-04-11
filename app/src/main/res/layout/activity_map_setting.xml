@@ -28,6 +28,8 @@
             <Button
                 android:id="@+id/placedelete"
                 android:background="@drawable/button_background_gray"
+                android:backgroundTint="@color/cream"
+                android:backgroundTintMode="multiply"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:minHeight="0dp"

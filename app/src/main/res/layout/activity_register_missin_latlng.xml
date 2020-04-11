@@ -18,13 +18,13 @@
 
         <TextView
             android:id="@+id/label_unusual"
-            android:layout_width="wrap_content"
-            android:layout_height="53dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="실종지점 등록"
             android:textColor="#ffffff"
-            android:textStyle="bold"
             android:textSize="20sp"
+            android:paddingVertical="11dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,21 +35,24 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_scale"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:background="@drawable/custom_background_cream">
 
     <TextView
         android:id="@+id/label_map_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:paddingHorizontal="10dp"
         android:text="@string/label_map_type"
+        android:textColor="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
         android:id="@+id/map_type_in_missing_latlng"
@@ -66,39 +69,39 @@
         android:id="@+id/mperson_latitude_longitude"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:layout_marginHorizontal="10dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
 
         <Button
             android:id="@+id/button_cancel"
             android:layout_width="0dp"
             android:layout_height="53dp"
             android:layout_weight="1"
-            android:background="#00000000"
+            android:background="@drawable/button_background_gray"
             android:gravity="center"
             android:onClick="mOnCancel"
             android:padding="16dp"
-            android:text="@string/label_button_cancel"
-            android:textColor="@color/light_purple"
-            android:textSize="15sp" />
+            android:text="@string/label_button_cancel" />
 
         <Button
             android:id="@+id/button_save"
             android:layout_width="0dp"
             android:layout_height="53dp"
             android:layout_weight="1"
-            android:background="#00000000"
+            android:background="@drawable/btn_background_cream"
+            android:backgroundTint="@color/burgundy"
+            android:backgroundTintMode="multiply"
             android:gravity="center"
             android:onClick="mOnSave"
             android:padding="16dp"
-            android:text="@string/label_button_save"
-            android:textColor="@color/light_purple"
-            android:textSize="15sp" />
+            android:text="@string/label_button_save"/>
     </LinearLayout>
 
 </LinearLayout>

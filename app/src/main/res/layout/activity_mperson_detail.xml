@@ -10,7 +10,7 @@
             android:id="@+id/TextView_popuptitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="12dp"
+            android:paddingVertical="11dp"
             android:background="@color/burgundy"
             android:text="실종자 정보"
             android:textColor="#ffffff"
