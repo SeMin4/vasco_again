@@ -237,8 +237,9 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                     squareOverlay.clear();
 //                getNaverMap().setMinZoom(getNaverMap().getCameraPosition().zoom);
 //                getNaverMap().setMaxZoom(getNaverMap().getCameraPosition().zoom);
-                    FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(getNaverMap(), centerLatLng, map_radius);
-                    gridMapMakeTask.execute();
+//                    FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(getNaverMap(), centerLatLng, map_radius);
+//                    gridMapMakeTask.execute();
+                    mSocket.emit("heatmap");
                     frameLayout.removeView(textView);
                 }
                 else{
@@ -374,10 +375,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         locationOverlay.setVisible(true);
         locationOverlay.setCircleRadius(100);
         //uiSettings.setLocationButtonEnabled(true);
+        mSocket.emit("heatmap");
 
-        //AsynTask를 extend 해서 비동기적으로 뒤에 해당하는 격자표 그리기.
-        FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(naverMap, centerLatLng, map_radius);
-        gridMapMakeTask.execute();
 
 
     }
@@ -503,18 +502,20 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         });
                     }
                     double rate =0;
-                    if(i>=10 && i<=18){
+                    if(heat_map_info[i]>=10 && heat_map_info[i]<20){
                         rate = 0.3;
                     }
-                    else if(i>=20 && i%5 ==0)
+                    else if(heat_map_info[i]>=20 && heat_map_info[i]<30)
                     {
                         rate=0.6;
                     }
-                    else if(i>=57){
+                    else if(heat_map_info[i]>=30 && heat_map_info[i]< 40){
                         rate = 0.8;
                     }
-                    else if (i>=35 && i<=40){
+                    else if (heat_map_info[i]>=40){
                         rate =1;
+                    }else if(heat_map_info[i] == -1){
+                        rate = -1.0;
                     }
                     showHeatMap(polygonOverlay, rate);
                   //  polygonOverlay.setColor(Color.BLUE);
@@ -534,16 +535,19 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         protected void showHeatMap(PolygonOverlay polygonOverlay, double rate){
           //  double rate = 0.3;
 
-            if (rate>=0.2 && rate <= 0.4){
+            Log.d("showHeat"," rate : "+rate);
+            if (rate>=0.2 && rate < 0.4){
                 polygonOverlay.setColor(Color.argb(82,255,255,153));
             }
-            else if(rate >=0.4 && rate <=0.6){
+            else if(rate >=0.4 && rate <0.6){
                 polygonOverlay.setColor(Color.argb(150,255,255,153));
             }
-            else if(rate >=0.6 && rate <=0.8){
+            else if(rate >=0.6 && rate <0.8){
                 polygonOverlay.setColor(Color.argb(180,255,245,153));
+            }else if(rate == -1.0){
+                polygonOverlay.setColor(Color.BLACK);
             }
-            else if (rate<=0.2){
+            else if (rate<0.2){
                 polygonOverlay.setColor(Color.argb(0,255,255,153));
             }
             else{
@@ -628,6 +632,9 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 for(int i = 0; i < 64; ++i){
                     Log.d("Heat Map", "" + i + " 번째 : "+ heat_map_info[i]);
                 }
+                //AsynTask를 extend 해서 비동기적으로 뒤에 해당하는 격자표 그리기.
+                FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(naverMap, centerLatLng, map_radius);
+                gridMapMakeTask.execute();
             }catch (JSONException e){
                 e.printStackTrace();
             }
