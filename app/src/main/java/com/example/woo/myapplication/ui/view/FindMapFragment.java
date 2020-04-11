@@ -23,8 +23,6 @@ import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
-import com.example.woo.myapplication.data.DepartmentData;
-import com.example.woo.myapplication.ui.activity.MapActivity;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraPosition;
@@ -165,7 +163,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         mSocket.on("heatmap",heatmap);
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_find_map, container, true);
-//        heatmapView = (View)getView().findViewById(R.id.info_heatmap);
+//        heatmapView = (View)getView().findViewById(R.id.view_heatmap_info);
         FrameLayout frameLayout = (FrameLayout)rootView.findViewById(R.id.frame_lay);
         TextView textView = new TextView(rootView.getContext());
         zoom_in_btn = rootView.findViewById(R.id.zoom_in_btn);
@@ -328,33 +326,17 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
-                if (flag == 0) {
-                    prevLong = longitude;
-                    prevLat = latitude;
-                    //통신(서보로 정보 보내기)
-                    flag = 1;
-                    coords.add(new LatLng(latitude, longitude));
-
-                    path.setCoords(coords);
-
-                    path.setMap(naverMap);
-
-                } else if (flag == 1) {
-                    double euclidean =Math.sqrt((prevLong - longitude) * (prevLong - longitude) + (prevLat - latitude) * (prevLat - latitude));
-                    if (minDistance <= euclidean && euclidean <= maxDistance) {
-
+                if(getZoom_level()==1){
+                    if (flag == 0) {
                         prevLong = longitude;
                         prevLat = latitude;
+                        //통신(서보로 정보 보내기)
+                        flag = 1;
 
-                        coords.add(new LatLng(latitude, longitude));
-                        path.setCoords(coords);
-                        path.setMap(naverMap);
+                    } else if (flag == 1) {
+                        double euclidean =Math.sqrt((prevLong - longitude) * (prevLong - longitude) + (prevLat - latitude) * (prevLat - latitude));
+                        if (minDistance <= euclidean && euclidean <= maxDistance) {
 
-                    } else if (maxDistance>=euclidean){//gps 신호가 튄경우
-                        if (count <=5){
-                            count++;
-                        }
-                        else{
                             prevLong = longitude;
                             prevLat = latitude;
 
@@ -362,11 +344,25 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                             path.setCoords(coords);
                             path.setMap(naverMap);
 
-                            count =0;
-                        }
-                    }
+                        } else if (maxDistance>=euclidean){//gps 신호가 튄경우
+                            if (count <=5){
+                                count++;
+                            }
+                            else{
+                                prevLong = longitude;
+                                prevLat = latitude;
 
+                                coords.add(new LatLng(latitude, longitude));
+                                path.setCoords(coords);
+                                path.setMap(naverMap);
+
+                                count =0;
+                            }
+                        }
+
+                    }
                 }
+
             }
         };
 
