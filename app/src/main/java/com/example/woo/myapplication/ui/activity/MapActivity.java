@@ -436,6 +436,9 @@ public class MapActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"연결 이 완료 이후 방입장 완료",Toast.LENGTH_SHORT).show();
                     }
                     });
+
+
+
                 }else{
                     runOnUiThread(new Runnable() {
                         @Override
@@ -507,19 +510,5 @@ public class MapActivity extends AppCompatActivity {
 //        }
 //    };
 
-    private void tokenizer (String positions){
-        ArrayList<LatLng> arrayList = new ArrayList<>();
-        String[] array = positions.split("@");
-        StringTokenizer token1;
-        LatLng latLng;
 
-        for (int i =0; i< array.length;i++){
-            token1 = new StringTokenizer(array[i] , ";");
-            latLng = new LatLng(Integer.parseInt(token1.nextToken()),Integer.parseInt(token1.nextToken()));
-            Log.d("위치받기",String.valueOf(latLng));
-            arrayList.add(latLng);
-        }
-
-
-    }
 }

@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -80,7 +81,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
     private int zoom_level;
     private int[] click_index  = new int[2];
-    protected int[] heat_map_info = new int[64];
+    protected int[] heat_map_rate = new int[64];
 
 //    public FindMapFragment(){
 //        this.mSocket = MapActivity.mSocket;
@@ -159,8 +160,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mSocket.on("drawLatLng",drawLatLng); //그림그리기 이벤트
-        mSocket.on("heatmap",heatmap);
+        mSocket.on("drawLatLng",getLatLng); //그림그리기 이벤트
+        mSocket.on("heatmap",getHeatmapRate);
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_find_map, container, true);
 //        heatmapView = (View)getView().findViewById(R.id.view_heatmap_info);
@@ -202,20 +203,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 else{
                     Toast.makeText(getContext(),"더 이상 확대 할 수 없습니다.", Toast.LENGTH_LONG).show();
-                    try{
-                        JSONObject data = new JSONObject();
-                        data.put("Lat", tmplat);
-                        data.put("Lng", tmplng);
-                        int tmpidx = 1;
-                        data.put("idx", tmpidx);
-                        tmplat++;
-                        tmplng--;
-                        mSocket.emit("sendLatLng", data);
-//                        data.put("mid",mid);
-//                        mSocket.emit("makeRoom",data);
-                    }catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+
                 }
 
             }
@@ -345,6 +333,20 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                             path.setCoords(coords);
                             path.setMap(naverMap);
 
+                            try{
+                                JSONObject data = new JSONObject();
+                                data.put("Lat", tmplat);
+                                data.put("Lng", tmplng);
+                                int tmpidx = 1;
+                                data.put("idx", tmpidx);
+
+                                mSocket.emit("sendLatLng", data);
+//                        data.put("mid",mid);
+//                        mSocket.emit("makeRoom",data);
+                            }catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         } else if (maxDistance>=euclidean){//gps 신호가 튄경우
                             if (count <=5){
                                 count++;
@@ -356,6 +358,21 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                                 coords.add(new LatLng(latitude, longitude));
                                 path.setCoords(coords);
                                 path.setMap(naverMap);
+
+                                try{
+                                    JSONObject data = new JSONObject();
+                                    data.put("Lat", tmplat);
+                                    data.put("Lng", tmplng);
+                                    int tmpidx = 1;
+                                    data.put("idx", tmpidx);
+                                    tmplat++;
+                                    tmplng--;
+                                    mSocket.emit("sendLatLng", data);
+//                        data.put("mid",mid);
+//                        mSocket.emit("makeRoom",data);
+                                }catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
                                 count =0;
                             }
@@ -514,7 +531,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         rate = -1.0;
                     }
                     showHeatMap(polygonOverlay, rate);
-                  //  polygonOverlay.setColor(Color.BLUE);
+                  
                 }
 
 
@@ -527,6 +544,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
             }
             return null;
         }
+        
+    }
 
         protected void showHeatMap(PolygonOverlay polygonOverlay, double rate){
           //  double rate = 0.3;
@@ -552,7 +571,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
         }
     }
-
+    
     public List<LatLng> getFourCornerLatLng(LatLng standardLatLng){
         return Arrays.asList(
                 standardLatLng,
@@ -599,7 +618,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     //경로 그리기
-    Emitter.Listener drawLatLng = new Emitter.Listener() {
+    Emitter.Listener getLatLng = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             try{
@@ -607,7 +626,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 String check = (String)data.get("check");
                 String latLng = (String)data.get("latLng"); //위도경도 스트링
                 if(check.equals("success")){
-
+                    tokenizer(latLng);
                 }
             }catch (JSONException e){
                 e.printStackTrace();
@@ -616,17 +635,17 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     };
 
 //    Emitter.Listener
-    Emitter.Listener heatmap = new Emitter.Listener() {
+    Emitter.Listener getHeatmapRate = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             try{
                 JSONObject data = (JSONObject)args[0];
                 Log.d("data : ", data.toString());
                 for(int i = 0; i < 64; ++i){
-                    heat_map_info[i] = (int) data.get("" + i);
+                    heat_map_rate[i] = (int) data.get("" + i);
                 }
                 for(int i = 0; i < 64; ++i){
-                    Log.d("Heat Map", "" + i + " 번째 : "+ heat_map_info[i]);
+                    Log.d("Heat Map", "" + i + " 번째 : "+ heat_map_rate[i]);
                 }
                 //AsynTask를 extend 해서 비동기적으로 뒤에 해당하는 격자표 그리기.
                 FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(naverMap, centerLatLng, map_radius);
@@ -636,5 +655,21 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
             }
         }
     };
+
+    private void tokenizer (String positions){ //위도, 경도 읽어서 list에 저장
+        ArrayList<LatLng> arrayList = new ArrayList<>();
+        String[] array = positions.split("@");
+        StringTokenizer token1;
+        LatLng latLng;
+
+        for (int i =0; i< array.length;i++){
+            token1 = new StringTokenizer(array[i] , ";");
+            latLng = new LatLng(Integer.parseInt(token1.nextToken()),Integer.parseInt(token1.nextToken()));
+            Log.d("위치받기",String.valueOf(latLng));
+            arrayList.add(latLng);
+        }
+
+    }
+
 
 }
