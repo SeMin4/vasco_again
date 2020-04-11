@@ -104,14 +104,14 @@ public class MyGlobals {
         @GET("/complete/data?") // 완료 지점 찾기
         Call<CompleteData> getCompleteData(@Query("m_id") String m_id);
 
-        @GET("/not_complete/detailData?") //특정 인덱스 부분에 해당하는 수색불가정보
+        @GET("/detail/unableLocate?") //특정 인덱스 부분에 해당하는 수색불가정보
         Call<Not_Complete_Data> getNotCompleteDetail(@Query("m_id") String m_id,@Query("ul_latitude") String lat,@Query("ul_longitude") String lng);
 
         @GET("/tracking/list?")
         Call<ArrayList<DetailData>> getTrackingList(@Query("m_id") String m_id, @Query("index") String index);
 
-        @GET("/get/not_complete/data?") //기존지도에서 정보얻어오기 지도전체에 대한 수색불가정보
-        Call<ArrayList<Not_Complete_Data>> getNotCompleteData(@Query("mid") String mid);
+        @GET("/whole/unableLocate?") //기존지도에서 정보얻어오기 지도전체에 대한 수색불가정보
+        Call<ArrayList<Not_Complete_Data>> getNotCompleteData(@Query("m_id") String mid);
 
         @GET("/get/detail/data?") //기존지도에서 트래킹 정보얻어오기
         Call<ArrayList<DetailData>> getMapDetailData(@Query("mid") String mid);

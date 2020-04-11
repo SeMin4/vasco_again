@@ -1,6 +1,8 @@
 package com.example.woo.myapplication.data;
 
-public class Not_Complete_Data {
+import java.io.Serializable;
+
+public class Not_Complete_Data implements Serializable {
     String ul_longitude;
     String ul_latitude;
     String ul_desc;

@@ -1,6 +1,8 @@
 package com.example.woo.myapplication.data;
 
-public class LatLngData {
+import java.io.Serializable;
+
+public class LatLngData  {
     String latLng;
     String color;
 

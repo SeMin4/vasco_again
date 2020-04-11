@@ -556,7 +556,35 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                             Intent intent = new Intent(getContext(), DetailMapPopUp.class);
                             intent.putExtra("Lat", tmplat);
                             intent.putExtra("Lng", tmplng);
-                            startActivity(intent);
+                            ArrayList<Not_Complete_Data> marker_data = new ArrayList<>();
+                            retrofitExService.getNotCompleteData(MapActivity.mid).enqueue(new Callback<ArrayList<Not_Complete_Data>>() {
+                                @Override
+                                public void onResponse(Call<ArrayList<Not_Complete_Data>> call, Response<ArrayList<Not_Complete_Data>> response) {
+                                    ArrayList<Not_Complete_Data> list = response.body();
+                                    if(list != null){
+                                        for(int i =0;i<list.size();i++){
+                                            Not_Complete_Data data = list.get(i);
+                                            String lat = data.getUl_latitude();
+                                            String lng = data.getUl_longitude();
+                                            LatLng tmpLatLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+                                            if(polygonOverlay.getBounds().contains(tmpLatLng)){
+                                                marker_data.add(data);
+                                            }
+                                        }
+                                        intent.putExtra("MarkerData", marker_data);
+                                        startActivity(intent);
+
+                                    }else{
+//                                        Toast.makeText(getContext(),"수색 불가 정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<ArrayList<Not_Complete_Data>> call, Throwable t) {
+//                                    Toast.makeText(getContext(),"수색 불가 정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                             return false;
                         }
                     });
