@@ -18,35 +18,69 @@
 
 
     </fragment>
-    <Button
-        android:id="@+id/reload_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reload"
-        android:layout_gravity="right">
 
-    </Button>
+
     <LinearLayout
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginVertical="45dp"
+        android:paddingHorizontal="10dp"
+        android:background="@drawable/custom_background_cream"
+        android:gravity="center"
+        android:weightSum="3"
+        android:elevation="7dp">
 
         <Button
             android:id="@+id/zoom_in_btn"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/zoom_in">
+            android:text="@string/zoom_in"
+            android:layout_margin="5dp"
+            android:paddingVertical="10dp"
+            android:background="@drawable/btn_background_cream"
+            android:minHeight="0dp"
+            style="?android:attr/borderlessButtonStyle">
 
         </Button>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="10dp"
+            android:background="@color/gray"/>
         <Button
             android:id="@+id/zoom_out_btn"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/zoom_out">
+            android:text="@string/zoom_out"
+            android:background="@drawable/btn_background_cream"
+            android:layout_margin="5dp"
+            android:minHeight="0dp"
+            android:paddingVertical="10dp"
+            style="?android:attr/borderlessButtonStyle">
+
+        </Button>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="10dp"
+            android:background="@color/gray"/>
+        <Button
+            android:id="@+id/reload_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_background_cream"
+            android:layout_margin="5dp"
+            android:minHeight="0dp"
+            android:paddingVertical="10dp"
+            android:text="@string/reload"
+            style="?android:attr/borderlessButtonStyle">
 
         </Button>
     </LinearLayout>
