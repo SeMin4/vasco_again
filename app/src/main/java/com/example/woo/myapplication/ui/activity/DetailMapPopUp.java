@@ -22,6 +22,7 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
 import com.naver.maps.map.overlay.PolygonOverlay;
 
 import org.json.JSONException;
@@ -127,6 +128,17 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
                     Marker marker = new Marker();
                     marker.setPosition(new LatLng(lat,lng));
                     marker.setIconTintColor(Color.RED);
+                    marker.setOnClickListener(new Overlay.OnClickListener() {
+                        @Override
+                        public boolean onClick(@NonNull Overlay overlay) {
+                            Intent intent = new Intent(getApplicationContext(),SpecialInfoPopup.class );
+                            intent.putExtra("mid", MapActivity.mid);
+                            intent.putExtra("lat", lat.toString());
+                            intent.putExtra("lng", lng.toString());
+                            startActivity(intent);
+                            return false;
+                        }
+                    });
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

@@ -534,19 +534,19 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         });
                     }
                     double rate =0;
-                    if(i>=10 && i<20){ //임시로 비율 집어넣은거
+                    if(heat_map_rate[i]>=10 && heat_map_rate[i]<20){ //임시로 비율 집어넣은거
                         rate = 0.3;
                     }
-                    else if(i>=20 && i<30)
+                    else if(heat_map_rate[i]>=20 && heat_map_rate[i]<30)
                     {
                         rate=0.6;
                     }
-                    else if(i>=30 && i< 40){
+                    else if(heat_map_rate[i]>=30 && heat_map_rate[i]< 40){
                         rate = 0.8;
                     }
-                    else if (i>=40){
+                    else if (heat_map_rate[i]>=40){
                         rate =1;
-                    }else if(i == -1){
+                    }else if(heat_map_rate[i] == -1){
                         rate = -1.0;
                     }
 
