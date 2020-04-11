@@ -56,11 +56,12 @@ public class MapSettingActivity extends AppCompatActivity
 
     private int placedeleteFlag = 0;
     Drawable color;
-
+    public static MapSettingActivity mapSettingActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_setting);
+        mapSettingActivity = this;
         placedelete = (Button)findViewById(R.id.placedelete);
         placerecovery = (Button)findViewById(R.id.placerecovery);
         completedelete = (Button)findViewById(R.id.deletecomplete);

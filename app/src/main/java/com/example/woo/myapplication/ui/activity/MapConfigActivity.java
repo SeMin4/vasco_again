@@ -49,7 +49,7 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
 
     GradientDrawable drawable;
     FrameLayout frameLayout;
-
+    public static MapConfigActivity mapConfigActivity;
     Mperson selected;
 
     double clickLat;
@@ -58,6 +58,7 @@ public class MapConfigActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_config);
+        mapConfigActivity = this;
         FragmentManager fm = getSupportFragmentManager();
         MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.navermap);
         drawable = (GradientDrawable) getApplicationContext().getDrawable(R.drawable.bg_border_burgundy);

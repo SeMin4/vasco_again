@@ -109,6 +109,7 @@ public class PasswordActivity extends Activity {
                                 } else {
                                     startForegroundService(intent);
                                 }
+                                finish();
                             }
                         }
 

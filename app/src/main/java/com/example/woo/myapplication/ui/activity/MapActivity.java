@@ -77,6 +77,10 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_activity);
+        if(MapConfigActivity.mapConfigActivity != null)
+            MapConfigActivity.mapConfigActivity.finish();
+        if(MapSettingActivity.mapSettingActivity != null)
+            MapSettingActivity.mapSettingActivity.finish();
         retrofitExService = MyGlobals.getInstance().getRetrofitExService();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
