@@ -226,7 +226,7 @@ public class MyPageActivity extends AppCompatActivity implements MyRoomListAdapt
                 String titlePerson = item.getP_name() ;
 
             }
-        }) ;
+        });
     }
 
     @Override
