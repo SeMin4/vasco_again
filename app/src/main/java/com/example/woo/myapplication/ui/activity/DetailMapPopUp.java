@@ -13,6 +13,7 @@ import android.view.WindowManager;
 
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.ui.view.FindMapFragment;
+import com.example.woo.myapplication.data.Not_Complete_Data;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraUpdate;
@@ -26,7 +27,8 @@ import com.naver.maps.map.overlay.PolygonOverlay;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+    import java.util.Arrays;
 import java.util.List;
 
 import io.socket.client.Socket;
@@ -40,6 +42,8 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
     private Socket mSocket;
     private NaverMap naverMap;
     private Marker marker = null;
+    private ArrayList<Not_Complete_Data> markerData;
+    private ArrayList<LatLng> markerLatLng;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +58,11 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
         Intent intent = getIntent();
         centerLat = intent.getDoubleExtra("Lat", -1);
         centerLng = intent.getDoubleExtra("Lng", -1);
+        markerData = (ArrayList<Not_Complete_Data>) intent.getSerializableExtra("MarkerData");
+        for(int i = 0; i < markerData.size(); ++i){
+            LatLng tmp = new LatLng(Double.parseDouble(markerData.get(i).getUl_latitude()), Double.parseDouble(markerData.get(i).getUl_longitude()));
+            markerLatLng.add(tmp);
+        }
         centerLatLng = new LatLng(centerLat, centerLng);
         mapView = findViewById(R.id.detail_naver_map_view);
         mapView.onCreate(savedInstanceState);
@@ -203,7 +212,12 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
 
         polygonOverlay.setMap(naverMap);
         //NaverMap 기본 설정 하고 폴리곤 오버레이 다시 그리기
-
+        //지도에 해당하는 마커 다 그리기
+        for(int i = 0; i < markerLatLng.size(); ++i){
+            Marker marker = new Marker();
+            marker.setPosition(markerLatLng.get(i));
+            marker.setMap(naverMap);
+        }
         naverMap.setOnMapLongClickListener((pointF, latLng) -> {
             InfoWindow infoWindow = new InfoWindow();
             infoWindow.setAlpha(0.9f);

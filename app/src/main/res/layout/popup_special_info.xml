@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/custom_dialog_bg"
+    tools:context=".ui.activity.SpecialInfoPopup">
+
+    <TextView
+        android:textColor="@color/burgundy"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/specialTitle"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="#00ff0000">
+    </TextView>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:src="@drawable/divider_burgundy"/>
+
+    <ImageView
+        android:id="@+id/specialImage"
+        android:layout_width="270dp"
+        android:layout_height="270dp"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:src="@drawable/gallery"
+        ></ImageView>
+
+    <TextView
+        android:id="@+id/specialDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="이곳에 특이사항내요들이 표시됩니다."
+        android:layout_gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_margin="30dp"></TextView>
+
+</LinearLayout>
