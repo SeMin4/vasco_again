@@ -127,7 +127,9 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
             infoWindow.open(naverMap);
 //            windowHashMap.put(infoWindow.hashCode(), infoWindow);
             infoWindow.setOnClickListener(overlay -> {
+                Intent intent = new Intent(getApplicationContext(),InsertDetailsPopUp.class);
                 infoWindow.close();
+
 //                Intent intent = new Intent(DistrictActivity.this, DistrictRecordActivity.class);
 //                intent.putExtra("markerId", infoWindow.hashCode());
 //                intent.putExtra("latitude", latLng.latitude);

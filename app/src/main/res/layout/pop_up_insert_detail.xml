@@ -41,11 +41,11 @@
         android:src="@drawable/divider_burgundy" />
 
     <Button
-        android:id="@+id/departmentModifyBtn"
+        android:id="@+id/completedBtn"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/cream"
-        android:text="@string/modifyDepartment"
+        android:text="수색 완료"
         android:textSize="18sp">
 
     </Button>

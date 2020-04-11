@@ -16,19 +16,6 @@
         android:paddingVertical="15dp"
         android:weightSum="10">
 
-        <TextView
-            android:id="@+id/department_name"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginHorizontal="20dp"
-            android:layout_weight="9"
-            android:gravity="center_vertical"
-            android:text="0~20%"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1">
-
-        </TextView>
-
         <Button
             android:id="@+id/department_modify"
             android:layout_width="30dp"
@@ -43,5 +30,20 @@
             >
 
         </Button>
+
+        <TextView
+            android:id="@+id/department_name"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="20dp"
+            android:layout_weight="9"
+            android:gravity="center_vertical"
+            android:text="20~40%"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1">
+
+        </TextView>
+
+
     </LinearLayout>
 </LinearLayout>
