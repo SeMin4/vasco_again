@@ -169,7 +169,7 @@ public class MapActivity extends AppCompatActivity {
                 if(list == null || list.size() == 0){
 
                 }else{
-                    findMapFragment.drawLatLng(list);
+                    findMapFragment.drawPathsAlreadySaved(list);
                 }
             }
 

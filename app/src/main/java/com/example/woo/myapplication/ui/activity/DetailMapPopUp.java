@@ -4,10 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -136,6 +135,8 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
 //                intent.putExtra("mapId", mapId);
 //                intent.putExtra("index",index);
 //                startActivityForResult(intent, RECORD_REGISTER);
+
+
                 return true;
             });
 

@@ -19,4 +19,5 @@ public class LatLngData {
     public void setColor(String color) {
         this.color = color;
     }
+
 }

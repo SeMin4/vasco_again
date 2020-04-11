@@ -70,7 +70,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     View view;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
-    public ArrayList<PathOverlay> allPathsOverlay;
+    public ArrayList<PathOverlay> allPathsOverlay; //실시간 수색
+    public ArrayList<PathOverlay> savedPathsOverlay; //이미 db에 저장된 경로들
 
     private ArrayList<Integer> placeIndex; //수색구역 정보
     public static Socket mSocket;
@@ -113,11 +114,6 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
     public void setPlaceIndex(ArrayList<Integer> placeIndex) {
         this.placeIndex = placeIndex;
-    }
-
-
-    public void drawLatLng(ArrayList<LatLngData> list){ //디비에서 받은 데이터로 그림그리기
-
     }
 
 
@@ -165,7 +161,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mSocket.on("drawLatLng",getLatLng); //그림그리기 이벤트
+        mSocket.on("drawPathsAlreadySaved",getLatLng); //그림그리기 이벤트
         mSocket.on("heatmap",getHeatmapRate);
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_find_map, container, true);
@@ -657,7 +653,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 String check = (String)data.get("check");
                 String latLng = (String)data.get("latLng"); //위도경도 스트링
                 if(check.equals("success")){
-                    drawPaths(tokenizer(latLng), Integer.parseInt("000000"));
+                    drawPaths(tokenizer(latLng), Integer.parseInt("000000"),allPathsOverlay);
                 }
             }catch (JSONException e){
                 e.printStackTrace();
@@ -703,16 +699,30 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         return arrayList;
     }
 
-    protected void drawPaths (ArrayList pathList, int pathColor){ //다른 사람들의 경로를 읽는다
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+    protected void drawPaths (ArrayList pathList, int pathColor, ArrayList<PathOverlay> overlayList){ //다른 사람들의 경로를 읽는다
+
                 PathOverlay path = new PathOverlay();
-                allPathsOverlay.add(path);
+                overlayList.add(path);
                 path.setColor(pathColor);
                 path.setCoords(pathList);
                 path.setMap(naverMap);
+
+
+    }
+
+    public void drawPathsAlreadySaved(ArrayList<LatLngData> list){ //디비에서 받은 데이터로 그림그리기
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int i = 0;
+                for (i = 0; i < list.size(); i++) {
+                    String latlng = list.get(i).getLatLng();
+                    drawPaths(tokenizer(latlng), Integer.parseInt(list.get(i).getColor()),savedPathsOverlay);
+                }
+
             }
+
         });
     }
 

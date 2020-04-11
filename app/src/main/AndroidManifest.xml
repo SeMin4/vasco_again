@@ -24,8 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.activity.DetailMapPopUp"
-            android:theme="@android:style/Theme.Dialog" ></activity>
+        <activity android:name=".ui.activity.InsertDetailsPopUp"></activity>
+        <activity
+            android:name=".ui.activity.DetailMapPopUp"
+            android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".ui.activity.SelectDepartmentPopUp"
             android:theme="@android:style/Theme.Dialog" />
