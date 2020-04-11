@@ -4,6 +4,7 @@ import com.example.woo.myapplication.data.Color;
 import com.example.woo.myapplication.data.CompleteData;
 import com.example.woo.myapplication.data.DepartmentData;
 import com.example.woo.myapplication.data.DetailData;
+import com.example.woo.myapplication.data.LatLngData;
 import com.example.woo.myapplication.data.MapDetail;
 import com.example.woo.myapplication.data.MapInfo;
 import com.example.woo.myapplication.data.Mperson;
@@ -11,6 +12,7 @@ import com.example.woo.myapplication.data.NotCompleteList;
 import com.example.woo.myapplication.data.Not_Complete_Data;
 import com.example.woo.myapplication.data.PlaceIndex;
 import com.example.woo.myapplication.data.User;
+import com.naver.maps.geometry.LatLng;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,6 +81,9 @@ public class MyGlobals {
 
     public interface RetrofitExService{ //interface 선언
         public static final String URL = "http://13.125.174.158:9001/"; //서버 주소와 포트번호
+
+        @GET("/get/latLng")
+        Call<ArrayList<LatLngData>> getLatLng(@Query("mid") String mid);
 
         @GET("/get/placeIndex?")
         Call<ArrayList<PlaceIndex>> getPlaceIndex(@Query("mid") String mid);

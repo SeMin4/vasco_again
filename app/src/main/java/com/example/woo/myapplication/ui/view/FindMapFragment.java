@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.data.LatLngData;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraPosition;
@@ -77,7 +78,6 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     private LatLng zoomCenterLatLng;
 //    View heatmapView;
 
-
     private int zoom_level;
     private int[] click_index  = new int[2];
     protected int[] heat_map_info = new int[64];
@@ -113,6 +113,9 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
+    public void drawLatLng(ArrayList<LatLngData> list){ //디비에서 받은 데이터로 그림그리기
+
+    }
 
 
     // TODO: Rename and change types and number of parameters
@@ -141,6 +144,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
             e.printStackTrace();
         } //웹소켓 생성
 
+
         FragmentManager fm = getChildFragmentManager();
         if(mapFragment == null){
             mapFragment = MapFragment.newInstance();
@@ -153,8 +157,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         findMapFragment = fm.findFragmentById(R.id.findmap);
 
         locationSource = new FusedLocationSource(this,LOCATION_PERMISSION_REQUEST_CODE);
-
-}
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

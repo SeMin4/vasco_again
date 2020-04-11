@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.data.LatLngData;
 import com.example.woo.myapplication.ui.view.FindMapFragment;
 import com.naver.maps.geometry.LatLng;
 
@@ -30,6 +31,9 @@ import java.util.StringTokenizer;
 
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -51,7 +55,12 @@ public class MapActivity extends AppCompatActivity {
     private int existFlag = -1;
     private String findLat = null;
     private String findLng = null;
+    private MyGlobals.RetrofitExService retrofitExService;
     //View view_heatmap_info;
+
+    public MapActivity(){
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,12 +162,33 @@ public class MapActivity extends AppCompatActivity {
             findMapFragment.setmSocket(mSocket);
 
         }
+        retrofitExService = MyGlobals.getInstance().getRetrofitExService();
+        retrofitExService.getLatLng(mid).enqueue(new Callback<ArrayList<LatLngData>>() {
+            @Override
+            public void onResponse(Call<ArrayList<LatLngData>> call, Response<ArrayList<LatLngData>> response) {
+                ArrayList<LatLngData> list = response.body();
+                Log.d("latLng","onResponse");
+                Log.d("latLng","list : "+list);
+                if(list == null || list.size() == 0){
+
+                }else{
+                    findMapFragment.drawLatLng(list);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<LatLngData>> call, Throwable t) {
+                Log.d("latLng","onFailure");
+                Log.d("latLng","error : "+t);
+            }
+        });
 
         mSocket.on("makeRoom",makeRoom);
         try{
             JSONObject data = new JSONObject();
             data.put("uid",MyGlobals.getInstance().getUser().getU_id());
             data.put("mid",mid);
+            data.put("color",MyGlobals.getInstance().getUser().getColor());
             mSocket.emit("makeRoom",data);
         }catch (JSONException e) {
             e.printStackTrace();

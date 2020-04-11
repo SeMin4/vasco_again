@@ -140,7 +140,8 @@ public class MapSettingActivity extends AppCompatActivity
 //              }
 //              NaverMapFragment.flag = 1;
           }
-      }});
+              NaverMapFragment.flag = 1;
+          }});
 
       placerecovery.setOnClickListener(new View.OnClickListener() {
           @Override
