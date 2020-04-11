@@ -20,32 +20,63 @@
         <LinearLayout
             android:layout_gravity="bottom"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="45dp"
+            android:gravity="center">
             <Button
                 android:id="@+id/placedelete"
+                android:background="@drawable/button_background_gray"
+                android:backgroundTint="@color/cream"
+                android:backgroundTintMode="multiply"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:paddingVertical="10dp"
                 android:layout_weight="1"
-                android:text="구역 삭제"/>
+                android:text="구역 삭제"
+                android:layout_margin="5dp"
+                style="?android:attr/borderlessButtonStyle"/>
             <Button
                 android:id="@+id/placerecovery"
+                android:background="@drawable/button_background_gray"
+                android:backgroundTint="@color/cream"
+                android:backgroundTintMode="multiply"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:paddingVertical="10dp"
                 android:layout_weight="1"
-                android:text="구역 회복"/>
+                android:text="구역 회복"
+                android:layout_margin="5dp"
+                style="?android:attr/borderlessButtonStyle"/>
             <Button
                 android:id="@+id/deletecomplete"
+                android:background="@drawable/button_background_gray"
+                android:backgroundTint="@color/cream"
+                android:backgroundTintMode="multiply"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:paddingVertical="10dp"
                 android:layout_weight="1"
-                android:text="구역 설정 취소"/>
+                android:text="설정 취소"
+                android:layout_margin="5dp"
+                style="?android:attr/borderlessButtonStyle"/>
             <Button
                 android:id="@+id/next_btn"
+                android:background="@drawable/button_background_gray"
+                android:backgroundTint="@color/cream"
+                android:backgroundTintMode="multiply"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:paddingVertical="10dp"
                 android:layout_weight="1"
                 android:text="다음"
+                android:layout_margin="5dp"
+                style="?android:attr/borderlessButtonStyle"
                 ></Button>
 
         </LinearLayout>

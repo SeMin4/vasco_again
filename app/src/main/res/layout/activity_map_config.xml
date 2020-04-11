@@ -78,7 +78,7 @@
         android:layout_marginHorizontal="10dp"
         android:background="@drawable/bg_border_burgundy"
         android:backgroundTint="@color/white"
-        android:elevation="10dp">
+        android:elevation="7dp">
         <FrameLayout
             android:id="@+id/naverMap_Config"
             android:layout_width="match_parent"

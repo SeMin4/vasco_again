@@ -216,7 +216,7 @@ public class InsertMpersonActivity extends AppCompatActivity {
         insert = (Button)findViewById(R.id.insert);
         description = (EditText)findViewById(R.id.mperson_description);
 
-        missingLocation.setVisibility(View.INVISIBLE);
+        //missingLocation.setVisibility(View.INVISIBLE);
 
         mpersonName.addTextChangedListener(new addListenerOnTextChange(this, mpersonName, R.drawable.ic_person_outline_selector, R.drawable.ic_person_outline_burgundy));
         searchLocation.addTextChangedListener(new addListenerOnTextChange(this, searchLocation, R.drawable.ic_location_selector, R.drawable.ic_location_burgundy));
