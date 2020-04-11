@@ -11,6 +11,7 @@ import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,11 +42,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -67,6 +70,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
 
     private ArrayList<Integer> placeIndex; //수색구역 정보
+    public static Socket mSocket;
 
     //zoom in-out button 정보
     Button zoom_in_btn;
@@ -78,11 +82,10 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     private int zoom_level;
     private int[] click_index  = new int[2];
 
-    private Socket mSocket;
 
-    public FindMapFragment(){
-        this.mSocket = MapActivity.mSocket;
-    }
+//    public FindMapFragment(){
+//        this.mSocket = MapActivity.mSocket;
+//    }
 
     public Socket getmSocket() {
         return mSocket;
@@ -124,8 +127,22 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            Log.d("emiiter","들아엄1");
+            mSocket = IO.socket("http://13.125.174.158:9001");
+            if(mSocket == null){
+                Log.d("emiiter","msocket  null");
+            }else {
+                mSocket.connect();
+                Log.d("emiiter","msocket  connect");
+            }
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } //웹소켓 생성
+
         FragmentManager fm = getChildFragmentManager();
-        mSocket.on("drawLatLng",drawLatLng); //그림그리기 이벤트
         if(mapFragment == null){
             mapFragment = MapFragment.newInstance();
             fragmentTransaction = fm.beginTransaction();
@@ -143,6 +160,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mSocket.on("drawLatLng",drawLatLng); //그림그리기 이벤트
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_find_map, container, true);
 //        heatmapView = (View)getView().findViewById(R.id.info_heatmap);

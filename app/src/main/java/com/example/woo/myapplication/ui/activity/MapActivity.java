@@ -45,7 +45,7 @@ public class MapActivity extends AppCompatActivity {
     FindMapFragment findMapFragment;
     private String mid;
     private ArrayList<Integer> placeIndex;
-    public static Socket mSocket;
+    public Socket mSocket;
     private int existFlag = -1;
     private String findLat = null;
     private String findLng = null;;
@@ -54,20 +54,21 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_activity);
-        try {
-            Log.d("emiiter","들아엄1");
-            mSocket = IO.socket("http://13.125.174.158:9001");
-            if(mSocket == null){
-                Log.d("emiiter","msocket  null");
-            }else {
-                mSocket.connect();
-                Log.d("emiiter","msocket  connect");
-            }
+//        try {
+//            Log.d("emiiter","들아엄1");
+//            mSocket = IO.socket("http://13.125.174.158:9001");
+//            if(mSocket == null){
+//                Log.d("emiiter","msocket  null");
+//            }else {
+//                mSocket.connect();
+//                Log.d("emiiter","msocket  connect");
+//            }
+//
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        } //웹소켓 생성
 
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } //웹소켓 생성
-
+        this.mSocket = FindMapFragment.mSocket;
 
 
 
@@ -106,7 +107,7 @@ public class MapActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
             }
             findMapFragment.setPlaceIndex(placeIndex);
-            findMapFragment.setmSocket(mSocket);
+            //findMapFragment.setmSocket(mSocket);
 
         }else if(existFlag == 0) { //방만들기
             fm = getSupportFragmentManager();
