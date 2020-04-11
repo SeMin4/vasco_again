@@ -1,6 +1,7 @@
 package com.example.woo.myapplication.ui.view;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.location.Location;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.ui.activity.DetailMapPopUp;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraPosition;
@@ -515,6 +517,21 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                     }
                     showHeatMap(polygonOverlay, rate);
                   //  polygonOverlay.setColor(Color.BLUE);
+                }
+                else{
+                    polygonOverlay.setOnClickListener(new Overlay.OnClickListener() {
+                        @Override
+                        public boolean onClick(@NonNull Overlay overlay) {
+                            LatLng tmp = polygonOverlay.getBounds().getCenter();
+                            double tmplat = tmp.latitude;
+                            double tmplng = tmp.longitude;
+                            Intent intent = new Intent(getContext(), DetailMapPopUp.class);
+                            intent.putExtra("Lat", tmplat);
+                            intent.putExtra("Lng", tmplng);
+                            startActivity(intent);
+                            return false;
+                        }
+                    });
                 }
 
 

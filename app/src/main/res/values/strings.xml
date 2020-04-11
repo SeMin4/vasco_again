@@ -77,6 +77,7 @@
     <string name="settings_pwd_not_equal">비밀번호가 불일치</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="deleteDepartment">소속 삭제</string>
+    <string name="detailmessage">특이사항을 기록해주세요.</string>
     <string-array name="map_types">
         <item>기본</item>
         <item>위성</item>
