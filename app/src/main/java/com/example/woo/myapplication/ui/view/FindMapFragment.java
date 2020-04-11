@@ -593,7 +593,11 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         public void call(Object... args) {
             try{
                 JSONObject data = (JSONObject)args[0];
-                String latLng = (String)data.get("latLng");
+                String check = (String)data.get("check");
+                String latLng = (String)data.get("latLng"); //위도경도 스트링
+                if(check.equals("success")){
+
+                }
             }catch (JSONException e){
                 e.printStackTrace();
             }
