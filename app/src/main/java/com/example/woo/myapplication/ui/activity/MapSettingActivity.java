@@ -45,7 +45,6 @@ public class MapSettingActivity extends AppCompatActivity
     double centerLng;
     String pid;
 
-    GradientDrawable btnDrawable;
     FragmentManager fm;
     FragmentTransaction fragmentTransaction;
 
@@ -81,7 +80,6 @@ public class MapSettingActivity extends AppCompatActivity
         }
 
 
-        btnDrawable= (GradientDrawable) getApplicationContext().getDrawable(R.drawable.btn_gray_shape_only);
 //        frameLayout = (FrameLayout)findViewById(R.id.naverMap_Setting);
 //
 //        frameLayout.setOnTouchListener(new View.OnTouchListener() {
@@ -114,31 +112,13 @@ public class MapSettingActivity extends AppCompatActivity
                   naverMapFragment.gestureFunc(); //리사이클러뷰 올림
                   placedeleteFlag = 1; //1이면 리사이클러뷰 안올리기
                   placedelete.setBackgroundColor(Color.RED);
+                  placedelete.setTextColor(Color.WHITE);
               }else {
                   placedelete.setBackgroundColor(Color.RED);
+                  placedelete.setTextColor(Color.WHITE);
+
                   placerecovery.setBackground(color);
-//=======
-//              if(first == 0){
-//                  naverMapFragment.gestureFunc();
-//                  first = 1;
-//              }
-//              if(NaverMapFragment.flag == 0 ){
-//                  NaverMapFragment.flag = 1;
-//                  btnDrawable.setColor(getResources().getColor(R.color.burgundy));
-//
-//                  placedelete.setBackground(btnDrawable);
-//                  placedelete.setClipToOutline(true);
-//                  placedelete.setTextColor(Color.WHITE);
-//                  //placedelete.setBackgroundColor(Color.RED);
-//              }else{
-//                  NaverMapFragment.flag = 0;
-//
-//                  btnDrawable.setColor(getResources().getColor(R.color.light_gray));
-//                  placedelete.setBackground(btnDrawable);
-//                  placedelete.setTextColor(Color.BLACK);
-////>>>>>>> design
-//              }
-//              NaverMapFragment.flag = 1;
+                  placerecovery.setTextColor(Color.BLACK);
           }
               NaverMapFragment.flag = 1;
           }});
@@ -148,7 +128,10 @@ public class MapSettingActivity extends AppCompatActivity
           public void onClick(View v) {
               if(placedeleteFlag == 1) {
                   placedelete.setBackground(color);
+                  placedelete.setTextColor(Color.BLACK);
+
                   placerecovery.setBackgroundColor(Color.RED);
+                  placerecovery.setTextColor(Color.WHITE);
                   NaverMapFragment.flag = 0;
               }
           }
@@ -164,11 +147,13 @@ public class MapSettingActivity extends AppCompatActivity
 //<<<<<<< HEAD
               placedeleteFlag = 0;
               placedelete.setBackground(color);
+              placedelete.setTextColor(Color.BLACK);
+
               placerecovery.setBackground(color);
+              placerecovery.setTextColor(Color.BLACK);
 //=======
 //              first = 0;
-              btnDrawable.setColor(getResources().getColor(R.color.light_gray));
-              placedelete.setBackground(btnDrawable);
+              placedelete.setBackground(color);
               placedelete.setTextColor(Color.BLACK);
 //>>>>>>> design
           }
