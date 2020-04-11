@@ -54,6 +54,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.xml.transform.dom.DOMLocator;
+
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -91,6 +93,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     private int zoom_level;
     private int[] click_index  = new int[2];
     protected int[] heat_map_rate = new int[64];
+    private Marker marker = null;
 
 //    public FindMapFragment(){
 //        this.mSocket = MapActivity.mSocket;
@@ -152,6 +155,10 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         } //웹소켓 생성
 
 
+        mSocket.on("drawPathsAlreadySaved",getLatLng); //그림그리기 이벤트
+        mSocket.on("heatmap",getHeatmapRate);
+        mSocket.on("findPeople",getComplete); //수색완료
+        mSocket.on("specialThing",getNotComplete);//수색불가
         FragmentManager fm = getChildFragmentManager();
         if(mapFragment == null){
             mapFragment = MapFragment.newInstance();
@@ -169,8 +176,6 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mSocket.on("drawPathsAlreadySaved",getLatLng); //그림그리기 이벤트
-        mSocket.on("heatmap",getHeatmapRate);
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_find_map, container, true);
 //        heatmapView = (View)getView().findViewById(R.id.view_heatmap_info);
@@ -272,6 +277,11 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         //처음 줌레벨을 설정하고 줌레벨에 해당하는 클릭 인덱스 값이 없으므로 -1으로 설정
         setZoom_level(0);
         setNaverMap(naverMap);
+        if(MapActivity.findLat!=null && MapActivity.findLng!= null){
+            marker = new Marker();
+            marker.setPosition(new LatLng(Double.parseDouble(MapActivity.findLat),Double.parseDouble(MapActivity.findLng)));
+            marker.setMap(naverMap);
+        }
         setClick_index(-1,getZoom_level());
         naverMap.getUiSettings().setZoomControlEnabled(false);
         naverMap.getUiSettings().setLocationButtonEnabled(true);
@@ -690,6 +700,81 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
             }
         }
     };
+
+
+    Emitter.Listener getComplete = new Emitter.Listener() { //다른사람이 올린 수색완료 받아오기
+        @Override
+        public void call(Object... args) {
+            try{
+                Log.d("수색완료","findmap");
+                JSONObject data = (JSONObject)args[0];
+                String check = (String)data.get("check");
+                if(check.equals("success")){
+                    if(marker!=null){
+                        Marker prevMarker = marker;
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                prevMarker.setMap(null);
+                            }
+                        });
+                    }
+
+                    Log.d("수색완료","if문안");
+                    //수색완료 마커찍기
+                     Double lat = (Double)data.get("latitude");
+                     Double lng = (Double)data.get("longitude");
+                     MapActivity.findLat = ""+lat;
+                     MapActivity.findLng = ""+lng;
+                     Log.d("수색완료","lat : "+lat + " lng : "+lng);
+                     marker = new Marker();
+                     marker.setPosition(new LatLng(lat,lng));
+                     marker.setIconTintColor(Color.GREEN);
+                     getActivity().runOnUiThread(new Runnable() {
+                         @Override
+                         public void run() {
+                             Log.d("수색완료","marker");
+                             Log.d("수색완료",""+getNaverMap());
+                             marker.setMap(getNaverMap());
+                         }
+                     });
+                }else{
+
+                }
+            }catch (JSONException e){
+
+            }
+        }
+    };
+
+    Emitter.Listener getNotComplete = new Emitter.Listener() { //다른사람이 올린 수색불가 특이사항 받아오기
+        @Override
+        public void call(Object... args) {
+            try{
+                JSONObject data = (JSONObject)args[0];
+                String check = (String)data.get("check");
+                if(check.equals("success")){
+                    Double lat = (Double)data.get("latitude");
+                    Double lng = (Double)data.get("longitude");
+                    //수색불가 marker생성
+                    Marker marker = new Marker();
+                    marker.setPosition(new LatLng(lat,lng));
+                    marker.setIconTintColor(Color.RED);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            marker.setMap(getNaverMap());
+                        }
+                    });
+                }
+            }catch(JSONException e){
+
+            }
+
+        }
+    };
+
+
 
     private ArrayList tokenizer (String positions){ //위도, 경도 읽어서 list에 저장
         ArrayList<LatLng> arrayList = new ArrayList<>();
