@@ -541,13 +541,13 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 polygonOverlay.setColor(Color.argb(150,255,255,153));
             }
             else if(rate >=0.6 && rate <=0.8){
-                polygonOverlay.setColor(Color.argb(180,255,255,153));
+                polygonOverlay.setColor(Color.argb(180,255,245,153));
             }
             else if (rate<=0.2){
                 polygonOverlay.setColor(Color.argb(0,255,255,153));
             }
             else{
-                polygonOverlay.setColor(Color.argb(220,255,255,153));
+                polygonOverlay.setColor(Color.argb(220,255,233,153));
             }
 
         }

@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -48,12 +50,14 @@ public class MapActivity extends AppCompatActivity {
     public Socket mSocket;
     private int existFlag = -1;
     private String findLat = null;
-    private String findLng = null;;
+    private String findLng = null;
+    View info_heatmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_activity);
+
 //        try {
 //            Log.d("emiiter","들아엄1");
 //            mSocket = IO.socket("http://13.125.174.158:9001");
@@ -70,6 +74,24 @@ public class MapActivity extends AppCompatActivity {
 
         this.mSocket = FindMapFragment.mSocket;
 
+
+
+//        //info_heatmap=
+//        try {
+//            Log.d("emiiter","들아엄1");
+//            mSocket = IO.socket("http://13.125.174.158:9001");
+//            if(mSocket == null){
+//                Log.d("emiiter","msocket  null");
+//            }else {
+//                mSocket.connect();
+//                Log.d("emiiter","msocket  connect");
+//            }
+//
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        } //웹소켓 생성
+
+        tokenizer("1111;222222@333;4444@55;6666666@777;88888@999;101010@");
 
 
         Intent intent = getIntent();
@@ -477,4 +499,20 @@ public class MapActivity extends AppCompatActivity {
 //
 //        }
 //    };
+
+    private void tokenizer (String positions){
+        ArrayList<LatLng> arrayList = new ArrayList<>();
+        String[] array = positions.split("@");
+        StringTokenizer token1;
+        LatLng latLng;
+
+        for (int i =0; i< array.length;i++){
+            token1 = new StringTokenizer(array[i] , ";");
+            latLng = new LatLng(Integer.parseInt(token1.nextToken()),Integer.parseInt(token1.nextToken()));
+            Log.d("위치받기",String.valueOf(latLng));
+            arrayList.add(latLng);
+        }
+
+
+    }
 }

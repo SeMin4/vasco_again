@@ -1,26 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/info_heatmap">
+    android:id="@+id/info_heatmap"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="TextView" />
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="TextView" />
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="TextView" />
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="7dp"
+        android:background="@drawable/bg_default_to_gray_selector"
+        android:elevation="5dp"
+        android:orientation="horizontal"
+        android:paddingVertical="15dp"
+        android:weightSum="10">
+
+        <TextView
+            android:id="@+id/department_name"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="20dp"
+            android:layout_weight="9"
+            android:gravity="center_vertical"
+            android:text="0~20%">
+
+        </TextView>
+
+        <Button
+            android:id="@+id/department_modify"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:background="@color/heatmap_no1"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:textColor="@color/heatmap_no1"
+
+            >
+
+        </Button>
+    </LinearLayout>
 </LinearLayout>
