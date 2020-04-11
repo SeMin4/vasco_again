@@ -226,7 +226,7 @@ public class InsertDetailsPopUp extends Activity {
                 }
             }
 
-            setImage();
+           // setImage();
 
         }else if (requestCode == PICK_FROM_CAMERA) {
             Log.d("aaa","bbbbb");
