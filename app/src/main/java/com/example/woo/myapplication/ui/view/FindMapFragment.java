@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.data.DepartmentData;
 import com.example.woo.myapplication.ui.activity.MapActivity;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
@@ -71,7 +72,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
     private ArrayList<Integer> placeIndex; //수색구역 정보
     public static Socket mSocket;
-
+    Button reload_btn;
     //zoom in-out button 정보
     Button zoom_in_btn;
     Button zoom_out_btn;
@@ -81,7 +82,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
     private int zoom_level;
     private int[] click_index  = new int[2];
-
+    protected int[] heat_map_info = new int[64];
 
 //    public FindMapFragment(){
 //        this.mSocket = MapActivity.mSocket;
@@ -161,6 +162,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mSocket.on("drawLatLng",drawLatLng); //그림그리기 이벤트
+        mSocket.on("heatmap",heatmap);
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_find_map, container, true);
 //        heatmapView = (View)getView().findViewById(R.id.info_heatmap);
@@ -168,6 +170,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         TextView textView = new TextView(rootView.getContext());
         zoom_in_btn = rootView.findViewById(R.id.zoom_in_btn);
         zoom_out_btn = rootView.findViewById(R.id.zoom_out_btn);
+        reload_btn = rootView.findViewById(R.id.reload_btn);
         zoom_in_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -242,6 +245,14 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                     Toast.makeText(getContext(),"더 이상 축소 할 수 없습니다.", Toast.LENGTH_LONG).show();
                 }
 
+            }
+        });
+        reload_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    mSocket.emit("heatmap");
+//                        data.put("mid",mid);
+//                        mSocket.emit("makeRoom",data);
             }
         });
         return  rootView;
@@ -604,5 +615,23 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         }
     };
 
+//    Emitter.Listener
+    Emitter.Listener heatmap = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            try{
+                JSONObject data = (JSONObject)args[0];
+                Log.d("data : ", data.toString());
+                for(int i = 0; i < 64; ++i){
+                    heat_map_info[i] = (int) data.get("" + i);
+                }
+                for(int i = 0; i < 64; ++i){
+                    Log.d("Heat Map", "" + i + " 번째 : "+ heat_map_info[i]);
+                }
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+        }
+    };
 
 }
