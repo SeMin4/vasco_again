@@ -3,6 +3,7 @@ package com.example.woo.myapplication.ui.activity;
 import android.app.Fragment;
 import android.content.Intent;
 
+import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -44,6 +45,7 @@ public class MapSettingActivity extends AppCompatActivity
     double centerLng;
     String pid;
 
+    GradientDrawable btnDrawable;
     FragmentManager fm;
     FragmentTransaction fragmentTransaction;
     FrameLayout frameLayout;
@@ -75,9 +77,9 @@ public class MapSettingActivity extends AppCompatActivity
             fragmentTransaction.commit();
         }
 
-
-
+        btnDrawable= (GradientDrawable) getApplicationContext().getDrawable(R.drawable.btn_gray_shape_only);
         frameLayout = (FrameLayout)findViewById(R.id.naverMap_Setting);
+
         frameLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -108,10 +110,18 @@ public class MapSettingActivity extends AppCompatActivity
               }
               if(NaverMapFragment.flag == 0 ){
                   NaverMapFragment.flag = 1;
-                  placedelete.setBackgroundColor(Color.RED);
+                  btnDrawable.setColor(getResources().getColor(R.color.burgundy));
+
+                  placedelete.setBackground(btnDrawable);
+                  placedelete.setClipToOutline(true);
+                  placedelete.setTextColor(Color.WHITE);
+                  //placedelete.setBackgroundColor(Color.RED);
               }else{
                   NaverMapFragment.flag = 0;
-                  placedelete.setBackground(color);
+
+                  btnDrawable.setColor(getResources().getColor(R.color.light_gray));
+                  placedelete.setBackground(btnDrawable);
+                  placedelete.setTextColor(Color.BLACK);
               }
 
           }
@@ -123,7 +133,9 @@ public class MapSettingActivity extends AppCompatActivity
               naverMapFragment.detachView();
               NaverMapFragment.flag = 0;
               first = 0;
-              placedelete.setBackground(color);
+              btnDrawable.setColor(getResources().getColor(R.color.light_gray));
+              placedelete.setBackground(btnDrawable);
+              placedelete.setTextColor(Color.BLACK);
           }
       });
 
