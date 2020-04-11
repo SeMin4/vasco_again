@@ -3,9 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/frame_lay"
     tools:context=".ui.view.FindMapFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+
 
     <fragment
         android:id="@+id/findmap"
@@ -15,5 +18,38 @@
 
 
     </fragment>
+    <Button
+        android:id="@+id/reload_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reload"
+        android:layout_gravity="right">
+
+    </Button>
+    <LinearLayout
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/zoom_in_btn"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/zoom_in">
+
+        </Button>
+        <Button
+            android:id="@+id/zoom_out_btn"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/zoom_out">
+
+        </Button>
+    </LinearLayout>
+
 
 </FrameLayout>

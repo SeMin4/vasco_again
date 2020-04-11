@@ -151,8 +151,9 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent = new Intent(getApplicationContext(), EnterMapPWActivity.class);
-                intent.putExtra("mapInfoIndex", position);
-                intent.putExtra("mapId", maplist.get(position).getM_id());
+               // intent.putExtra("mapInfoIndex", position);
+               // intent.putExtra("mapId", maplist.get(position).getM_id());
+                intent.putExtra("mapInfo",maplist.get(position));
                 startActivityForResult(intent,0);
             }
         });

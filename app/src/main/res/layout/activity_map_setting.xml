@@ -9,56 +9,47 @@
     <FrameLayout
         android:id="@+id/naverMap_Setting"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="11">
+        android:layout_height="match_parent">
         <fragment
             android:id="@+id/naverMap_Frag"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:name="com.example.woo.myapplication.ui.view.NaverMapFragment">
         </fragment>
+
+        <LinearLayout
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/placedelete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="구역 삭제"/>
+            <Button
+                android:id="@+id/placerecovery"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="구역 회복"/>
+            <Button
+                android:id="@+id/deletecomplete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="구역 설정 취소"/>
+            <Button
+                android:id="@+id/next_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="다음"
+                ></Button>
+
+        </LinearLayout>
     </FrameLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/placedelete"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="구역 삭제"/>
-        <Button
-            android:id="@+id/placerecovery"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="구역 회복"/>
-        <Button
-            android:id="@+id/deletecomplete"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="구역 설정 취소"/>
-        <Button
-            android:id="@+id/next_btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:text="다음"/>
-    </LinearLayout>
-
-
-
-
-
-
-
-
-
-
 
 
 </LinearLayout>

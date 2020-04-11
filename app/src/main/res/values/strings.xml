@@ -46,7 +46,7 @@
     <string name="DepartmentName">소속명</string>
     <string name="messageChangeColor">클릭하여 색상 설정</string>
     <string name="color">색상</string>
-    <string name="label_map_type">유형:</string>
+    <string name="label_map_type">유형</string>
     <string name="label_scale_type">축적:</string>
     <string name="label_button_reset">초기화</string>
     <string name="label_popup_location">현위치: </string>
@@ -65,6 +65,9 @@
     <string name="label_set_map_details">축척 및 구역 크기 지정</string>
     <string name="label_bearing">현재 회전 각도: </string>
 
+    <string name="zoom_in">화면 확대</string>
+    <string name="zoom_out">화면 축소</string>
+    <string name="reload">새로고침</string>
     <string name="label_mPerson_info">실종자 정보</string>
     <string name="label_set_unit_scale">단위길이: </string>
     <string name="limit">미허용 시, 카메라와 갤러리를 사용할 수 없습니다.</string>

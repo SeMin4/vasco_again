@@ -191,7 +191,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/fab"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_add_burgundy"
+            android:src="@drawable/ic_manage_dep"
             android:layout_marginBottom="15dp"
             android:layout_marginRight="20dp"
             android:backgroundTint="#FFFFFF"

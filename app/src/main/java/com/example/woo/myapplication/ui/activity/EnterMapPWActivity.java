@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.OverlapExamineData;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.data.MapInfo;
 
 import java.util.HashMap;
 
@@ -30,7 +32,8 @@ public class EnterMapPWActivity extends Activity {
     private int mapInfo_index;
     private Retrofit retrofit;
     private MyGlobals.RetrofitExService retrofitExService;
-    private String mapId;
+    //private String mapId;
+    private MapInfo mapInfo;
     private Button confirm;
 
     @Override
@@ -44,7 +47,8 @@ public class EnterMapPWActivity extends Activity {
         Intent intent = getIntent();
         retrofitExService = MyGlobals.getInstance().getRetrofitExService();
         mapInfo_index = intent.getIntExtra("mapInfoIndex", -1);
-        mapId = intent.getStringExtra("mapId");
+        //mapId = intent.getStringExtra("mapId");
+        mapInfo = (MapInfo)intent.getSerializableExtra("mapInfo");
         password = (EditText) findViewById(R.id.EditText_password);
         Log.d("Enter", "map index: " + mapInfo_index);
 
@@ -62,7 +66,7 @@ public class EnterMapPWActivity extends Activity {
         retrofit=MyGlobals.getInstance().getRetrofit();
         retrofitExService=MyGlobals.getInstance().getRetrofitExService();
         HashMap<String,String> input = new HashMap<>();
-        input.put("mapId", mapId);
+        input.put("mapId", mapInfo.getM_id());
         input.put("password", strPassword1);
         retrofitExService.postMapAttendance(input).enqueue(new Callback<OverlapExamineData>() {
             @Override
@@ -70,13 +74,20 @@ public class EnterMapPWActivity extends Activity {
                 OverlapExamineData data = response.body();
                 if(data.getOverlap_examine().equals("yes")){
                     //방에입장한다.
-                    Toast.makeText(getApplicationContext(), "방에 입장하셨습니다.", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent();
-                    intent.putExtra("mapInfoIndex", mapInfo_index); //이건 무엇?
-                    setResult(RESULT_OK, intent);
+                    Intent intent = new Intent(getApplicationContext(), GPSService.class);
+                   // intent.putExtra("mid",mapId);
+                    intent.putExtra("mapInfo",mapInfo);
+                    intent.putExtra("existFlag",1);
+                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                        startService(intent);
+                    } else {
+                        startForegroundService(intent);
+                    }
+                    //Toast.makeText(getApplicationContext(), "방에 입장하셨습니다.", Toast.LENGTH_LONG).show();
+
+                   // intent.putExtra("mapInfoIndex", mapInfo_index); //이건 무엇?
+                   // setResult(RESULT_OK, intent);
                     finish();
-
-
                 }
                 else if(data.getOverlap_examine().equals("wrong")){
                     Toast.makeText(getApplicationContext(), "비밀번호를 다시 확인하세요.", Toast.LENGTH_LONG).show();
