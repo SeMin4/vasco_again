@@ -170,7 +170,7 @@ public class MapActivity extends AppCompatActivity {
         if(findLng != null && findLat != null){ // 수색완료 지점
             //marker 생성 하기
         }
-        getTotalNotComplete();
+//        getTotalNotComplete();
 
         retrofitExService.getLatLng(mid).enqueue(new Callback<ArrayList<LatLngData>>() {
             @Override
@@ -553,29 +553,7 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
-    public void getTotalNotComplete(){ //처음 입장시 전체 수색불가 받아오기
-        retrofitExService.getNotCompleteData(mid).enqueue(new Callback<ArrayList<Not_Complete_Data>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Not_Complete_Data>> call, Response<ArrayList<Not_Complete_Data>> response) {
-                ArrayList<Not_Complete_Data> list = response.body();
-                if(list != null){
-                    for(int i =0;i<list.size();i++){
-                        Not_Complete_Data data = list.get(i);
-                        String lat = data.getUl_latitude();
-                        String lng = data.getUl_longitude();
-                        //marker 만들기
-                    }
-                }else{
-                    Toast.makeText(getApplicationContext(),"수색 불가 정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ArrayList<Not_Complete_Data>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"수색 불가 정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     //수색 완료 불가 관련 코드
 
