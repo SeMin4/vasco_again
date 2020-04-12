@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.ui.view.FindMapFragment;
@@ -46,6 +48,9 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
     private ArrayList<Not_Complete_Data> markerData;
     private ArrayList<LatLng> markerLatLng;
     private int REQUEST_CODE = 1234;
+    Button completedBtn;
+    Button notfoundedBtn;
+    LatLng position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,10 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setContentView(R.layout.pop_up_detail_map);
+
+        notfoundedBtn = (Button)findViewById(R.id.notFoundedBtn);
+        completedBtn = (Button)findViewById(R.id.completedBtn);
+
         Intent intent = getIntent();
         centerLat = intent.getDoubleExtra("Lat", -1);
         centerLng = intent.getDoubleExtra("Lng", -1);
@@ -70,6 +79,13 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
         mapView = findViewById(R.id.detail_naver_map_view);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+        completedBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     Emitter.Listener getComplete = new Emitter.Listener() { //다른사람이 올린 수색완료 받아오기
@@ -242,14 +258,36 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
                 @NonNull
                 @Override
                 public CharSequence getText(@NonNull InfoWindow infoWindow) {
-                    return "이곳을 등록하려면 말풍선을 클릭하세요";
+                    return "이 곳을 등록하려면 수색완료 혹은 수색불가를 클릭하세요";
                 }
             });
+            position = latLng;
 
             infoWindow.setPosition(latLng);
             infoWindow.open(naverMap);
 //            windowHashMap.put(infoWindow.hashCode(), infoWindow);
-            infoWindow.setOnClickListener(overlay -> {
+
+            notfoundedBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if(latLng != null){
+                        Intent intent = new Intent(getApplicationContext(),InsertDetailsPopUp.class);
+                        Log.d("click","lat : "+latLng.latitude);
+                        Log.d("click","lng : "+latLng.longitude);
+                        intent.putExtra("lat",latLng.latitude);
+                        intent.putExtra("lng",latLng.longitude);
+                        infoWindow.close();
+                        startActivity(intent);
+                        intent.putExtra("markerId", infoWindow.hashCode());
+                        //intent.putExtra("latitude", latLng.latitude);
+                        //intent.putExtra("longitude", latLng.longitude);
+                        startActivityForResult(intent,REQUEST_CODE);
+                    }
+
+                }
+            });
+/*                infoWindow.setOnClickListener(overlay -> {
                 Intent intent = new Intent(getApplicationContext(),InsertDetailsPopUp.class);
                 Log.d("click","lat : "+latLng.latitude);
                 Log.d("click","lng : "+latLng.longitude);
@@ -270,10 +308,11 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
 
                 return true;
             });
-
+*/
         });
 
     }
+
 
     public List<LatLng> getFourCornerLatLng(LatLng standardLatLng){
         return Arrays.asList(
