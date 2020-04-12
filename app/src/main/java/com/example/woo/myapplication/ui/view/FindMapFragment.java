@@ -54,8 +54,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.xml.transform.dom.DOMLocator;
-
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -78,6 +76,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     View view;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
+    PathOverlay myPath;
     public ArrayList<PathOverlay> allPathsOverlay; //실시간 수색
     public ArrayList<PathOverlay> savedPathsOverlay; //이미 db에 저장된 경로들
 
@@ -295,7 +294,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         naverMap.setCameraPosition(new CameraPosition(centerLatLng, 10));
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
         List<LatLng> coords = new ArrayList<>();
-        PathOverlay myPath = new PathOverlay();
+        myPath = new PathOverlay();
         mycolor = Integer.parseInt(MyGlobals.getInstance().getUser().getColor());
         count = 0;
         // 지도 중심으로 부터 지도의 전체 크기의 절반 만큼 남서쪽 북동쪽 부분으로 바운드를 결정하고 그 부분을 볼 수 있는 부분으로 카메라를 옮김.
@@ -316,17 +315,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         );
         myPath.setCoords(coords);
         myPath.setColor(mycolor);
-//        InfoWindow infoWindow = new InfoWindow();
-//
-//        infoWindow.setAdapter(new InfoWindow.ViewAdapter() {
-//            @NonNull
-//            @Override
-//            public View getView(@NonNull InfoWindow infoWindow) {
-//                return heatmapView;
-//            }
-//        });
-//
-//        infoWindow.setPosition();
+
         onLocationChangeListener = new NaverMap.OnLocationChangeListener() {
 
             @Override
@@ -355,8 +344,10 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                             try{
                                 JSONObject data = new JSONObject();
                                 data.put("Lat", tmplat);
+                                //data.put("Lat", latitude);
                                 data.put("Lng", tmplng);
-                                int tmpidx = 1;
+                                //data.put("Lng", longitude);
+                                int tmpidx = getClick_index(0);
                                 data.put("idx", tmpidx);
 
                                 mSocket.emit("sendLatLng", data);
@@ -366,32 +357,13 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                                 e.printStackTrace();
                             }
 
-                        } else if (maxDistance>=euclidean){//gps 신호가 튄경우
+                        } else if (maxDistance> euclidean){//gps 신호가 튄경우
                             if (count <=5){
                                 count++;
                             }
                             else{
                                 prevLong = longitude;
                                 prevLat = latitude;
-
-                                coords.add(new LatLng(latitude, longitude));
-                                myPath.setCoords(coords);
-                                myPath.setMap(naverMap);
-
-                                try{
-                                    JSONObject data = new JSONObject();
-                                    data.put("Lat", tmplat);
-                                    data.put("Lng", tmplng);
-                                    int tmpidx = 1;
-                                    data.put("idx", tmpidx);
-                                    tmplat++;
-                                    tmplng--;
-                                    mSocket.emit("sendLatLng", data);
-//                        data.put("mid",mid);
-//                        mSocket.emit("makeRoom",data);
-                                }catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
 
                                 count =0;
                             }
@@ -518,7 +490,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                             public boolean onClick(@NonNull Overlay overlay) {
                                 //원래 색칠되어 있으면 색칠 된 부분을 투명으로 변경
                                 if(getClick_index(getZoom_level()) != -1){
-                                    squareOverlay.get(getClick_index(getZoom_level())).setColor(Color.TRANSPARENT);
+                                    showHeatMap(squareOverlay.get(getClick_index(getZoom_level())), rateCalculation(heat_map_rate[getClick_index(0)]));
                                 }
                                 //다른 인덱스값을 클릭한 인덱스 값으로 지정
                                 if(getClick_index(getZoom_level()) != (Integer)overlay.getTag()){
@@ -533,29 +505,14 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                             }
                         });
                     }
-                    double rate =0;
-                    if(heat_map_rate[i]>=10 && heat_map_rate[i]<20){ //임시로 비율 집어넣은거
-                        rate = 0.3;
-                    }
-                    else if(heat_map_rate[i]>=20 && heat_map_rate[i]<30)
-                    {
-                        rate=0.6;
-                    }
-                    else if(heat_map_rate[i]>=30 && heat_map_rate[i]< 40){
-                        rate = 0.8;
-                    }
-                    else if (heat_map_rate[i]>=40){
-                        rate =1;
-                    }else if(heat_map_rate[i] == -1){
-                        rate = -1.0;
-                    }
 
-                    showHeatMap(polygonOverlay, rate);
+                    heat_map_rate[i]=40;//테스트용 임시 값
+                    Log.d("showHeat",String.valueOf(heat_map_rate[i]));
+                    showHeatMap(polygonOverlay, rateCalculation(heat_map_rate[i]));
+                    //showLines();
                   //  polygonOverlay.setColor(Color.BLUE);
-//                    showHeatMap(polygonOverlay, rate); //연결할 때 이 줄 지우고 밑에 주석 빼기
-                    //showHeatMap(polygonOverlay, heat_map_rate[i]);
-                }
 
+                }
                 else{
                     polygonOverlay.setOnClickListener(new Overlay.OnClickListener() {
                         @Override
@@ -592,6 +549,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                                 @Override
                                 public void onFailure(Call<ArrayList<Not_Complete_Data>> call, Throwable t) {
 //                                    Toast.makeText(getContext(),"수색 불가 정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
+
                                 }
                             });
 
@@ -601,12 +559,6 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 }
 
 
-
-
-
-
-
-
                 squareOverlay.add(polygonOverlay);
                 // 메인스레드로 넘겨 줌. 안드로이드의 특성상 메인 스레드가 아니면 UI를 건드릴수 없기 때문에 객체만 만들고 메인스레드로 넘겨서 메인스레드는 UI를 변경함.
                 publishProgress(polygonOverlay);
@@ -614,6 +566,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 drawLatLng = getFourCornerLatLng(drawLatLng).get(3);
 
             }
+            showLines(); // 표시 여부 판단 후 내 경로, 실시간으로 받아온 경로, 이미 저장된 경로 표시
             return null;
         }
     }
@@ -621,28 +574,73 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     protected void showHeatMap(PolygonOverlay polygonOverlay, double rate){
         //  double rate = 0.3;
 
-        Log.d("showHeat"," rate : "+rate);
+
         if (rate>=0 && rate < 0.2){
-            polygonOverlay.setColor(Color.argb(0,255,255,153));
+            polygonOverlay.setColor(Color.TRANSPARENT);
         }
         else if (rate>=0.2 && rate < 0.4){
-            polygonOverlay.setColor(Color.argb(82,255,255,153));
+            polygonOverlay.setColor(getResources().getColor(R.color.heatmap_no1));
         }
         else if(rate >=0.4 && rate <0.6){
-            polygonOverlay.setColor(Color.argb(150,255,255,153));
+            polygonOverlay.setColor(getResources().getColor(R.color.heatmap_no2));
         }
         else if(rate >=0.6 && rate <0.8){
-            polygonOverlay.setColor(Color.argb(180,255,245,153));
+            polygonOverlay.setColor(getResources().getColor(R.color.heatmap_no3));
         }else if(rate == -1.0){
             polygonOverlay.setColor(Color.BLACK);
         }
         else if(rate>=0.8 && rate <=1){
-            polygonOverlay.setColor(Color.argb(220,255,233,153));
+            polygonOverlay.setColor(getResources().getColor(R.color.heatmap_no4));
         }
         else{
             polygonOverlay.setColor(Color.argb(0,255,255,153));
         }
 
+    }
+
+    private double rateCalculation(int count){
+        double rate;
+
+        Log.d("showHeat",String.valueOf(count));
+
+        rate= (double)count/50.0; //추후에 비율 수정
+        Log.d("showHeat"," rate : "+rate);
+        return rate;
+    }
+
+    private void showLines(){
+        int i;
+
+        if(getZoom_level() == 0){
+            if(allPathsOverlay != null && allPathsOverlay.size()>=1)
+            {
+                for (i = 0; i<allPathsOverlay.size(); i++){
+                    allPathsOverlay.get(i).setMap(null);
+                }
+            }
+            if(savedPathsOverlay != null && savedPathsOverlay.size()>=1){
+                for (i = 0; i<savedPathsOverlay.size(); i++){
+                    savedPathsOverlay.get(i).setMap(null);
+                }
+            }
+            if(myPath != null){
+                myPath.setMap(null);
+            }
+        }
+        else if(getZoom_level() == 1){
+            if(allPathsOverlay != null && allPathsOverlay.size()>=1)
+            {
+                for (i = 0; i<allPathsOverlay.size(); i++){
+                    allPathsOverlay.get(i).setMap(naverMap);
+                }
+            }
+            if(savedPathsOverlay != null && savedPathsOverlay.size()>=1){
+                for (i = 0; i<savedPathsOverlay.size(); i++){
+                    savedPathsOverlay.get(i).setMap(naverMap);
+                }
+            }
+
+        }
     }
 
     public List<LatLng> getFourCornerLatLng(LatLng standardLatLng){
@@ -820,13 +818,16 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         return arrayList;
     }
 
-    protected void drawPaths (ArrayList pathList, int pathColor, ArrayList<PathOverlay> overlayList){ //다른 사람들의 경로를 읽는다
+    protected void drawPaths (ArrayList pathList, int pathColor, ArrayList<PathOverlay> overlayList){ //다른 사람들의 경로 표시
 
                 PathOverlay path = new PathOverlay();
                 overlayList.add(path);
                 path.setColor(pathColor);
                 path.setCoords(pathList);
-                path.setMap(naverMap);
+
+                if(getZoom_level() ==1){
+                    path.setMap(naverMap);
+                }
 
 
     }

@@ -28,9 +28,9 @@
     <color name = "cream">#F7F6E2</color>
 
     <color name = "dark_cream">#e7e7da</color>
-    <color name="heatmap_no1">#33FFFF99</color>
-    <color name="heatmap_no2">#66FFFF99</color>
-    <color name="heatmap_no3">#99FFF599</color>
-    <color name="heatmap_no4">#CCFFE999</color>
+    <color name="heatmap_no1">#63FFF580</color>
+    <color name="heatmap_no2">#A3FFFF99</color>
+    <color name="heatmap_no3">#CCFFEE99</color>
+    <color name="heatmap_no4">#C3FFDD99</color>
 
 </resources>
