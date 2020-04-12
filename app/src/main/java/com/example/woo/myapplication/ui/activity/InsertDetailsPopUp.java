@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,7 +18,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
@@ -29,6 +33,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import io.socket.client.Socket;
@@ -39,12 +44,14 @@ public class InsertDetailsPopUp extends Activity {
     private File tempFile;
     ImageButton cameraBtn;
     ImageButton galleryBtn;
-    Button completedBtn;
+    Button saveBtn;
+    EditText editText;
+    ImageView imageView;
     private Socket mSocket;
     private String mid;
     private double lat;
     private double lng;
-    String mCurrentPhotoPath;
+    String mCurrentPhotoPath; //절대 위치 경로
 
     private final int MY_PERMISSIONS_REQUEST_CAMERA=1001;
 
@@ -80,7 +87,9 @@ public class InsertDetailsPopUp extends Activity {
 
         cameraBtn = (ImageButton)findViewById(R.id.fromCameraBtn);
         galleryBtn = (ImageButton)findViewById(R.id.fromGalleryBtn);
-        completedBtn = (Button)findViewById(R.id.completedBtn);
+        saveBtn = (Button)findViewById(R.id.saveDetailsBtn);
+        editText = (EditText)findViewById(R.id.editText_details);
+        imageView = (ImageView)findViewById(R.id.imageView);
 
 
         cameraBtn.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +104,7 @@ public class InsertDetailsPopUp extends Activity {
                 goToAlbum();
             }
         });
-        completedBtn.setOnClickListener(new View.OnClickListener() {
+        saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //수색완료 정보 보내기
@@ -184,9 +193,10 @@ public class InsertDetailsPopUp extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
         Log.d("aaa",String.valueOf(resultCode));
-        if (resultCode != Activity.RESULT_OK) {
+        if (resultCode != Activity.RESULT_OK ) {
             Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
 
             if(tempFile != null) {
@@ -199,9 +209,11 @@ public class InsertDetailsPopUp extends Activity {
             }
             return;
         }
+
         Log.d("aaa",String.valueOf(requestCode));
-        if (requestCode == PICK_FROM_ALBUM) {
+        if (requestCode == PICK_FROM_ALBUM&& resultCode == RESULT_OK) {
             Uri photoUri = data.getData();
+
             Cursor cursor = null;
             try {
                 /*
@@ -219,6 +231,7 @@ public class InsertDetailsPopUp extends Activity {
                 cursor.moveToFirst();
 
                 tempFile = new File(cursor.getString(column_index));
+                mCurrentPhotoPath = tempFile.getAbsolutePath();
 
             } finally {
                 if (cursor != null) {
@@ -226,17 +239,43 @@ public class InsertDetailsPopUp extends Activity {
                 }
             }
 
-            setImage();
+            Log.d("aaa",String.valueOf(mCurrentPhotoPath));
+            //imageView.setImageURI(photoUri);
+            try {
+                InputStream in = getContentResolver().openInputStream(data.getData());
+
+                Bitmap img = BitmapFactory.decodeStream(in);
+                in.close();
+
+                imageView.setImageBitmap(img);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d("aaa","imagee");
+            }
 
         }else if (requestCode == PICK_FROM_CAMERA) {
             Log.d("aaa","bbbbb");
 
-            setImage();
+            saveImage();
+            Log.d("aaa",String.valueOf(mCurrentPhotoPath));
+            try {
+                //불러온 사진 데이터를 비트맵으로 저장합니다.
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+                //이미지뷰에 비트맵 세팅해줍니다
+                imageView.setImageBitmap(bitmap);
+                Log.d("aaa","image");
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d("aaa","imagee");
+            }
+            //setImage();
 
         }
+
+        Log.d("aaa","bbbbb");
     }
 
-    private void setImage() {
+    private void saveImage() {
 
             Log.d("aaa", "Call");
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -247,6 +286,14 @@ public class InsertDetailsPopUp extends Activity {
             sendBroadcast(mediaScanIntent);
             Toast.makeText(this, "사진이 앨범에 저장되었습니다.", Toast.LENGTH_SHORT).show();
 
+    }
+
+    private void setImage(){
+        Log.d("aaa","set");
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap originalBm = BitmapFactory.decodeFile(mCurrentPhotoPath, options);
+
+        imageView.setImageBitmap(originalBm);
 
     }
 
