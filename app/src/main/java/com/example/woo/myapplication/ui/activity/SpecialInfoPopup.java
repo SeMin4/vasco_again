@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.data.Not_Complete_Data;
@@ -52,11 +53,17 @@ public class SpecialInfoPopup extends Activity {
                 specialFileName = data.getUl_file();
                 specialDescText = data.getUl_desc();
                 specialDescription.setText(specialDescText);
+
                 Log.d("picasso","url : "+SERVER_HOST_PATH  +MapActivity.mid+"/"+ specialFileName);
-                Picasso.with(getApplicationContext())
+
+//                Picasso.with(getApplicationContext())
+//                        .load(SERVER_HOST_PATH  +MapActivity.mid+"/"+ specialFileName)
+//                        .rotate(0f)
+//                        .fit()
+//                        .into(specialImage);
+                Glide.with(getApplicationContext())
                         .load(SERVER_HOST_PATH  +MapActivity.mid+"/"+ specialFileName)
-                        .rotate(0f)
-                        .fit()
+                        .override(300, 300)
                         .into(specialImage);
             }
 
