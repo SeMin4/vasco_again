@@ -96,8 +96,40 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
             listViewItemList.add(item);
         }
 
+        public void deleteAll(){
+           listViewItemList.clear();
+        }
+
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        retrofitExService.getPersonMapData( selected.getP_id()).enqueue(new Callback<ArrayList<MapInfo>>() {
+            @Override
+            public void onResponse(Call<ArrayList<MapInfo>> call, Response<ArrayList<MapInfo>> response) {
+                System.out.println("onResponse@@@@@@@@@@@@");
+                maplist = response.body();
+                if(maplist == null){
+                    Toast.makeText(getApplicationContext(),"지도정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                System.out.println("maplist _size : "+maplist.size());
+                adapter.deleteAll();
+                for(int i =0;i<maplist.size();i++){
+                    adapter.addItem(maplist.get(i));
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<MapInfo>> call, Throwable t) {
+                System.out.println("onFailure@@@@@@@@@@@@@@");
+                Toast.makeText(getApplicationContext(),"지도 목록 띄우기 실패입니다.",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
 
     @Override
     public void onClick(View v) {
@@ -122,28 +154,28 @@ public class MpersonDetailActivity extends Activity implements View.OnClickListe
         setPerson(); // 사람정보 저장
 
         //***************************맵정보 가져오기***********
-        retrofitExService.getPersonMapData( selected.getP_id()).enqueue(new Callback<ArrayList<MapInfo>>() {
-            @Override
-            public void onResponse(Call<ArrayList<MapInfo>> call, Response<ArrayList<MapInfo>> response) {
-                System.out.println("onResponse@@@@@@@@@@@@");
-                maplist = response.body();
-                if(maplist == null){
-                    Toast.makeText(getApplicationContext(),"지도정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                System.out.println("maplist _size : "+maplist.size());
-                for(int i =0;i<maplist.size();i++){
-                    adapter.addItem(maplist.get(i));
-                }
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<MapInfo>> call, Throwable t) {
-                System.out.println("onFailure@@@@@@@@@@@@@@");
-                Toast.makeText(getApplicationContext(),"지도 목록 띄우기 실패입니다.",Toast.LENGTH_SHORT).show();
-            }
-        });
+//        retrofitExService.getPersonMapData( selected.getP_id()).enqueue(new Callback<ArrayList<MapInfo>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<MapInfo>> call, Response<ArrayList<MapInfo>> response) {
+//                System.out.println("onResponse@@@@@@@@@@@@");
+//                maplist = response.body();
+//                if(maplist == null){
+//                    Toast.makeText(getApplicationContext(),"지도정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                System.out.println("maplist _size : "+maplist.size());
+//                for(int i =0;i<maplist.size();i++){
+//                    adapter.addItem(maplist.get(i));
+//                }
+//                adapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ArrayList<MapInfo>> call, Throwable t) {
+//                System.out.println("onFailure@@@@@@@@@@@@@@");
+//                Toast.makeText(getApplicationContext(),"지도 목록 띄우기 실패입니다.",Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 
         //리스트뷰를 누르면 해당 지역의 수색 상황을 보여준다,방으로 입장하기 위해서 비밀번호 입력

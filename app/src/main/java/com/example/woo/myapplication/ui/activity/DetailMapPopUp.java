@@ -66,26 +66,29 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
 
         notfoundedBtn = (Button)findViewById(R.id.notFoundedBtn);
         completedBtn = (Button)findViewById(R.id.completedBtn);
-
+        markerLatLng = new ArrayList<>();
         Intent intent = getIntent();
         centerLat = intent.getDoubleExtra("Lat", -1);
         centerLng = intent.getDoubleExtra("Lng", -1);
         markerData = (ArrayList<Not_Complete_Data>) intent.getSerializableExtra("MarkerData");
-        for(int i = 0; i < markerData.size(); ++i){
-            LatLng tmp = new LatLng(Double.parseDouble(markerData.get(i).getUl_latitude()), Double.parseDouble(markerData.get(i).getUl_longitude()));
-            markerLatLng.add(tmp);
+        if(markerData != null){
+            for(int i = 0; i < markerData.size(); ++i){
+                LatLng tmp = new LatLng(Double.parseDouble(markerData.get(i).getUl_latitude()), Double.parseDouble(markerData.get(i).getUl_longitude()));
+                markerLatLng.add(tmp);
+            }
         }
+
         centerLatLng = new LatLng(centerLat, centerLng);
         mapView = findViewById(R.id.detail_naver_map_view);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        completedBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        completedBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //sendComplete
+//            }
+//        });
     }
 
     Emitter.Listener getComplete = new Emitter.Listener() { //다른사람이 올린 수색완료 받아오기
@@ -247,6 +250,18 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
             for(int i = 0; i < markerLatLng.size(); ++i){
                 Marker marker = new Marker();
                 marker.setPosition(markerLatLng.get(i));
+                marker.setIconTintColor(Color.RED);
+                marker.setOnClickListener(new Overlay.OnClickListener() {
+                    @Override
+                    public boolean onClick(@NonNull Overlay overlay) {
+                        Intent intent = new Intent(getApplicationContext(),SpecialInfoPopup.class );
+                        intent.putExtra("mid", MapActivity.mid);
+                        intent.putExtra("lat", "" + marker.getPosition().latitude);
+                        intent.putExtra("lng", "" + marker.getPosition().longitude);
+                        startActivity(intent);
+                        return false;
+                    }
+                });
                 marker.setMap(naverMap);
             }
         }
@@ -267,6 +282,15 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
             infoWindow.open(naverMap);
 //            windowHashMap.put(infoWindow.hashCode(), infoWindow);
 
+            completedBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(latLng != null){
+                        sendComplete(latLng.latitude,latLng.longitude);
+                    }
+                }
+            });
+
             notfoundedBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -279,10 +303,10 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
                         intent.putExtra("lng",latLng.longitude);
                         infoWindow.close();
                         startActivity(intent);
-                        intent.putExtra("markerId", infoWindow.hashCode());
-                        //intent.putExtra("latitude", latLng.latitude);
-                        //intent.putExtra("longitude", latLng.longitude);
-                        startActivityForResult(intent,REQUEST_CODE);
+//                        intent.putExtra("markerId", infoWindow.hashCode());
+//                        //intent.putExtra("latitude", latLng.latitude);
+//                        //intent.putExtra("longitude", latLng.longitude);
+//                        startActivityForResult(intent,REQUEST_CODE);
                     }
 
                 }
@@ -311,6 +335,19 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
 */
         });
 
+    }
+
+
+    public void sendComplete(Double lat,Double lng){ //수색완료 보내기
+        try{
+            JSONObject data = new JSONObject();
+            data.put("m_find_latitude",lat);
+            data.put("m_find_longitude",lng);
+            mSocket.emit("findPeople",data);
+            finish();
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 
 
