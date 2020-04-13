@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,7 +152,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         } //웹소켓 생성
 
 
-        mSocket.on("drawPathsAlreadySaved",getLatLng); //그림그리기 이벤트
+        mSocket.on("drawLatLng",getLatLng); //그림그리기 이벤트
         mSocket.on("heatmap",getHeatmapRate);
         mSocket.on("findPeople",getComplete); //수색완료
         mSocket.on("specialThing",getNotComplete);//수색불가
@@ -318,9 +317,16 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onLocationChange(@NonNull Location location) {
-
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
+
+                LatLngBounds latLngBounds = new LatLngBounds(centerLatLng.offset(1280*-1/2,1280*-1/2),centerLatLng.offset(1280/2,1280/2));
+                LatLng latLng = new LatLng(latitude, longitude);
+
+                if (latLngBounds.contains(latLng) == false){
+                    return;
+                }
+
                 if(getZoom_level()==1){
                     if (flag == 0) {
                         prevLong = longitude;
@@ -341,10 +347,10 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
                             try{
                                 JSONObject data = new JSONObject();
-                                data.put("Lat", tmplat);
-                                //data.put("Lat", latitude);
-                                data.put("Lng", tmplng);
-                                //data.put("Lng", longitude);
+                                //data.put("Lat", tmplat);
+                                data.put("Lat", latitude);
+                                //data.put("Lng", tmplng);
+                                data.put("Lng", longitude);
                                 int tmpidx = getClick_index(0);
                                 data.put("idx", tmpidx);
 
@@ -504,7 +510,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         });
                     }
 
-                    heat_map_rate[i]=40;//테스트용 임시 값
+                   //heat_map_rate[i]=40;//테스트용 임시 값
                     Log.d("showHeat",String.valueOf(heat_map_rate[i]));
                     showHeatMap(polygonOverlay, rateCalculation(heat_map_rate[i]));
                     //showLines();
@@ -696,8 +702,9 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 JSONObject data = (JSONObject)args[0];
                 String check = (String)data.get("check");
                 String latLng = (String)data.get("latLng"); //위도경도 스트링
+                String color = (String)data.get("color");
                 if(check.equals("success")){
-                    drawPaths(tokenizer(latLng), Integer.parseInt("000000"),allPathsOverlay);
+                    drawPaths(tokenizer(latLng), Integer.parseInt(color),allPathsOverlay);
                 }
             }catch (JSONException e){
                 e.printStackTrace();

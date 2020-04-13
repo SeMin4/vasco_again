@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,16 +14,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
-import com.example.woo.myapplication.OverlapExamineData;
 import com.example.woo.myapplication.R;
-import com.example.woo.myapplication.data.Color;
 import com.example.woo.myapplication.data.LatLngData;
 import com.example.woo.myapplication.data.Not_Complete_Data;
 import com.example.woo.myapplication.ui.view.FindMapFragment;
@@ -33,14 +27,10 @@ import com.naver.maps.geometry.LatLng;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,6 +56,7 @@ public class MapActivity extends AppCompatActivity {
     public static String findLat = null;
     public static String findLng = null;
     private MyGlobals.RetrofitExService retrofitExService;
+    public static MapActivity mapActivity;
 
 
     public MapActivity(){
@@ -89,7 +80,7 @@ public class MapActivity extends AppCompatActivity {
         LinearLayout.LayoutParams paramll = new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.FILL_PARENT);
         addContentView(ll, paramll);
-
+        MapActivity.mapActivity=this;
 //        try {
 //            Log.d("emiiter","들아엄1");
 //            mSocket = IO.socket("http://13.125.174.158:9001");
