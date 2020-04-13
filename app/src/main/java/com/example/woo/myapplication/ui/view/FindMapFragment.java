@@ -250,7 +250,15 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         reload_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(getZoom_level() == 0){
+                    for(int i = 0; i<squareOverlay.size(); ++i){
+                        squareOverlay.get(i).setMap(null);
+
+                    }
+                    squareOverlay.clear();
                     mSocket.emit("heatmap");
+                }
+
 //                        data.put("mid",mid);
 //                        mSocket.emit("makeRoom",data);
             }
