@@ -62,7 +62,7 @@
             android:layout_marginLeft="7dp"
             android:layout_marginRight="7dp"
             android:layout_marginBottom="7dp"
-            android:padding="5dp"
+            android:padding="10dp"
             android:background="@drawable/button_background_gray"
             android:backgroundTint="@color/cream"
             />
