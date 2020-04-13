@@ -248,8 +248,45 @@ public class InsertDetailsPopUp extends Activity {
 
             saveImage();
             Log.d("aaa",String.valueOf(mCurrentPhotoPath));
+            Uri photoUri = data.getData();
+            Log.d("aaa",String.valueOf(photoUri));
+            Cursor cursor = null;
 
-            setImage(data.getData());
+            try {
+                /*
+                 *  Uri 스키마를
+                 *  content:/// 에서 file:/// 로  변경한다.
+                 */
+                String[] proj = { MediaStore.Images.Media.DATA };
+
+                assert photoUri != null;
+                cursor = getContentResolver().query(photoUri, proj, null, null, null);
+
+                assert cursor != null;
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+                cursor.moveToFirst();
+
+                tempFile = new File(cursor.getString(column_index));
+                mCurrentPhotoPath = tempFile.getAbsolutePath();
+
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+
+/*            try {
+                Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(),data.getData());
+                imageView.setImageBitmap(bm);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d("aaa",String.valueOf(e));
+            }
+
+ */
+            Log.d("aaa","dldldl");
+            setImage(photoUri);
             //sendImage(tempfile);
         }
 
