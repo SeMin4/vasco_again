@@ -23,6 +23,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.woo.myapplication.MyGlobals;
+import com.example.woo.myapplication.OverlapExamineData;
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.ui.view.FindMapFragment;
 import com.gun0912.tedpermission.PermissionListener;
@@ -37,11 +39,17 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import io.socket.client.Socket;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InsertDetailsPopUp extends Activity {
     private static final int PICK_FROM_ALBUM = 1;
     private static final int PICK_FROM_CAMERA = 2;
-    private File tempFile;
+    private File tempFile = null;
     ImageButton cameraBtn;
     ImageButton galleryBtn;
     Button saveBtn;
@@ -54,6 +62,7 @@ public class InsertDetailsPopUp extends Activity {
     String mCurrentPhotoPath; //절대 위치 경로
 
     private final int MY_PERMISSIONS_REQUEST_CAMERA=1001;
+    private MyGlobals.RetrofitExService retrofitExService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,7 @@ public class InsertDetailsPopUp extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.pop_up_insert_detail);
+        retrofitExService = MyGlobals.getInstance().getRetrofitExService();
         this.mSocket = FindMapFragment.mSocket;
         this.mid = MapActivity.mid;
         Intent intent = getIntent();
@@ -107,55 +117,48 @@ public class InsertDetailsPopUp extends Activity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //수색완료 정보 보내기
-                sendComplete(lat,lng);
+                if(tempFile!=null){
+                    sendImage(tempFile,lat,lng,editText.getText().toString());
+                }
+
             }
         });
     }
 
-    public void sendComplete(Double lat,Double lng){ //수색완료 보내기
-        try{
-            JSONObject data = new JSONObject();
-            data.put("m_find_latitude",lat);
-            data.put("m_find_longitude",lng);
-            mSocket.emit("findPeople",data);
-            finish();
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-    }
 
-    //    public void sendImage(File file){//수색불가 보내기
-//        mSocket.on("specialThing",getNotComplete);
-//        RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"),file);
-//        MultipartBody.Part part = MultipartBody.Part.createFormData("upload",file.getName(),fileReqBody);
-//        RequestBody mapId =  RequestBody.create(MediaType.parse("text/plain"),mid);
-//        retrofitExService.postNotComplete(mapId,part).enqueue(new Callback<OverlapExamineData>() {
-//            @Override
-//            public void onResponse(Call<OverlapExamineData> call, Response<OverlapExamineData> response) {
-//                OverlapExamineData data = response.body();
-//                if(data.getOverlap_examine().equals("success")){
-//                    try{
-//                        JSONObject latLng = new JSONObject();
-//                        latLng.put("ul_longitude",);
-//                        latLng.put("ul_latitude",);
-//                        latLng.put("ul_desc",);
-//                        latLng.put("ul_file",file.getName());
-//                        mSocket.emit("specialThing",latLng);
-//                    }catch (JSONException e){
-//                        e.printStackTrace();
-//                    }
-//                }else{
-//                    Toast.makeText(getApplicationContext(),"이미지 보내기 실패",Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<OverlapExamineData> call, Throwable t) {
-//                Toast.makeText(getApplicationContext(),"이미지 보내기 실패",Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+
+        public void sendImage(File file,Double lat,Double lng,String desc){//수색불가 보내기
+        //mSocket.on("specialThing",getNotComplete);
+        RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"),file);
+        MultipartBody.Part part = MultipartBody.Part.createFormData("upload",file.getName(),fileReqBody);
+        RequestBody mapId =  RequestBody.create(MediaType.parse("text/plain"),mid);
+        retrofitExService.postNotComplete(mapId,part).enqueue(new Callback<OverlapExamineData>() {
+            @Override
+            public void onResponse(Call<OverlapExamineData> call, Response<OverlapExamineData> response) {
+                OverlapExamineData data = response.body();
+                if(data.getOverlap_examine().equals("success")){
+                    try{
+                        JSONObject latLng = new JSONObject();
+                        latLng.put("ul_longitude",lng);
+                        latLng.put("ul_latitude",lat);
+                        latLng.put("ul_desc",desc);;
+                        latLng.put("ul_file",file.getName());
+                        mSocket.emit("specialThing",latLng);
+                        finish();
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(),"이미지 보내기 실패",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OverlapExamineData> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"이미지 보내기 실패",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
 

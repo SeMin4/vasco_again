@@ -80,12 +80,12 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        completedBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        completedBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //sendComplete
+//            }
+//        });
     }
 
     Emitter.Listener getComplete = new Emitter.Listener() { //다른사람이 올린 수색완료 받아오기
@@ -267,6 +267,15 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
             infoWindow.open(naverMap);
 //            windowHashMap.put(infoWindow.hashCode(), infoWindow);
 
+            completedBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(latLng != null){
+                        sendComplete(latLng.latitude,latLng.longitude);
+                    }
+                }
+            });
+
             notfoundedBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -311,6 +320,19 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
 */
         });
 
+    }
+
+
+    public void sendComplete(Double lat,Double lng){ //수색완료 보내기
+        try{
+            JSONObject data = new JSONObject();
+            data.put("m_find_latitude",lat);
+            data.put("m_find_longitude",lng);
+            mSocket.emit("findPeople",data);
+            finish();
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 
 
