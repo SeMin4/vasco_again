@@ -3,43 +3,66 @@
 
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="500dp"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center_vertical|center_horizontal"
-    tools:context=".ui.activity.DetailMapPopUp">
+    tools:context=".ui.activity.DetailMapPopUp"
+    android:background="#00ff0000"
+    android:gravity="center_vertical">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:text="@string/detailmessage"
         android:textAlignment="center"
         android:textSize="15sp"
-        android:textColor="@color/black"
-        android:background="@color/gray">
+        android:minHeight="0dp"
+        android:padding="12dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@drawable/button_background_gray"
+        android:backgroundTint="@color/burgundy"
+        android:layout_marginVertical="5dp">
     </TextView>
 
     <com.naver.maps.map.MapView
         android:id="@+id/detail_naver_map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="500dp" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/notFoundedBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="수색불가" />
-
-            <Button
-                android:id="@+id/completedBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="수색완료" />
-        </LinearLayout>
 
     </com.naver.maps.map.MapView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginVertical="5dp">
+
+        <Button
+            android:id="@+id/notFoundedBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수색 불가"
+            android:layout_weight="1"
+            android:minHeight="0dp"
+            android:padding="12dp"
+            android:textColor="@color/dark_gray"
+            android:background="@drawable/button_background_gray"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_marginRight="7dp"/>
+
+        <Button
+            android:id="@+id/completedBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수색 완료"
+            android:layout_weight="1"
+            android:minHeight="0dp"
+            android:padding="12dp"
+            android:textColor="@color/dark_gray"
+            android:background="@drawable/button_background_gray"
+            style="?android:attr/borderlessButtonStyle"/>
+    </LinearLayout>
 </LinearLayout>
