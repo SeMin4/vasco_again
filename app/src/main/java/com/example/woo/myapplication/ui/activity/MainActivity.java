@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
         fab_sub1=(FloatingActionButton) findViewById(R.id.fab_sub1);
         fab_sub2=(FloatingActionButton) findViewById(R.id.fab_sub2);
 
-        if(!MyGlobals.getInstance().getUser().getU_id().equals("admin")){
+        if(!MyGlobals.getInstance().getUser().getU_email().equals("admin")){
             fab_btn.hide();
             fab_sub1.hide();
             fab_sub2.hide();
