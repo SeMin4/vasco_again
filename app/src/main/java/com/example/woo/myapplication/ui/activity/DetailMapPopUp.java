@@ -66,15 +66,18 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
 
         notfoundedBtn = (Button)findViewById(R.id.notFoundedBtn);
         completedBtn = (Button)findViewById(R.id.completedBtn);
-
+        markerLatLng = new ArrayList<>();
         Intent intent = getIntent();
         centerLat = intent.getDoubleExtra("Lat", -1);
         centerLng = intent.getDoubleExtra("Lng", -1);
         markerData = (ArrayList<Not_Complete_Data>) intent.getSerializableExtra("MarkerData");
-        for(int i = 0; i < markerData.size(); ++i){
-            LatLng tmp = new LatLng(Double.parseDouble(markerData.get(i).getUl_latitude()), Double.parseDouble(markerData.get(i).getUl_longitude()));
-            markerLatLng.add(tmp);
+        if(markerData != null){
+            for(int i = 0; i < markerData.size(); ++i){
+                LatLng tmp = new LatLng(Double.parseDouble(markerData.get(i).getUl_latitude()), Double.parseDouble(markerData.get(i).getUl_longitude()));
+                markerLatLng.add(tmp);
+            }
         }
+
         centerLatLng = new LatLng(centerLat, centerLng);
         mapView = findViewById(R.id.detail_naver_map_view);
         mapView.onCreate(savedInstanceState);
@@ -247,6 +250,18 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
             for(int i = 0; i < markerLatLng.size(); ++i){
                 Marker marker = new Marker();
                 marker.setPosition(markerLatLng.get(i));
+                marker.setIconTintColor(Color.RED);
+                marker.setOnClickListener(new Overlay.OnClickListener() {
+                    @Override
+                    public boolean onClick(@NonNull Overlay overlay) {
+                        Intent intent = new Intent(getApplicationContext(),SpecialInfoPopup.class );
+                        intent.putExtra("mid", MapActivity.mid);
+                        intent.putExtra("lat", "" + marker.getPosition().latitude);
+                        intent.putExtra("lng", "" + marker.getPosition().longitude);
+                        startActivity(intent);
+                        return false;
+                    }
+                });
                 marker.setMap(naverMap);
             }
         }

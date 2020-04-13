@@ -538,12 +538,14 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                                                 marker_data.add(data);
                                             }
                                         }
+
                                         intent.putExtra("MarkerData", marker_data);
-                                        startActivity(intent);
+//                                        startActivity(intent);
 
                                     }else{
 //                                        Toast.makeText(getContext(),"수색 불가 정보를 받아오지 못했습니다.",Toast.LENGTH_SHORT).show();
                                     }
+                                    startActivity(intent);
                                 }
 
                                 @Override
@@ -862,6 +864,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         LatLng tmpLatLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
                         Marker marker = new Marker();
                         marker.setPosition(tmpLatLng);
+                        marker.setIconTintColor(Color.RED);
                         marker.setMap(getNaverMap());
                         //marker 만들기
                     }

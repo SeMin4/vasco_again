@@ -23,7 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SpecialInfoPopup extends Activity {
-    private String SERVER_HOST_PATH = "http://13.125.174.158:9000/mapId";
+    private String SERVER_HOST_PATH = "http://13.125.174.158:9000/not_complete_picture/";
     private ImageView specialImage;
     private TextView specialDescription;
     private MyGlobals.RetrofitExService retrofitExService;
@@ -53,7 +53,7 @@ public class SpecialInfoPopup extends Activity {
                 specialDescText = data.getUl_desc();
                 specialDescription.setText(specialDescText);
                 Picasso.with(getApplicationContext())
-                        .load(SERVER_HOST_PATH + "/" + specialFileName)
+                        .load(SERVER_HOST_PATH  + specialFileName)
                         .rotate(0f)
                         .fit()
                         .into(specialImage);
@@ -61,9 +61,29 @@ public class SpecialInfoPopup extends Activity {
 
             @Override
             public void onFailure(Call<Not_Complete_Data> call, Throwable t) {
-                Log.d("error", "detail notcomplete error");
+                Log.d("error", t.getMessage());
             }
         });
+//        retrofitExService.getNotCompleteDetail(mid,latitude,longitude).enqueue(new Callback<Not_Complete_Data>() {
+//            @Override
+//            public void onResponse(Call<Not_Complete_Data> call, Response<Not_Complete_Data> response) {
+//                Not_Complete_Data data = response.body();
+//                specialFileName = data.getUl_file();
+//                specialDescText = data.getUl_desc();
+//                specialDescription.setText(specialDescText);
+//                Picasso.with(getApplicationContext())
+//                        .load(SERVER_HOST_PATH  + specialFileName)
+//                        .rotate(0f)
+//                        .fit()
+//                        .into(specialImage);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Not_Complete_Data> call, Throwable t) {
+//                Log.d("failureerror", t.getMessage());
+//                Log.d("error", "detail notcomplete error");
+//            }
+//        });
 
     }
 }
