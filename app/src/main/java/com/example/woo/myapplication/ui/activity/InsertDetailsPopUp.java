@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -33,7 +32,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import io.socket.client.Socket;
@@ -60,8 +58,8 @@ public class InsertDetailsPopUp extends Activity {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.pop_up_insert_detail);
+
         this.mSocket = FindMapFragment.mSocket;
         this.mid = MapActivity.mid;
         Intent intent = getIntent();
@@ -89,7 +87,7 @@ public class InsertDetailsPopUp extends Activity {
         galleryBtn = (ImageButton)findViewById(R.id.fromGalleryBtn);
         saveBtn = (Button)findViewById(R.id.saveDetailsBtn);
         editText = (EditText)findViewById(R.id.editText_details);
-        imageView = (ImageView)findViewById(R.id.imageView);
+        imageView = (ImageView)findViewById(R.id.detail_Image);
 
 
         cameraBtn.setOnClickListener(new View.OnClickListener() {
@@ -211,10 +209,11 @@ public class InsertDetailsPopUp extends Activity {
         }
 
         Log.d("aaa",String.valueOf(requestCode));
-        if (requestCode == PICK_FROM_ALBUM&& resultCode == RESULT_OK) {
+        if (requestCode == PICK_FROM_ALBUM) {
             Uri photoUri = data.getData();
-
+            Log.d("aaa",String.valueOf(photoUri));
             Cursor cursor = null;
+
             try {
                 /*
                  *  Uri 스키마를
@@ -239,44 +238,25 @@ public class InsertDetailsPopUp extends Activity {
                 }
             }
 
-           // setImage();
+            setImage(photoUri);
             Log.d("aaa",String.valueOf(mCurrentPhotoPath));
-            //imageView.setImageURI(photoUri);
-            try {
-                InputStream in = getContentResolver().openInputStream(data.getData());
+            //sendImage(tempfile);
 
-                Bitmap img = BitmapFactory.decodeStream(in);
-                in.close();
-
-                imageView.setImageBitmap(img);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.d("aaa","imagee");
-            }
 
         }else if (requestCode == PICK_FROM_CAMERA) {
             Log.d("aaa","bbbbb");
 
             saveImage();
             Log.d("aaa",String.valueOf(mCurrentPhotoPath));
-            try {
-                //불러온 사진 데이터를 비트맵으로 저장합니다.
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                //이미지뷰에 비트맵 세팅해줍니다
-                imageView.setImageBitmap(bitmap);
-                Log.d("aaa","image");
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.d("aaa","imagee");
-            }
-            //setImage();
 
+            setImage(data.getData());
+            //sendImage(tempfile);
         }
 
-        Log.d("aaa","bbbbb");
+        //Log.d("aaa","bbbbb");
     }
 
-    private void saveImage() {
+    private void saveImage() { //로컬에 찍은 사진 저장
 
             Log.d("aaa", "Call");
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -289,16 +269,18 @@ public class InsertDetailsPopUp extends Activity {
 
     }
 
-    private void setImage(){
-        Log.d("aaa","set");
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        Bitmap originalBm = BitmapFactory.decodeFile(mCurrentPhotoPath, options);
-
-        imageView.setImageBitmap(originalBm);
+    private void setImage(Uri photoUri){ //이미지뷰에 올리기
+        try {
+            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(),photoUri);
+            imageView.setImageBitmap(bm);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("aaa",String.valueOf(e));
+        }
 
     }
 
-    private void takePhoto() {
+    private void takePhoto() { //사진 찍기
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         try {
@@ -319,7 +301,7 @@ public class InsertDetailsPopUp extends Activity {
         }
     }
 
-    private File createImageFile() throws IOException {
+    private File createImageFile() throws IOException { //찍은 사진 넣을 파일 생성
 
         Log.d("aaa","fi");
         //String timeStamp = new SimpleDateFormat("HHmmss").format(new Date());
