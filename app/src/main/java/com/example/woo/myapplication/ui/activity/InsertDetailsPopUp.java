@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.ui.view.FindMapFragment;
+import com.example.woo.myapplication.utils.ImageResizeUtils;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -33,7 +35,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import io.socket.client.Socket;
@@ -52,6 +53,7 @@ public class InsertDetailsPopUp extends Activity {
     private double lat;
     private double lng;
     String mCurrentPhotoPath; //절대 위치 경로
+    private Boolean isCamera = false;
 
     private final int MY_PERMISSIONS_REQUEST_CAMERA=1001;
 
@@ -89,7 +91,7 @@ public class InsertDetailsPopUp extends Activity {
         galleryBtn = (ImageButton)findViewById(R.id.fromGalleryBtn);
         saveBtn = (Button)findViewById(R.id.saveDetailsBtn);
         editText = (EditText)findViewById(R.id.editText_details);
-        imageView = (ImageView)findViewById(R.id.imageView);
+        imageView = (ImageView)findViewById(R.id.detail_Image);
 
 
         cameraBtn.setOnClickListener(new View.OnClickListener() {
@@ -211,7 +213,7 @@ public class InsertDetailsPopUp extends Activity {
         }
 
         Log.d("aaa",String.valueOf(requestCode));
-        if (requestCode == PICK_FROM_ALBUM&& resultCode == RESULT_OK) {
+        if (requestCode == PICK_FROM_ALBUM) {
             Uri photoUri = data.getData();
 
             Cursor cursor = null;
@@ -242,35 +244,24 @@ public class InsertDetailsPopUp extends Activity {
            // setImage();
             Log.d("aaa",String.valueOf(mCurrentPhotoPath));
             //imageView.setImageURI(photoUri);
-            try {
-                InputStream in = getContentResolver().openInputStream(data.getData());
 
-                Bitmap img = BitmapFactory.decodeStream(in);
-                in.close();
+            setImage();
 
-                imageView.setImageBitmap(img);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.d("aaa","imagee");
-            }
-
+           // sendImage(tempFile);
         }else if (requestCode == PICK_FROM_CAMERA) {
-            Log.d("aaa","bbbbb");
 
             saveImage();
+            Uri photouri = Uri.parse(mCurrentPhotoPath);
             Log.d("aaa",String.valueOf(mCurrentPhotoPath));
-            try {
-                //불러온 사진 데이터를 비트맵으로 저장합니다.
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                //이미지뷰에 비트맵 세팅해줍니다
-                imageView.setImageBitmap(bitmap);
-                Log.d("aaa","image");
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.d("aaa","imagee");
-            }
-            //setImage();
+            isCamera =true;
+/*
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            Bitmap originalBm = BitmapFactory.decodeFile(mCurrentPhotoPath, options);
 
+            imageView.setImageBitmap(originalBm);
+*/
+            setImage();
+            // sendImage(tempFile);
         }
 
         Log.d("aaa","bbbbb");
@@ -278,23 +269,62 @@ public class InsertDetailsPopUp extends Activity {
 
     private void saveImage() {
 
-            Log.d("aaa", "Call");
-            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            // 해당 경로에 있는 파일을 객체화(새로 파일을 만든다는 것으로 이해하면 안 됨)
-            File f = new File(mCurrentPhotoPath);
-            Uri uri = FileProvider.getUriForFile(getApplicationContext(),"com.example.woo.myapplication.fileprovider",f);
-            mediaScanIntent.setData(uri);
-            sendBroadcast(mediaScanIntent);
-            Toast.makeText(this, "사진이 앨범에 저장되었습니다.", Toast.LENGTH_SHORT).show();
+        Log.d("aaa", "Call");
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        // 해당 경로에 있는 파일을 객체화(새로 파일을 만든다는 것으로 이해하면 안 됨)
+        File f = new File(mCurrentPhotoPath);
+        Uri uri = FileProvider.getUriForFile(getApplicationContext(),"com.example.woo.myapplication.fileprovider",f);
+        mediaScanIntent.setData(uri);
+        sendBroadcast(mediaScanIntent);
 
+        Toast.makeText(this, "사진이 앨범에 저장되었습니다.", Toast.LENGTH_SHORT).show();
+
+    }
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 
     private void setImage(){
-        Log.d("aaa","set");
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        Bitmap originalBm = BitmapFactory.decodeFile(mCurrentPhotoPath, options);
+//        try {
+//            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(),photoUri);
+//            imageView.setImageBitmap(bm);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Log.d("aaa",String.valueOf(e));
+//        }
+            ImageResizeUtils.resizeFile(tempFile, tempFile, 1280, isCamera);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            Bitmap originalBm = BitmapFactory.decodeFile(tempFile.getAbsolutePath(), options);
+//            if (originalBm != null) {
+//                ExifInterface ei = new ExifInterface(mCurrentPhotoPath);
+//                int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+//                        ExifInterface.ORIENTATION_UNDEFINED);
+//
+//                Bitmap rotatedBitmap = null;
+//                switch (orientation) {
+//
+//                    case ExifInterface.ORIENTATION_ROTATE_90:
+//                        rotatedBitmap = rotateImage(originalBm, 90);
+//                        break;
+//
+//                    case ExifInterface.ORIENTATION_ROTATE_180:
+//                        rotatedBitmap = rotateImage(originalBm, 180);
+//                        break;
+//
+//                    case ExifInterface.ORIENTATION_ROTATE_270:
+//                        rotatedBitmap = rotateImage(originalBm, 270);
+//                        break;
+//
+//                    case ExifInterface.ORIENTATION_NORMAL:
+//                    default:
+//                        rotatedBitmap = originalBm;
+//                }
+//            }
 
-        imageView.setImageBitmap(originalBm);
+            imageView.setImageBitmap(originalBm);
 
     }
 
@@ -309,13 +339,21 @@ public class InsertDetailsPopUp extends Activity {
             e.printStackTrace();
         }
         if (tempFile != null) {
-            Log.d("aaa","camera");
-            Uri photoUri = FileProvider.getUriForFile(getApplicationContext(),"com.example.woo.myapplication.fileprovider",tempFile);
-            Log.d("aaa","camera2");
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            Log.d("aaa","camera3");
-            startActivityForResult(intent, PICK_FROM_CAMERA);
 
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N){
+                Log.d("aaa","camera");
+                Uri photoUri = FileProvider.getUriForFile(getApplicationContext(),"com.example.woo.myapplication.fileprovider",tempFile);
+                Log.d("aaa","camera2");
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                Log.d("aaa","camera3");
+                startActivityForResult(intent, PICK_FROM_CAMERA);
+            }else {
+
+                Uri photoUri = Uri.fromFile(tempFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(intent, PICK_FROM_CAMERA);
+
+            }
         }
     }
 
@@ -357,7 +395,6 @@ public class InsertDetailsPopUp extends Activity {
                 }
                 return;
             }
-
         }
     }
 
