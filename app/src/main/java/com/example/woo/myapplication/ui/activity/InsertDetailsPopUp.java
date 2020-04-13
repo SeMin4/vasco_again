@@ -64,8 +64,6 @@ public class InsertDetailsPopUp extends Activity {
     private final int MY_PERMISSIONS_REQUEST_CAMERA=1001;
     private MyGlobals.RetrofitExService retrofitExService;
 
-    public static InsertDetailsPopUp insertDetailsPopUp;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +71,6 @@ public class InsertDetailsPopUp extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.pop_up_insert_detail);
-        insertDetailsPopUp = this;
         retrofitExService = MyGlobals.getInstance().getRetrofitExService();
         this.mSocket = FindMapFragment.mSocket;
         this.mid = MapActivity.mid;
@@ -149,8 +146,7 @@ public class InsertDetailsPopUp extends Activity {
                         latLng.put("ul_desc",desc);;
                         latLng.put("ul_file",file.getName());
                         mSocket.emit("specialThing",latLng);
-                        if(InsertDetailsPopUp.insertDetailsPopUp != null)
-                            InsertDetailsPopUp.insertDetailsPopUp.finish();
+                        finish();
                     }catch (JSONException e){
                         e.printStackTrace();
                     }

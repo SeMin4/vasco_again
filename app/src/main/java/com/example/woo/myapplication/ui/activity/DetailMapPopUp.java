@@ -138,8 +138,6 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
         @Override
         public void call(Object... args) {
             try{
-                if(InsertDetailsPopUp.insertDetailsPopUp != null)
-                    InsertDetailsPopUp.insertDetailsPopUp.finish();
                 JSONObject data = (JSONObject)args[0];
                 String check = (String)data.get("check");
                 if(check.equals("success")){
@@ -305,10 +303,10 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
                         intent.putExtra("lng",latLng.longitude);
                         infoWindow.close();
                         startActivity(intent);
-                        intent.putExtra("markerId", infoWindow.hashCode());
-                        //intent.putExtra("latitude", latLng.latitude);
-                        //intent.putExtra("longitude", latLng.longitude);
-                        startActivityForResult(intent,REQUEST_CODE);
+//                        intent.putExtra("markerId", infoWindow.hashCode());
+//                        //intent.putExtra("latitude", latLng.latitude);
+//                        //intent.putExtra("longitude", latLng.longitude);
+//                        startActivityForResult(intent,REQUEST_CODE);
                     }
 
                 }
