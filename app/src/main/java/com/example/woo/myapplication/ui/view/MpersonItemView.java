@@ -62,6 +62,7 @@ public class MpersonItemView extends LinearLayout {
 
         //imageView rounded corners 설정
         drawable= (GradientDrawable) context.getDrawable(R.drawable.iv_corners_rounded);
+        drawable.setColor(getResources().getColor(R.color.light_gray));
 
 
     }
