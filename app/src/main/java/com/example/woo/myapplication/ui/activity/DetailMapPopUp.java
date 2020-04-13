@@ -138,6 +138,8 @@ public class DetailMapPopUp extends Activity implements OnMapReadyCallback {
         @Override
         public void call(Object... args) {
             try{
+                if(InsertDetailsPopUp.insertDetailsPopUp != null)
+                    InsertDetailsPopUp.insertDetailsPopUp.finish();
                 JSONObject data = (JSONObject)args[0];
                 String check = (String)data.get("check");
                 if(check.equals("success")){

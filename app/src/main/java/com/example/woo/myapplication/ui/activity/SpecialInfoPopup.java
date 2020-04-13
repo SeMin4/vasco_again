@@ -52,8 +52,9 @@ public class SpecialInfoPopup extends Activity {
                 specialFileName = data.getUl_file();
                 specialDescText = data.getUl_desc();
                 specialDescription.setText(specialDescText);
+                Log.d("picasso","url : "+SERVER_HOST_PATH  +MapActivity.mid+"/"+ specialFileName);
                 Picasso.with(getApplicationContext())
-                        .load(SERVER_HOST_PATH  + specialFileName)
+                        .load(SERVER_HOST_PATH  +MapActivity.mid+"/"+ specialFileName)
                         .rotate(0f)
                         .fit()
                         .into(specialImage);
