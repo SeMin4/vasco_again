@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
@@ -180,7 +179,6 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         View rootView = inflater.inflate(R.layout.fragment_find_map, container, true);
 //        heatmapView = (View)getView().findViewById(R.id.view_heatmap_info);
         FrameLayout frameLayout = (FrameLayout)rootView.findViewById(R.id.frame_lay);
-        TextView textView = new TextView(rootView.getContext());
         zoom_in_btn = rootView.findViewById(R.id.zoom_in_btn);
         zoom_out_btn = rootView.findViewById(R.id.zoom_out_btn);
         reload_btn = rootView.findViewById(R.id.reload_btn);
@@ -204,13 +202,6 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(getNaverMap(), getZoomCenterLatLng(), map_radius);
                         gridMapMakeTask.execute();
                         setZoom_level(1);
-                        textView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT));
-                        textView.setGravity(Gravity.TOP);
-                        textView.setText("몇 행 몇열 확대 버전");
-                        textView.setBackgroundColor(Color.WHITE);
-                        textView.setTextColor(Color.BLACK);
-                        textView.setTextSize(30);
-                        frameLayout.addView(textView);
 
                     }
 
@@ -240,7 +231,6 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 //                    FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(getNaverMap(), centerLatLng, map_radius);
 //                    gridMapMakeTask.execute();
                     mSocket.emit("heatmap");
-                    frameLayout.removeView(textView);
                 }
                 else{
                     Toast.makeText(getContext(),"더 이상 축소 할 수 없습니다.", Toast.LENGTH_LONG).show();

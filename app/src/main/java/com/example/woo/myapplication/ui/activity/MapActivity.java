@@ -18,11 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.OverlapExamineData;
 import com.example.woo.myapplication.R;
+import com.example.woo.myapplication.data.Color;
 import com.example.woo.myapplication.data.LatLngData;
 import com.example.woo.myapplication.data.Not_Complete_Data;
 import com.example.woo.myapplication.ui.view.FindMapFragment;
@@ -64,10 +66,7 @@ public class MapActivity extends AppCompatActivity {
     public static String findLat = null;
     public static String findLng = null;
     private MyGlobals.RetrofitExService retrofitExService;
-    //View view_heatmap_info;
 
-    private GradientDrawable drawable;
-    private Button palette;
 
     public MapActivity(){
 
@@ -81,14 +80,7 @@ public class MapActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         LinearLayout ll = (LinearLayout)inflater.inflate(R.layout.view_heatmap_info, null);
-        View view = getLayoutInflater().inflate(R.layout.view_heatmap_info, null);
 
-        drawable = (GradientDrawable)getApplicationContext().getDrawable(R.drawable.iv_circle);
-        drawable.setColor(getResources().getColor(R.color.heatmap_no1));
-        palette = (Button)ll.findViewById(R.id.department_modify);
-
-        palette.setBackground(drawable);
-        palette.setClipToOutline(true);
 
         LinearLayout.LayoutParams paramll = new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.FILL_PARENT);
