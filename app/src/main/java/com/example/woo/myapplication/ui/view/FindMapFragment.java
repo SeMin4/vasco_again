@@ -511,6 +511,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                     }
 
                    //heat_map_rate[i]=40;//테스트용 임시 값
+
                     Log.d("showHeat",String.valueOf(heat_map_rate[i]));
                     showHeatMap(polygonOverlay, rateCalculation(heat_map_rate[i]));
                     //showLines();
@@ -592,7 +593,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         }
         else if(rate >=0.6 && rate <0.8){
             polygonOverlay.setColor(getResources().getColor(R.color.heatmap_no3));
-        }else if(rate == -1.0){
+        }else if(rate <0){
             polygonOverlay.setColor(Color.BLACK);
         }
         else if(rate>=0.8 && rate <=1){
