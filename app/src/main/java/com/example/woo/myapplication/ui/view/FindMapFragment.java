@@ -343,27 +343,41 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         prev.setLatitude(prevLat);
                         prev.setLongitude(prevLong);
                         double euclidean = location.distanceTo(prev);
-                        //double euclidean =Math.sqrt((prevLong - longitude) * (prevLong - longitude) + (prevLat - latitude) * (prevLat - latitude));
+                        int tmpidx= -1;
+
                         Log.d("aaa","euclidean"+String.valueOf(euclidean));
                         if (euclidean >=minDistance && euclidean <= maxDistance) {
                             prevLong = longitude;
                             prevLat = latitude;
                             Log.d("aaa", String.valueOf(latitude));
                             coords.add(new LatLng(latitude, longitude));
+
                             if(coords.size() >=2){
                                 myPath.setCoords(coords);
                                 myPath.setVisible(true);
                                 myPath.setMap(naverMap);
                             }
+
+                            if(getZoom_level() ==0){
+                                for(int i = 0; i<64; i++){
+                                  boolean cell = squareOverlay.get(i).getBounds().contains(new LatLng(latitude,longitude));
+                                  if(cell == true){
+                                      tmpidx=i;
+                                      break;
+                                  }
+                                }
+                            }
+                            else if(getZoom_level() == 1){
+                                tmpidx = getClick_index(0);
+                            }
+
                             try{
                                 JSONObject data = new JSONObject();
                                 //data.put("Lat", tmplat);
                                 data.put("Lat", latitude);
                                 //data.put("Lng", tmplng);
                                 data.put("Lng", longitude);
-                                int tmpidx = getClick_index(0);
                                 data.put("idx", tmpidx);
-
 
                                 mSocket.emit("sendLatLng", data);
 //                        data.put("mid",mid);
@@ -651,10 +665,10 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                             savedPathsOverlay.get(i).setMap(naverMap);
                         }
                     }
-                                if(myPath != null){
-                                    myPath.setVisible(false);
-                                    myPath.setMap(naverMap);
-                                }
+                    if(myPath != null){
+                        myPath.setVisible(false);
+                        //myPath.setMap(naverMap);
+                    }
                 } else if (getZoom_level() == 1) {
                     Log.d("showLines","zoomlevel1");
                     if (allPathsOverlay != null && allPathsOverlay.size() >= 1) {
