@@ -602,7 +602,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
             polygonOverlay.setColor(getResources().getColor(R.color.heatmap_no4));
         }
         else{
-            polygonOverlay.setColor(Color.argb(0,255,255,153));
+            polygonOverlay.setColor(getResources().getColor(R.color.heatmap_no4));
+            //polygonOverlay.setColor(Color.argb(0,255,255,153));
         }
 
     }
