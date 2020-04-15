@@ -20,6 +20,17 @@
     </fragment>
 
 
+    <Button
+        android:id="@+id/start_btn"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_background_cream"
+        android:minHeight="0dp"
+        android:paddingVertical="10dp"
+        android:text="@string/start"></Button>
+
     <LinearLayout
         android:layout_gravity="bottom"
         android:layout_width="match_parent"

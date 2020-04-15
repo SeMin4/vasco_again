@@ -79,6 +79,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
     private ArrayList<Integer> placeIndex; //수색구역 정보
     public static Socket mSocket;
+    Button start_btn;
     Button reload_btn;
     //zoom in-out button 정보
     Button zoom_in_btn;
@@ -176,9 +177,18 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         View rootView = inflater.inflate(R.layout.fragment_find_map, container, true);
 //        heatmapView = (View)getView().findViewById(R.id.view_heatmap_info);
         FrameLayout frameLayout = (FrameLayout)rootView.findViewById(R.id.frame_lay);
+        start_btn = rootView.findViewById(R.id.start_btn);
         zoom_in_btn = rootView.findViewById(R.id.zoom_in_btn);
         zoom_out_btn = rootView.findViewById(R.id.zoom_out_btn);
         reload_btn = rootView.findViewById(R.id.reload_btn);
+
+        start_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         zoom_in_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -342,6 +352,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                             coords.add(new LatLng(latitude, longitude));
                             if(coords.size() >=2){
                                 myPath.setCoords(coords);
+                                myPath.setVisible(true);
                                 myPath.setMap(naverMap);
                             }
                             try{
@@ -613,7 +624,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
         Log.d("showHeat",String.valueOf(count));
 
-        rate= (double)count/50.0; //추후에 비율 수정
+        rate= (double)count/70.0; //추후에 비율 수정
         Log.d("showHeat"," rate : "+rate);
         return rate;
     }
@@ -628,27 +639,34 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 if (getZoom_level() == 0) {
                     if (allPathsOverlay != null && allPathsOverlay.size() >= 1) {
                         for (i = 0; i < allPathsOverlay.size(); i++) {
-                            allPathsOverlay.get(i).setMap(null);
+                            allPathsOverlay.get(i).setVisible(false);
+                            allPathsOverlay.get(i).setMap(naverMap);
+
+
                         }
                     }
                     if (savedPathsOverlay != null && savedPathsOverlay.size() >= 1) {
                         for (i = 0; i < savedPathsOverlay.size(); i++) {
-                            savedPathsOverlay.get(i).setMap(null);
+                            savedPathsOverlay.get(i).setVisible(false);
+                            savedPathsOverlay.get(i).setMap(naverMap);
                         }
                     }
                                 if(myPath != null){
-                                    myPath.setMap(null);
+                                    myPath.setVisible(false);
+                                    myPath.setMap(naverMap);
                                 }
                 } else if (getZoom_level() == 1) {
                     Log.d("showLines","zoomlevel1");
                     if (allPathsOverlay != null && allPathsOverlay.size() >= 1) {
                         for (i = 0; i < allPathsOverlay.size(); i++) {
+                            allPathsOverlay.get(i).setVisible(true);
                             allPathsOverlay.get(i).setMap(naverMap);
                         }
                     }
                     if (savedPathsOverlay != null && savedPathsOverlay.size() >= 1) {
                         for (i = 0; i < savedPathsOverlay.size(); i++) {
                             Log.d("showLines",""+savedPathsOverlay.get(i).getCoords()+"@@");
+                            savedPathsOverlay.get(i).setVisible(true);
                             savedPathsOverlay.get(i).setMap(naverMap);
                         }
                     }
