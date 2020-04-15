@@ -48,7 +48,6 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -75,8 +74,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
     PathOverlay myPath;
-    public ArrayList<PathOverlay> allPathsOverlay; //실시간 수색
-    public ArrayList<PathOverlay> savedPathsOverlay; //이미 db에 저장된 경로들
+    public ArrayList<PathOverlay> allPathsOverlay = new ArrayList<>(); //실시간 수색
+    public ArrayList<PathOverlay> savedPathsOverlay = new ArrayList<>(); //이미 db에 저장된 경로들
 
     private ArrayList<Integer> placeIndex; //수색구역 정보
     public static Socket mSocket;
@@ -304,13 +303,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
         naverMap.setLocationSource(locationSource);
         naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
-        Collections.addAll(coords,
-                new LatLng(37.57152, 126.97714),
-                new LatLng(37.56607, 126.98268),
-                new LatLng(37.56445, 126.97707),
-                new LatLng(37.55855, 126.97822)
-        );
-        myPath.setCoords(coords);
+
+        //myPath.setCoords(coords);
         myPath.setColor(mycolor);
 
         onLocationChangeListener = new NaverMap.OnLocationChangeListener() {
@@ -327,7 +321,6 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                     return;
                 }
 
-                if(getZoom_level()==1){
                     if (flag == 0) {
                         prevLong = longitude;
                         prevLat = latitude;
@@ -335,16 +328,23 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         flag = 1;
 
                     } else if (flag == 1) {
-                        double euclidean =Math.sqrt((prevLong - longitude) * (prevLong - longitude) + (prevLat - latitude) * (prevLat - latitude));
-                        if (minDistance <= euclidean && euclidean <= maxDistance) {
-
+                        //Log.d("aaa",String.valueOf(latitude));
+                        //myPath.setMap(naverMap);
+                        Location prev = new Location("prev");
+                        prev.setLatitude(prevLat);
+                        prev.setLongitude(prevLong);
+                        double euclidean = location.distanceTo(prev);
+                        //double euclidean =Math.sqrt((prevLong - longitude) * (prevLong - longitude) + (prevLat - latitude) * (prevLat - latitude));
+                        Log.d("aaa","euclidean"+String.valueOf(euclidean));
+                        if (euclidean >=minDistance && euclidean <= maxDistance) {
                             prevLong = longitude;
                             prevLat = latitude;
-
+                            Log.d("aaa", String.valueOf(latitude));
                             coords.add(new LatLng(latitude, longitude));
-                            myPath.setCoords(coords);
-                            myPath.setMap(naverMap);
-
+                            if(coords.size() >=2){
+                                myPath.setCoords(coords);
+                                myPath.setMap(naverMap);
+                            }
                             try{
                                 JSONObject data = new JSONObject();
                                 //data.put("Lat", tmplat);
@@ -354,6 +354,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                                 int tmpidx = getClick_index(0);
                                 data.put("idx", tmpidx);
 
+
                                 mSocket.emit("sendLatLng", data);
 //                        data.put("mid",mid);
 //                        mSocket.emit("makeRoom",data);
@@ -361,7 +362,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                                 e.printStackTrace();
                             }
 
-                        } else if (maxDistance> euclidean){//gps 신호가 튄경우
+                        } else if (euclidean> maxDistance){//gps 신호가 튄경우
                             if (count <=5){
                                 count++;
                             }
@@ -374,7 +375,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                         }
 
                     }
-                }
+
 
             }
         };
@@ -514,7 +515,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
                     Log.d("showHeat",String.valueOf(heat_map_rate[i]));
                     showHeatMap(polygonOverlay, rateCalculation(heat_map_rate[i]));
-                    //showLines();
+                    showLines();
                   //  polygonOverlay.setColor(Color.BLUE);
 
                 }
@@ -616,38 +617,41 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void showLines(){
-        int i;
 
-        if(getZoom_level() == 0){
-            if(allPathsOverlay != null && allPathsOverlay.size()>=1)
-            {
-                for (i = 0; i<allPathsOverlay.size(); i++){
-                    allPathsOverlay.get(i).setMap(null);
-                }
-            }
-            if(savedPathsOverlay != null && savedPathsOverlay.size()>=1){
-                for (i = 0; i<savedPathsOverlay.size(); i++){
-                    savedPathsOverlay.get(i).setMap(null);
-                }
-            }
-            if(myPath != null){
-                myPath.setMap(null);
-            }
-        }
-        else if(getZoom_level() == 1){
-            if(allPathsOverlay != null && allPathsOverlay.size()>=1)
-            {
-                for (i = 0; i<allPathsOverlay.size(); i++){
-                    allPathsOverlay.get(i).setMap(naverMap);
-                }
-            }
-            if(savedPathsOverlay != null && savedPathsOverlay.size()>=1){
-                for (i = 0; i<savedPathsOverlay.size(); i++){
-                    savedPathsOverlay.get(i).setMap(naverMap);
-                }
-            }
+        getActivity().runOnUiThread(new Runnable() {
 
-        }
+            @Override
+            public void run() {
+                int i;
+                if (getZoom_level() == 0) {
+                    if (allPathsOverlay != null && allPathsOverlay.size() >= 1) {
+                        for (i = 0; i < allPathsOverlay.size(); i++) {
+                            allPathsOverlay.get(i).setMap(null);
+                        }
+                    }
+                    if (savedPathsOverlay != null && savedPathsOverlay.size() >= 1) {
+                        for (i = 0; i < savedPathsOverlay.size(); i++) {
+                            savedPathsOverlay.get(i).setMap(null);
+                        }
+                    }
+                                if(myPath != null){
+                                    myPath.setMap(null);
+                                }
+                } else if (getZoom_level() == 1) {
+                    if (allPathsOverlay != null && allPathsOverlay.size() >= 1) {
+                        for (i = 0; i < allPathsOverlay.size(); i++) {
+                            allPathsOverlay.get(i).setMap(naverMap);
+                        }
+                    }
+                    if (savedPathsOverlay != null && savedPathsOverlay.size() >= 1) {
+                        for (i = 0; i < savedPathsOverlay.size(); i++) {
+                            savedPathsOverlay.get(i).setMap(naverMap);
+                        }
+                    }
+
+                }
+            }
+        });
     }
 
     public List<LatLng> getFourCornerLatLng(LatLng standardLatLng){
@@ -705,6 +709,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 String latLng = (String)data.get("latLng"); //위도경도 스트링
                 String color = (String)data.get("color");
                 if(check.equals("success")){
+                    Log.d("aaaa",latLng);
                     drawPaths(tokenizer(latLng), Integer.parseInt(color),allPathsOverlay);
                 }
             }catch (JSONException e){
@@ -818,7 +823,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
         for (int i =0; i< array.length;i++){
             token1 = new StringTokenizer(array[i] , ";");
-            latLng = new LatLng(Integer.parseInt(token1.nextToken()),Integer.parseInt(token1.nextToken()));
+            latLng = new LatLng(Double.parseDouble(token1.nextToken()),Double.parseDouble(token1.nextToken()));
             Log.d("위치받기",String.valueOf(latLng));
             arrayList.add(latLng);
         }
@@ -847,7 +852,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
             public void run() {
                 int i = 0;
                 for (i = 0; i < list.size(); i++) {
-                    String latlng = list.get(i).getLatLng();
+                    String latlng = list.get(i).getLatlng_arr();
                     drawPaths(tokenizer(latlng), Integer.parseInt(list.get(i).getColor()),savedPathsOverlay);
                 }
 
