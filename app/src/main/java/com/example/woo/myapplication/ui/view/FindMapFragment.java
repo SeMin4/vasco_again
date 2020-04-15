@@ -196,10 +196,9 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 //                    getNaverMap().setMaxZoom(getNaverMap().getCameraPosition().zoom);
                         setZoomCenterLatLng(getNaverMap().getCameraPosition().target);
                         map_radius /= 8;
+                        setZoom_level(1);
                         FindMapMakeTask gridMapMakeTask = new FindMapMakeTask(getNaverMap(), getZoomCenterLatLng(), map_radius);
                         gridMapMakeTask.execute();
-                        setZoom_level(1);
-
                     }
 
                 }
@@ -515,7 +514,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
                     Log.d("showHeat",String.valueOf(heat_map_rate[i]));
                     showHeatMap(polygonOverlay, rateCalculation(heat_map_rate[i]));
-                    showLines();
+//                    showLines();
                   //  polygonOverlay.setColor(Color.BLUE);
 
                 }
@@ -574,6 +573,8 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 drawLatLng = getFourCornerLatLng(drawLatLng).get(3);
 
             }
+            Log.d("showLines","showLines");
+            Log.d("showLines",""+savedPathsOverlay.size());
             showLines(); // 표시 여부 판단 후 내 경로, 실시간으로 받아온 경로, 이미 저장된 경로 표시
             return null;
         }
@@ -638,6 +639,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                                     myPath.setMap(null);
                                 }
                 } else if (getZoom_level() == 1) {
+                    Log.d("showLines","zoomlevel1");
                     if (allPathsOverlay != null && allPathsOverlay.size() >= 1) {
                         for (i = 0; i < allPathsOverlay.size(); i++) {
                             allPathsOverlay.get(i).setMap(naverMap);
@@ -645,6 +647,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                     }
                     if (savedPathsOverlay != null && savedPathsOverlay.size() >= 1) {
                         for (i = 0; i < savedPathsOverlay.size(); i++) {
+                            Log.d("showLines",""+savedPathsOverlay.get(i).getCoords()+"@@");
                             savedPathsOverlay.get(i).setMap(naverMap);
                         }
                     }
@@ -704,6 +707,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         @Override
         public void call(Object... args) {
             try{
+                Log.d("getLatLng","호출");
                 JSONObject data = (JSONObject)args[0];
                 String check = (String)data.get("check");
                 String latLng = (String)data.get("latLng"); //위도경도 스트링
@@ -834,15 +838,18 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
     protected void drawPaths (ArrayList pathList, int pathColor, ArrayList<PathOverlay> overlayList){ //다른 사람들의 경로 표시
 
                 PathOverlay path = new PathOverlay();
-                overlayList.add(path);
                 path.setColor(pathColor);
                 path.setCoords(pathList);
+                overlayList.add(path);
 
                 if(getZoom_level() ==1){
-                    path.setMap(naverMap);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            path.setMap(naverMap);
+                        }
+                    });
                 }
-
-
     }
 
     public void drawPathsAlreadySaved(ArrayList<LatLngData> list){ //디비에서 받은 데이터로 그림그리기
@@ -853,6 +860,7 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
                 int i = 0;
                 for (i = 0; i < list.size(); i++) {
                     String latlng = list.get(i).getLatlng_arr();
+                    Log.d("bbbb",latlng);
                     drawPaths(tokenizer(latlng), Integer.parseInt(list.get(i).getColor()),savedPathsOverlay);
                 }
 

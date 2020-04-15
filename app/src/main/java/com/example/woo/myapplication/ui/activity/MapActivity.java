@@ -174,13 +174,13 @@ public class MapActivity extends AppCompatActivity {
             public void onResponse(Call<ArrayList<LatLngData>> call, Response<ArrayList<LatLngData>> response) {
                 ArrayList<LatLngData> list = response.body();
                 Log.d("latLng","onResponse");
-                Log.d("aaaa",list.get(0).getLatlng_arr());
-                Log.d("aaaa",list.get(0).getColor());
                 //Log.d("latLng","list : "+list);
                 if(list == null || list.size() == 0){
 
                 }else{
-
+                    Log.d("aaaa",""+list.size());
+                    Log.d("aaaa",list.get(0).getLatlng_arr());
+                    Log.d("aaaa",list.get(0).getColor());
                     findMapFragment.drawPathsAlreadySaved(list);
                 }
             }
