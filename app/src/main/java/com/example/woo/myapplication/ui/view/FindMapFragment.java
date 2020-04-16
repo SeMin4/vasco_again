@@ -79,7 +79,6 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
 
     private ArrayList<Integer> placeIndex; //수색구역 정보
     public static Socket mSocket;
-    Button start_btn;
     Button reload_btn;
     //zoom in-out button 정보
     Button zoom_in_btn;
@@ -177,17 +176,10 @@ public class FindMapFragment extends Fragment implements OnMapReadyCallback {
         View rootView = inflater.inflate(R.layout.fragment_find_map, container, true);
 //        heatmapView = (View)getView().findViewById(R.id.view_heatmap_info);
         FrameLayout frameLayout = (FrameLayout)rootView.findViewById(R.id.frame_lay);
-        start_btn = rootView.findViewById(R.id.start_btn);
         zoom_in_btn = rootView.findViewById(R.id.zoom_in_btn);
         zoom_out_btn = rootView.findViewById(R.id.zoom_out_btn);
         reload_btn = rootView.findViewById(R.id.reload_btn);
 
-        start_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         zoom_in_btn.setOnClickListener(new View.OnClickListener() {
             @Override
