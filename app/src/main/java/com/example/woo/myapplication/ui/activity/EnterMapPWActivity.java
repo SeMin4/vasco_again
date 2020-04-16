@@ -19,7 +19,9 @@ import com.example.woo.myapplication.MyGlobals;
 import com.example.woo.myapplication.OverlapExamineData;
 import com.example.woo.myapplication.R;
 import com.example.woo.myapplication.data.MapInfo;
+import com.example.woo.myapplication.data.PlaceIndex;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit2.Call;
@@ -74,15 +76,53 @@ public class EnterMapPWActivity extends Activity {
                 OverlapExamineData data = response.body();
                 if(data.getOverlap_examine().equals("yes")){
                     //방에입장한다.
-                    Intent intent = new Intent(getApplicationContext(), GPSService.class);
-                   // intent.putExtra("mid",mapId);
-                    intent.putExtra("mapInfo",mapInfo);
-                    intent.putExtra("existFlag",1);
-                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                        startService(intent);
-                    } else {
-                        startForegroundService(intent);
-                    }
+                    Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                    ArrayList<Integer> placeIndex = new ArrayList<>();
+                    for(int i =0;i<64;i++)
+                        placeIndex.add(0);
+                    retrofitExService.getPlaceIndex(mapInfo.getM_id()).enqueue(new Callback<ArrayList<PlaceIndex>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<PlaceIndex>> call, Response<ArrayList<PlaceIndex>> response) {
+                            ArrayList<PlaceIndex> list = response.body();
+                            Log.d("index","list : "+list);
+                            if(list == null || list.size() == 0){
+
+                            }else{
+                                for(int i=0;i<list.size();i++){
+                                    int index = Integer.parseInt(list.get(i).getMd_index());
+                                    placeIndex.set(index,1);
+                                }
+                            }
+                            Log.d("index","placeIndex : "+placeIndex);
+                            String findLat = mapInfo.getM_find_latitude();
+                            String findLng = mapInfo.getM_find_longitude();
+                            String centerLat = mapInfo.getM_center_point_latitude();
+                            String centerLng = mapInfo.getM_center_point_longitude();
+                            String mapRadius = mapInfo.getM_size();
+                            intent.putExtra("mid",mapInfo.getM_id());
+                            intent.putExtra("existFlag",1);
+                            intent.putExtra("centerLat",centerLat);
+                            intent.putExtra("centerLng",centerLng);
+                            intent.putExtra("mapRadius",mapRadius);
+                            intent.putExtra("findLat",findLat);
+                            intent.putExtra("findLng",findLng);
+                            intent.putExtra("placeIndex",placeIndex);
+                          //  intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<PlaceIndex>> call, Throwable t) {
+
+                        }
+                    });
+
+
+//                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+//                        startService(intent);
+//                    } else {
+//                        startForegroundService(intent);
+//                    }
                     //Toast.makeText(getApplicationContext(), "방에 입장하셨습니다.", Toast.LENGTH_LONG).show();
 
                    // intent.putExtra("mapInfoIndex", mapInfo_index); //이건 무엇?
